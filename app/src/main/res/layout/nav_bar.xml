@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/home_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:drawableTop="@drawable/ic_baseline_home_24"
+        android:text="Home"
+        android:background="@color/white"
+        android:textColor="@android:color/black" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/events_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:drawableTop="@drawable/ic_baseline_event_note_24"
+        android:text="Events"
+        android:background="@color/white"
+        android:textColor="@android:color/black"/>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/friends_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:drawableTop="@drawable/ic_baseline_people_24"
+        android:text="Friends"
+        android:background="@color/white"
+        android:textColor="@android:color/black"/>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/add_friend_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:drawableTop="@drawable/ic_baseline_person_add_24"
+        android:text="Add Friend"
+        android:background="@color/white"
+        android:textColor="@android:color/black"/>
+</LinearLayout>
