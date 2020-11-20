@@ -1,8 +1,10 @@
 package com.example.gdl.CreateEventActivities;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -15,9 +17,12 @@ import androidx.appcompat.app.ActionBar;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.gdl.ActivityWithMenu;
+import com.example.gdl.HomePage;
 import com.example.gdl.R;
+import com.example.gdl.models.Member;
 
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 public class CreateEventMain extends ActivityWithMenu implements View.OnClickListener, DatePickerDialog.OnDateSetListener {
@@ -28,12 +33,14 @@ public class CreateEventMain extends ActivityWithMenu implements View.OnClickLis
     private final String sharedPrefFile = "com.example.gdl.createActivityMainSP";
     public static final String EVENT_NAME_KEY = "event name key";
     public static final String EVENT_DATE_KEY = "event date key";
+    private ArrayList<Member> mSelectedMembersList;
     SharedPreferences mPreferences;
 
     //UI components
     EditText mEventNameEditText;
     TextView mEventDateTextView;
     TextView mSelectMembersTextView;
+    TextView mNumberMembersSelected;
     TextView mAddPhotoTextView;
     Button mCreateButton;
 
@@ -54,6 +61,7 @@ public class CreateEventMain extends ActivityWithMenu implements View.OnClickLis
         mEventNameEditText = findViewById(R.id.eventNameEditText);
         mEventDateTextView = findViewById(R.id.event_date_text_view);
         mSelectMembersTextView = findViewById(R.id.select_members_text_view);
+        mNumberMembersSelected = findViewById(R.id.number_members_selected);
         mAddPhotoTextView = findViewById(R.id.add_photo_text_view);
         mCreateButton = findViewById(R.id.create_event_button);
 
@@ -64,6 +72,18 @@ public class CreateEventMain extends ActivityWithMenu implements View.OnClickLis
         mEventNameEditText.setText(mPreferences.getString(EVENT_NAME_KEY, ""));
         mEventDateTextView.setText(mPreferences.getString(EVENT_DATE_KEY, ""));
 
+        //get intent from CreateEventSelectedMembers
+        Intent selectedMembersIntent = getIntent();
+        mSelectedMembersList = selectedMembersIntent.getParcelableArrayListExtra(CreateEventSelectMembers.SELECTED_MEMBERS_KEY);
+        try {
+            String formattedNumberSelected = getString(R.string.numberSelected, mSelectedMembersList.size());
+            mNumberMembersSelected.setText(formattedNumberSelected);
+            Log.d(TAG, "onCreate: mSelectedMembersList=" + mSelectedMembersList);
+        } catch (Exception e) {
+            String formattedNumberSelected = getString(R.string.numberSelected, 0);
+            mNumberMembersSelected.setText(formattedNumberSelected);
+            Log.d(TAG, "onCreate: "+e);
+        }
 
     }
 
@@ -80,9 +100,11 @@ public class CreateEventMain extends ActivityWithMenu implements View.OnClickLis
         switch (v.getId()) {
             case R.id.select_members_text_view:
                 //TODO: save shared preferences before going to SelectMembers
-                Toast.makeText(this, "Go to SelectMembers", Toast.LENGTH_SHORT).show();
+                saveSharedPreferences();
+                //TODO: go to CreateEventSelectMembers
+                Intent selectMembersIntent = new Intent(this, CreateEventSelectMembers.class);
+                startActivity(selectMembersIntent);
                 break;
-                //TODO: go to SelectMembers with the intention of getting back a list of selected members
             case R.id.add_photo_text_view:
                 Toast.makeText(this, "implicit intent to photo gallery", Toast.LENGTH_SHORT).show();
                 break;
@@ -101,9 +123,7 @@ public class CreateEventMain extends ActivityWithMenu implements View.OnClickLis
         }
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
+    private void saveSharedPreferences() {
         SharedPreferences.Editor preferencesEditor = mPreferences.edit();
         preferencesEditor.putString(EVENT_NAME_KEY, mEventNameEditText.getText().toString());
         preferencesEditor.putString(EVENT_DATE_KEY, mEventDateTextView.getText().toString());
@@ -116,6 +136,9 @@ public class CreateEventMain extends ActivityWithMenu implements View.OnClickLis
         calendar.set(Calendar.YEAR, year);
         calendar.set(Calendar.MONTH, month);
         calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+        Log.d(TAG, "onDateSet: year"+year);
+        Log.d(TAG, "onDateSet: month"+month);
+        Log.d(TAG, "onDateSet: day"+dayOfMonth);
         String currentDateString = DateFormat.getDateInstance(DateFormat.FULL).format(calendar.getTime());
         mEventDateTextView.setText(currentDateString);
     }

@@ -24,6 +24,14 @@
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
+        <activity android:name=".CreateEventActivities.CreateEventSelectMembers">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".CreateEventActivities.CreateEventMain" />
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

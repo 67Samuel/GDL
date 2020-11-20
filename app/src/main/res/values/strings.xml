@@ -10,7 +10,8 @@
 
     <string name="enterEventName">Name: </string>
     <string name="enterEventDate">Date: </string>
-    <string name="selectMembersUnderlined"><u>Select Members</u> (0 selected)</string>
+    <string name="selectMembersUnderlined"><u>Select Members</u></string>
+    <string name="numberSelected">(%1$d selected)</string>
     <string name="addPhoto"><u>Add photo</u></string>
     <string name="createEventButton">Create</string>
 
