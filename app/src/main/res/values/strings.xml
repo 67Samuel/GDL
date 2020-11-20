@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">GDL</string>
+    <string name="menu_home">Home</string>
+    <string name="menu_my_events">My Events</string>
+    <string name="menu_my_friends">My Friends</string>
+    <string name="menu_add_friend">Add Friend</string>
 </resources>
