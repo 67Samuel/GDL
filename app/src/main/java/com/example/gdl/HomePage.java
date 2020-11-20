@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class HomePage extends ActivityWithMenu {
@@ -22,6 +23,10 @@ public class HomePage extends ActivityWithMenu {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home_page);
 
+        //set actionbar
+        ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
+        actionBar.setTitle("");
     }
 
 }

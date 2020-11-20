@@ -6,7 +6,7 @@
     <string name="menu_my_friends">My Friends</string>
     <string name="menu_add_friend">Add Friend</string>
 
-    <string name="pageHeader">CREATE\n EVENT</string>
+    <string name="pageHeader">CREATE EVENT</string>
 
     <string name="enterEventName">Name: </string>
     <string name="enterEventDate">Date: </string>
