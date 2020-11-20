@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".CreateEventActivities.CreateEventMain"
+    android:orientation="vertical">
+
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"/>
+
+    <include layout="@layout/enter_event_name_section"/>
+
+    <include layout="@layout/enter_event_date_section"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/selectMembersUnderlined"
+        android:id="@+id/select_members_text_view"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:layout_gravity="start"
+        android:layout_marginStart="15dp"
+        android:textStyle=""
+        android:padding="5dp"
+        android:layout_marginLeft="15dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/addPhoto"
+        android:id="@+id/add_photo_text_view"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:layout_gravity="start"
+        android:layout_marginStart="15dp"
+        android:padding="5dp"
+        android:textStyle=""
+        android:layout_marginLeft="15dp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="250dp"/>
+
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/darkGreen2"
+        android:layout_gravity="center"
+        android:layout_margin="10dp">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/createEventButton"
+            android:background="?selectableItemBackground"
+            android:padding="5dp"
+            android:id="@+id/create_event_button"
+            android:layout_centerInParent="true">
+
+        </Button>
+    </RelativeLayout>
+
+
+</LinearLayout>
