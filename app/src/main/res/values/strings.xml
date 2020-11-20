@@ -1,7 +1,23 @@
 <resources>
     <string name="app_name">GDL</string>
+
     <string name="menu_home">Home</string>
     <string name="menu_my_events">My Events</string>
     <string name="menu_my_friends">My Friends</string>
     <string name="menu_add_friend">Add Friend</string>
+
+    <string name="pageHeader">CREATE\n EVENT</string>
+
+    <string name="enterEventName">Name: </string>
+    <string name="enterEventDate">Date: </string>
+    <string name="selectMembersUnderlined"><u>Select Members</u> (0 selected)</string>
+    <string name="addPhoto"><u>Add photo</u></string>
+    <string name="createEventButton">Create</string>
+
+    <string name="selectMembersBold">Select Members</string>
+    <string name="searchMembers">Search: </string>
+    <string name="searchForName">Search for name</string>
+    <string name="doneButton">Done</string>
+
+
 </resources>
