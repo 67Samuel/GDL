@@ -1,5 +1,7 @@
 <resources>
-    <string name="app_name">GDL</string>
+    <string name="app_name">GoDutchLeh</string>
+
+
 
     <string name="menu_home">Home</string>
     <string name="menu_my_events">My Events</string>
@@ -19,6 +21,7 @@
     <string name="searchMembers">Search: </string>
     <string name="searchForName">Search for name</string>
     <string name="doneButton">Done</string>
+    <string name="review_them">Review Them</string>
 
 
 </resources>
