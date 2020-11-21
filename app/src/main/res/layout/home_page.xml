@@ -5,6 +5,224 @@
     android:layout_width="match_parent"
     android:orientation="vertical"
     tools:context=".HomePage">
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="60dp"
+            android:orientation="vertical"
+            android:background="@color/black">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_margin="20dp">
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/profile_pic"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    tools:srcCompat="@tools:sample/avatars"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:layout_marginHorizontal="20dp"
+                    android:gravity="center">
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/username"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/montserrat"
+                        android:text="Marcus Ho"
+                        android:textColor="@color/darkGreen"
+                        android:textSize="36sp"
+                        android:textStyle="bold"/>
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/user_email"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="marcus_ho@mymail.sutd.edu.sg"
+                        android:textColor="@color/darkGreen"
+                        android:textSize="12sp"
+                        android:textStyle="bold"/>
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <TableLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="30dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="40dp"
+                android:orientation="vertical"
+                android:background="@color/black"
+                android:layout_gravity="center_horizontal"
+                android:stretchColumns="*">
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="bottom">
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/no_of_bills_settled"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="160"
+                        android:textSize="50sp"
+                        android:textColor="@color/white"
+                        android:textStyle="bold"/>
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/no_of_paid_events"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="160"
+                        android:textSize="50sp"
+                        android:textColor="@color/white"
+                        android:textStyle="bold"/>
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/no_of_bills_to_pay_for"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="160"
+                        android:textSize="50sp"
+                        android:textColor="@color/white"
+                        android:textStyle="bold"/>
+
+                </TableRow>
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="top">
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/bills_settled_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="Bills Settled"
+                        android:textColor="@color/darkGreen"
+                        android:textSize="12sp"
+                        android:fontFamily="@font/montserrat"/>
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/paid_events_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="Paid Events"
+                        android:textColor="@color/darkGreen"
+                        android:textSize="12sp"
+                        android:fontFamily="@font/montserrat"/>
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/to_pay_for_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="To Pay for"
+                        android:textColor="@color/darkGreen"
+                        android:textSize="12sp"
+                        android:fontFamily="@font/montserrat"/>
+
+                </TableRow>
+
+
+            </TableLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom">
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center">
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/join_event_button"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:background="@drawable/button_bg_round"
+                    android:text="Join\nEvent" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center">
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/create_event_button"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:background="@drawable/button_bg_round"
+                    android:text="Create\nEvent" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+    </FrameLayout>
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:background="@color/white"
+        android:layout_gravity="center_horizontal"
+        android:stretchColumns="*">
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginVertical="30dp">
+            <TextView
+                android:id="@+id/my_events_button"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="@string/menu_my_events"
+                android:textColor="@color/black"
+                android:gravity="center"
+                android:background="@android:color/transparent"
+                android:drawableTop="@drawable/ic_party_hat"/>
+            <TextView
+                android:id="@+id/my_friends_button"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="@string/menu_my_friends"
+                android:textColor="@color/black"
+                android:gravity="center"
+                android:drawableTop="@drawable/ic_friends"/>
+        </TableRow>
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center">
+            <TextView
+                android:id="@+id/pending_payments_button"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="Pending\nPayments"
+                android:textColor="@color/black"
+                android:gravity="center"
+                android:drawableTop="@drawable/ic_alert"/>
+            <TextView
+                android:id="@+id/add_friend_button"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="@string/menu_add_friend"
+                android:textColor="@color/black"
+                android:gravity="center"
+                android:drawableTop="@drawable/ic_add_friend"/>
+        </TableRow>
+    </TableLayout>
 
 
 
