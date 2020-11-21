@@ -22,9 +22,11 @@ import com.example.gdl.models.Member;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class MembersAdapter extends RecyclerView.Adapter<MembersAdapter.ViewHolder> implements Filterable{
+
+    //TODO: find out whether adapter can send selected list to the activity
+    //TODO: set textview to the names of the current selected members
 
     private static final String TAG = "MembersAdapter";
 
