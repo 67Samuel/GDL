@@ -18,15 +18,60 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".CreateEventActivities.CreateEventMain">
+        <activity
+            android:name=".createeventpg.CreateEventMain"
+            android:label="@string/createEventPgName">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".HomePage" />
         </activity>
-        <activity android:name=".CreateEventActivities.CreateEventSelectMembers">
+
+        <activity
+            android:name=".eventlistpg.EventListActivity"
+            android:label="@string/myEventsPgName">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".CreateEventActivities.CreateEventMain" />
+                android:value=".HomePage" />
+        </activity>
+
+        <activity
+            android:name=".eventdetailspg.EventActivity"
+            android:label="@string/eventDetailsPgName">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".eventlistpg.EventListActivity" />
+        </activity>
+
+        <activity
+            android:name=".JoinEventActivity"
+            android:label="@string/joinEventPgName">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".HomePage" />
+        </activity>
+
+        <activity
+            android:name=".AddFriendPage"
+            android:label="@string/addFriendPgName">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".HomePage" />
+        </activity>
+
+        <activity
+            android:name=".myfriendspg.FriendListPage"
+            android:label="@string/myFriendsPgName">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".HomePage" />
+        </activity>
+
+        <activity
+            android:name=".createeventpg.CreateEventSelectMembers"
+            android:label="@string/createEventSelectMembersPgName">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".createeventpg.CreateEventMain" />
         </activity>
 
         <meta-data
