@@ -1,4 +1,4 @@
-package com.example.gdl.CreateEventActivities;
+package com.example.gdl.createeventpg;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;

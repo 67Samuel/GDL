@@ -1,4 +1,4 @@
-package com.example.gdl.CreateEventActivities;
+package com.example.gdl.createeventpg;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
@@ -9,7 +9,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,7 +16,6 @@ import androidx.appcompat.app.ActionBar;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.gdl.ActivityWithMenu;
-import com.example.gdl.HomePage;
 import com.example.gdl.R;
 import com.example.gdl.models.Member;
 
@@ -117,7 +115,7 @@ public class CreateEventMain extends ActivityWithMenu implements View.OnClickLis
                 //TODO: if there are, create the specified Event object
                 //TODO: go to MyEvents (should auto update the list within MyEvents)
             case R.id.event_date_text_view:
-                DialogFragment datePicker = new com.example.gdl.CreateEventActivities.DatePickerFragment();
+                DialogFragment datePicker = new com.example.gdl.createeventpg.DatePickerFragment();
                 datePicker.show(getSupportFragmentManager(), "date picker");
                 break;
         }

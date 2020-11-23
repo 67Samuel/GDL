@@ -1,4 +1,4 @@
-package com.example.gdl.CreateEventActivities;
+package com.example.gdl.createeventpg;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,7 +14,6 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.gdl.R;
-import com.example.gdl.adapters.MembersAdapter;
 import com.example.gdl.models.Member;
 
 import java.util.ArrayList;

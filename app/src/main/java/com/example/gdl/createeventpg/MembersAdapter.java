@@ -1,7 +1,6 @@
-package com.example.gdl.adapters;
+package com.example.gdl.createeventpg;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.util.Log;
 import android.view.LayoutInflater;
