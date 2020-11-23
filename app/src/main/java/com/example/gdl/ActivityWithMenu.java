@@ -1,17 +1,16 @@
 package com.example.gdl;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.gdl.CreateEventActivities.CreateEventMain;
+
+import com.example.gdl.eventlistpg.EventListActivity;
+import com.example.gdl.myfriendspg.FriendListPage;
 
 public class ActivityWithMenu extends AppCompatActivity {
 
@@ -33,18 +32,22 @@ public class ActivityWithMenu extends AppCompatActivity {
                 return true;
             case R.id.menu_my_events:
                 Toast.makeText(this, "Go to My Events", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(this, CreateEventMain.class);
-                startActivity(intent);
+                Intent myEventsIntent = new Intent(this, EventListActivity.class);
+                startActivity(myEventsIntent);
                 //go to my_events activity
                 return true;
             case R.id.menu_my_friends:
                 Toast.makeText(this, "Go to My Friends", Toast.LENGTH_SHORT).show();
                 //go to my_friends activity
+                Intent myFriendsIntent = new Intent(this, FriendListPage.class);
+                startActivity(myFriendsIntent);
                 return true;
             case R.id.menu_add_friend:
                 Toast.makeText(this, "Go to Add Friends", Toast.LENGTH_SHORT).show();
                 //save instance state
                 //go to add_friends activity
+                Intent addFriendsIntent = new Intent(this, AddFriendPage.class);
+                startActivity(addFriendsIntent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
