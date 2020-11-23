@@ -19,6 +19,7 @@ public class Member implements Parcelable {
     static ArrayList<Integer> mIdList = new ArrayList<>();
     String mName;
     Integer mId=null;
+    //Integer mPicId;
     boolean mStatus;
     double mDebt;
     double mLent;
@@ -32,6 +33,7 @@ public class Member implements Parcelable {
     protected Member(Parcel in) {
         mName = in.readString();
         mId = in.readInt();
+        //mPicId = in.readInt();
         mStatus = in.readByte() != 0;
         mDebt = in.readDouble();
         mLent = in.readDouble();
@@ -85,6 +87,7 @@ public class Member implements Parcelable {
         mDebt = 0;
         mLent = 0;
         mName = name;
+        //mPicId = 0;
 
         System.out.println("all members: "+mAllMembers);
         Log.d(TAG, "Member: a member has been initialized");
@@ -133,4 +136,6 @@ public class Member implements Parcelable {
     public double getLent() {
         return mLent;
     }
+
+    //public Integer getPicId() {return mPicId; }
 }
