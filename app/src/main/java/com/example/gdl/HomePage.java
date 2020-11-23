@@ -1,23 +1,18 @@
 package com.example.gdl;
 
-import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
-import static android.widget.Toast.*;
+import com.example.gdl.createeventpg.CreateEventMain;
+import com.example.gdl.eventlistpg.EventListActivity;
+import com.example.gdl.myfriendspg.FriendListPage;
 
 public class HomePage extends ActivityWithMenu {
     public static final String ACTIVITY_TAG = "MainActivity";
@@ -42,8 +37,10 @@ public class HomePage extends ActivityWithMenu {
         myEvents.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast joinEventsPg = Toast.makeText(HomePage.this, "Go to Join Events", Toast.LENGTH_SHORT);
-                joinEventsPg.show();
+                Toast myEventsPg = Toast.makeText(HomePage.this, "Go to My Events", Toast.LENGTH_SHORT);
+                myEventsPg.show();
+                Intent intent = new Intent(HomePage.this, EventListActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -51,8 +48,8 @@ public class HomePage extends ActivityWithMenu {
         myFriends.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast myFriendsPg = Toast.makeText(HomePage.this, "Go to My Friends", Toast.LENGTH_SHORT);
-                myFriendsPg.show();
+                Intent intent = new Intent(HomePage.this, FriendListPage.class);
+                startActivity(intent);
             }
         });
 
@@ -71,6 +68,8 @@ public class HomePage extends ActivityWithMenu {
             public void onClick(View view) {
                 Toast addFriendsPg = Toast.makeText(HomePage.this, "Go to add Friends", Toast.LENGTH_SHORT);
                 addFriendsPg.show();
+                Intent intent = new Intent(HomePage.this, AddFriendPage.class);
+                startActivity(intent);
             }
         });
 
@@ -80,6 +79,8 @@ public class HomePage extends ActivityWithMenu {
             public void onClick(View view) {
                 Toast joinEventPg = Toast.makeText(HomePage.this, "Go to Join Events", Toast.LENGTH_SHORT);
                 joinEventPg.show();
+                Intent intent = new Intent(HomePage.this, JoinEventActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -89,6 +90,8 @@ public class HomePage extends ActivityWithMenu {
             public void onClick(View view) {
                 Toast joinEventPg = Toast.makeText(HomePage.this, "Go to createEvent", Toast.LENGTH_SHORT);
                 joinEventPg.show();
+                Intent intent = new Intent(HomePage.this, CreateEventMain.class);
+                startActivity(intent);
             }
         });
 
