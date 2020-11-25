@@ -1,4 +1,4 @@
-package com.example.gdl.CreateEventActivities;
+package com.example.gdl.createeventpg;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,8 +16,6 @@ import android.widget.Toast;
 
 import com.example.gdl.ActivityWithMenu;
 import com.example.gdl.R;
-import com.example.gdl.adapters.MembersAdapter;
-import com.example.gdl.interfaces.RecyclerItemSelectedListener;
 import com.example.gdl.models.Member;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipDrawable;
