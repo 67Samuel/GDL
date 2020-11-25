@@ -55,6 +55,8 @@ public class Member implements Parcelable {
 
     public static void setIds(int n) {
         // populate mIdList with a bunch of numbers from 0 to n (simulate Ids from backend)
+        Log.d(TAG, "setIds: called");
+        mIdList.clear();
         for (int i=0; i<n; i++) {
             Log.d(TAG, "setIds: set id "+i);
             mIdList.add(i);
@@ -72,6 +74,7 @@ public class Member implements Parcelable {
 
     public Member(String name) {
         // create a Member obj with name and first available Id in mIdList
+        //TODO: get all data from database
         List<Integer> usedIdsList = getUsedIds();
         while (mId==null) {
             for (int id : mIdList) {
@@ -89,8 +92,7 @@ public class Member implements Parcelable {
         mName = name;
         //mPicId = 0;
 
-        System.out.println("all members: "+mAllMembers);
-        Log.d(TAG, "Member: a member has been initialized");
+        Log.d(TAG, "all members: "+mAllMembers);
     }
 
     @Override
