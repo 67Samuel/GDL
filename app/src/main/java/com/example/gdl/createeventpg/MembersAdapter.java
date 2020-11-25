@@ -1,26 +1,18 @@
 package com.example.gdl.createeventpg;
 
 import android.content.Context;
-import android.graphics.drawable.ColorDrawable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.gdl.CreateEventActivities.CreateEventSelectMembers;
 import com.example.gdl.R;
-import com.example.gdl.interfaces.RecyclerItemSelectedListener;
 import com.example.gdl.models.Member;
 
 import java.util.ArrayList;
@@ -97,7 +89,7 @@ public class MembersAdapter extends RecyclerView.Adapter<MembersAdapter.ViewHold
         //takes results from performFiltering
         @Override
         protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-            mFriendsList.clear();;
+            mFriendsList.clear();
             mFriendsList.addAll((List)filterResults.values);
             notifyDataSetChanged();
         }
