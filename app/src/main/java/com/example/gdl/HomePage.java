@@ -1,6 +1,7 @@
 package com.example.gdl;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -22,6 +23,8 @@ public class HomePage extends ActivityWithMenu {
     TextView myFriends;
     TextView pendingPayments;
     TextView addFriends;
+    SharedPreferences loginPreferences;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -94,8 +97,21 @@ public class HomePage extends ActivityWithMenu {
                 startActivity(intent);
             }
         });
-
-
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // Check if user has logged in before
+        loginPreferences = getSharedPreferences(LoginActivity.sharedPrefFile, MODE_PRIVATE);
+        boolean logged_In = loginPreferences.getBoolean(LoginActivity.loginStatus, false);
+
+        if (!logged_In){
+            Intent intent = new Intent(HomePage.this, LoginActivity.class);
+            startActivity(intent);
+        }
+    }
+
 
 }
