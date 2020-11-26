@@ -74,6 +74,14 @@
                 android:value=".createeventpg.CreateEventMain" />
         </activity>
 
+        <activity
+            android:name=".LoginActivity"
+            android:label="@string/loginPgName">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
