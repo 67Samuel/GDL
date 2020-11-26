@@ -53,37 +53,11 @@ public class Member implements Parcelable {
         }
     };
 
-    public static void setIds(int n) {
-        // populate mIdList with a bunch of numbers from 0 to n (simulate Ids from backend)
-        Log.d(TAG, "setIds: called");
-        mIdList.clear();
-        for (int i=0; i<n; i++) {
-            Log.d(TAG, "setIds: set id "+i);
-            mIdList.add(i);
-        }
-        Log.d(TAG, "setIds: created all fake ids ");
-    }
 
-    private List<Integer> getUsedIds() {
-        List<Integer> usedIdsList = new LinkedList<>();
-        for (Member member : mAllMembers) {
-            usedIdsList.add(member.mId);
-        }
-        return usedIdsList;
-    }
-
-    public Member(String name) {
+    public Member(String name, int id) {
         // create a Member obj with name and first available Id in mIdList
         //TODO: get all data from database
-        List<Integer> usedIdsList = getUsedIds();
-        while (mId==null) {
-            for (int id : mIdList) {
-                if (!(usedIdsList.contains(id))) {
-                    this.mId = id;
-                    break;
-                }
-            }
-        }
+        mId = id;
         mAllMembers.add(this);
         Log.d(TAG, "Member: new member added: " + this);
         mStatus = NOT_IN_DEBT;
@@ -91,8 +65,6 @@ public class Member implements Parcelable {
         mLent = 0;
         mName = name;
         //mPicId = 0;
-
-        Log.d(TAG, "all members: "+mAllMembers);
     }
 
     @Override

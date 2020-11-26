@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -22,6 +23,8 @@ import com.google.android.material.chip.ChipDrawable;
 import com.google.android.material.chip.ChipGroup;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class CreateEventSelectMembers extends ActivityWithMenu implements RecyclerItemSelectedListener {
 
@@ -39,8 +42,12 @@ public class CreateEventSelectMembers extends ActivityWithMenu implements Recycl
 
     //vars
     public ArrayList<Member> mFakeMembers = new ArrayList<>();
-    public final static String SELECTED_MEMBERS_KEY = "com.example.gdl.CreateEventActivities.selected_members_key";
-    private ArrayList<Member> mSelectedList = new ArrayList<>(); //members selected to be in event
+    //TODO: change the sending of member objs to sending just their ids
+    SharedPreferences mPreferences;
+    private static final String sharedPrefFile = "com.example.gdl.createeventpg.CreateEventSelectMembers.preffile";
+    public final static String SELECTED_MEMBERS_ID_KEY = "com.example.gdl.CreateEventActivities.selected_members_ids_key";
+    public ArrayList<Integer> mSelectedMembersIds = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +69,18 @@ public class CreateEventSelectMembers extends ActivityWithMenu implements Recycl
         mSelectMembersDoneButton = findViewById(R.id.select_members_done_button);
         mSelectedMembersChipGroup = findViewById(R.id.selected_members_chip_group);
         Log.d(TAG, "onCreate: views found");
+
+        //get shared pref
+        mPreferences = getSharedPreferences(sharedPrefFile, MODE_PRIVATE);
+        Set<String> membersIdsSet = this.mPreferences.getStringSet(SELECTED_MEMBERS_ID_KEY, null);
+        if (membersIdsSet != null && !membersIdsSet.isEmpty()) {
+            Log.d(TAG, "onCreate: getting shared pref");
+            mSelectedMembersIds.clear();
+            Log.d(TAG, "onCreate: clearing mSelectedMembersIds");
+            for (String s : membersIdsSet) {
+                onItemSelected(Integer.valueOf(s));
+            }
+        }
 
         getFakeMembers();
         Log.d(TAG, "onCreate: fake members made");
@@ -94,11 +113,11 @@ public class CreateEventSelectMembers extends ActivityWithMenu implements Recycl
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(CreateEventSelectMembers.this, CreateEventMain.class);
-                if (mSelectedList.isEmpty()) {
+                if (mSelectedMembersIds.isEmpty()) {
                     Toast.makeText(CreateEventSelectMembers.this, "Select at least one member", Toast.LENGTH_SHORT).show();
                     return;
                 } else {
-                    intent.putExtra(SELECTED_MEMBERS_KEY, mSelectedList);
+                    intent.putExtra(SELECTED_MEMBERS_ID_KEY, mSelectedMembersIds);
                 }
                 startActivity(intent);
             }
@@ -107,50 +126,69 @@ public class CreateEventSelectMembers extends ActivityWithMenu implements Recycl
     }
 
     public void getFakeMembers() {
-        Member.setIds(20);
-        Log.d(TAG, "getFakeMembers: fake ids set up");
-        mFakeMembers.add(new Member("sally"));
-        mFakeMembers.add(new Member("james"));
-        mFakeMembers.add(new Member("dillon"));
-        mFakeMembers.add(new Member("rebecca"));
-        mFakeMembers.add(new Member("lucy"));
-        mFakeMembers.add(new Member("isaac"));
-        mFakeMembers.add(new Member("joshua"));
-        mFakeMembers.add(new Member("kelly"));
-        mFakeMembers.add(new Member("percy"));
+        mFakeMembers.add(new Member("sally", 0));
+        mFakeMembers.add(new Member("james", 1));
+        mFakeMembers.add(new Member("dillon", 2));
+        mFakeMembers.add(new Member("rebecca", 3));
+        mFakeMembers.add(new Member("lucy", 4));
+        mFakeMembers.add(new Member("isaac", 5));
+        mFakeMembers.add(new Member("joshua", 6));
+        mFakeMembers.add(new Member("kelly", 7));
+        mFakeMembers.add(new Member("percy", 8));
+        Log.d(TAG, "getFakeMembers: fake members made");
     }
 
     @Override
-    public void onItemSelected(Member member) {
-        if (!mSelectedList.contains(member)) {
+    public void onItemSelected(Integer id) {
+        if (!mSelectedMembersIds.contains(id)) {
+            Log.d(TAG, "onItemSelected: making chip");
             Chip chip = new Chip(this);
-            chip.setText(member.getName());
-            //Line below is probably a better way to get images when pic comes from database
-            //chip.setChipIcon(ContextCompat.getDrawable(this, member.getPicId()));
+            //TODO: get member name from database using id
+            chip.setText("id: "+id);
             ChipDrawable drawable = ChipDrawable.createFromAttributes(this, null, 0, R.style.Widget_MaterialComponents_Chip_Entry);
             chip.setChipDrawable(drawable);
             chip.setCloseIconVisible(true);
             chip.setCheckable(false);
             chip.setClickable(false);
             chip.setChipIconResource(R.drawable.ashketchum);
+            //TODO: set icon with picture from member after member can get pic from database
+            //chip.setChipIcon(ContextCompat.getDrawable(this, member.getPicId()));
             chip.setPadding(80, 10, 80, 10);
             chip.setOnCloseIconClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     mSelectedMembersChipGroup.removeView(chip);
-                    mSelectedList.remove(member);
+                    mSelectedMembersIds.remove(id);
                 }
             });
             mSelectedMembersChipGroup.addView(chip);
-            mSelectedList.add(member);
+            mSelectedMembersIds.add(id);
             mSelectedMembersChipGroup.setVisibility(View.VISIBLE);
         }
     }
 
+    private void saveSharedPreferences() {
+        //saving mSelectedMembersIds as a String set to saved pref
+        if (mPreferences != null) {
+            SharedPreferences.Editor preferencesEditor = mPreferences.edit();
+            int count = mSelectedMembersIds.size();
+            if (count > 0) {
+                Set<String> selectedMembersIdsSet = new HashSet<String>();
+                for (Integer i : mSelectedMembersIds) {
+                    selectedMembersIdsSet.add(String.valueOf(i));
+                }
+                preferencesEditor.putStringSet(SELECTED_MEMBERS_ID_KEY, selectedMembersIdsSet);
+            } else {
+                preferencesEditor.remove(SELECTED_MEMBERS_ID_KEY);
+            }
+            preferencesEditor.apply();
+        }
+    }
+
     @Override
-    protected void onStop() {
-        super.onStop();
-        //mFakeMembers.clear();
-        Log.d(TAG, "onStop: called");
+    protected void onPause() {
+        super.onPause();
+        //save an integer array of selected members ids
+        saveSharedPreferences();
     }
 }

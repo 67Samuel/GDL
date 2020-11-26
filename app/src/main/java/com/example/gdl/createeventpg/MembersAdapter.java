@@ -22,13 +22,10 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MembersAdapter extends RecyclerView.Adapter<MembersAdapter.ViewHolder> implements Filterable{
 
-    //TODO: find out whether adapter can send selected list to the activity
-    //TODO: set textview to the names of the current selected members
-
     private static final String TAG = "MembersAdapter";
 
     private ArrayList<Member> mFriendsList;
-    private ArrayList<Member> mFriendsListFull; //copy of full list
+    private ArrayList<Member> mFriendsListFull; //copy of full list for filtering
     Context context;
     private RecyclerItemSelectedListener recyclerItemSelectedListener;
 
@@ -112,7 +109,7 @@ public class MembersAdapter extends RecyclerView.Adapter<MembersAdapter.ViewHold
         @Override
         public void onClick(View v) {
             Member selectedMember = mFriendsList.get(getAdapterPosition());
-            recyclerItemSelectedListener.onItemSelected(selectedMember); //make chip
+            recyclerItemSelectedListener.onItemSelected(selectedMember.getId()); //make chip
         }
     }
 }

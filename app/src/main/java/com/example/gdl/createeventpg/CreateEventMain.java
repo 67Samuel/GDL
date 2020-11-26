@@ -56,7 +56,6 @@ public class CreateEventMain extends ActivityWithMenu implements View.OnClickLis
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         //find all views
-        //TODO: make edit texts not able to press enter, make date a selection
         mEventNameEditText = findViewById(R.id.eventNameEditText);
         mEventDateTextView = findViewById(R.id.event_date_text_view);
         mSelectMembersTextView = findViewById(R.id.select_members_text_view);
@@ -73,7 +72,7 @@ public class CreateEventMain extends ActivityWithMenu implements View.OnClickLis
 
         //get intent from CreateEventSelectedMembers
         Intent selectedMembersIntent = getIntent();
-        mSelectedMembersList = selectedMembersIntent.getParcelableArrayListExtra(CreateEventSelectMembers.SELECTED_MEMBERS_KEY);
+        mSelectedMembersList = selectedMembersIntent.getParcelableArrayListExtra(CreateEventSelectMembers.SELECTED_MEMBERS_ID_KEY);
         //sets number for mNumberMembersSelected, try catch block for case where mSelectedMembersList == 0
         try {
             String formattedNumberSelected = getString(R.string.numberSelected, mSelectedMembersList.size());
@@ -99,9 +98,6 @@ public class CreateEventMain extends ActivityWithMenu implements View.OnClickLis
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.select_members_text_view:
-                //TODO: save shared preferences before going to SelectMembers
-                saveSharedPreferences();
-                //TODO: go to CreateEventSelectMembers
                 Intent selectMembersIntent = new Intent(this, CreateEventSelectMembers.class);
                 Log.d(TAG, "onClick: triggered");
                 startActivity(selectMembersIntent);
@@ -109,7 +105,6 @@ public class CreateEventMain extends ActivityWithMenu implements View.OnClickLis
             case R.id.add_photo_text_view:
                 Toast.makeText(this, "implicit intent to photo gallery", Toast.LENGTH_SHORT).show();
                 break;
-                //TODO: save shared preferences before going to photo gallery
                 //TODO: implicit intent to photo gallery to get photo
             case R.id.create_event_button:
                 Toast.makeText(this, "go to MyEvents", Toast.LENGTH_SHORT).show();
@@ -148,5 +143,11 @@ public class CreateEventMain extends ActivityWithMenu implements View.OnClickLis
     protected void onStop() {
         super.onStop();
         Log.d(TAG, "onStop: called");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        saveSharedPreferences();
     }
 }
