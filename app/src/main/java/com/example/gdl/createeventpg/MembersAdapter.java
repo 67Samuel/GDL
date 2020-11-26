@@ -1,19 +1,15 @@
 package com.example.gdl.createeventpg;
 
 import android.content.Context;
-import android.graphics.drawable.ColorDrawable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.gdl.R;
@@ -21,6 +17,8 @@ import com.example.gdl.models.Member;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MembersAdapter extends RecyclerView.Adapter<MembersAdapter.ViewHolder> implements Filterable{
 
@@ -31,17 +29,14 @@ public class MembersAdapter extends RecyclerView.Adapter<MembersAdapter.ViewHold
 
     private ArrayList<Member> mFriendsList;
     private ArrayList<Member> mFriendsListFull; //copy of full list
-    private ArrayList<Member> selectedList = new ArrayList<>(); //members selected to be in event
     Context context;
+    private RecyclerItemSelectedListener recyclerItemSelectedListener;
 
     public MembersAdapter(Context context, ArrayList<Member> friendsList) {
         this.mFriendsList = friendsList;
         this.mFriendsListFull = new ArrayList<>(friendsList);
         this.context = context;
-    }
-
-    public ArrayList<Member> getSelectedList() {
-        return selectedList;
+        recyclerItemSelectedListener = (CreateEventSelectMembers)context;
     }
 
     @NonNull
@@ -55,29 +50,9 @@ public class MembersAdapter extends RecyclerView.Adapter<MembersAdapter.ViewHold
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         //bind specific data to the views in each itemView
         holder.name.setText(mFriendsList.get(position).getName());
-        if (selectedList.contains(mFriendsList.get(position))) {
-            holder.itemLayout.setBackgroundColor(0x3803A762);
-        } else {
-            holder.itemLayout.setBackgroundColor(0xFFFFFFFF);
-        }
-        holder.itemLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ColorDrawable viewColor = (ColorDrawable) holder.itemLayout.getBackground();
-                int colorId = viewColor.getColor();
-                Log.d(TAG, "onClick: colourid="+colorId);
-                if (colorId == 0xFFFFFFFF) {
-                    Toast.makeText(context, "" + mFriendsList.get(position).getName() + " added", Toast.LENGTH_SHORT).show();
-                    holder.itemLayout.setBackgroundColor(0x3803A762);
-                    selectedList.add(mFriendsList.get(position));
-                } else if (colorId == 0x3803A762) {
-                    Toast.makeText(context, "" + mFriendsList.get(position).getName() + " removed", Toast.LENGTH_SHORT).show();
-                    holder.itemLayout.setBackgroundColor(0xFFFFFFFF);
-                    selectedList.remove(mFriendsList.get(position));
-                }
-            }
-        });
         holder.profilePhoto.setImageResource(R.drawable.ashketchum);
+        //The below code is probably better than the one above for when we take the image from database
+        //holder.profilePhoto.setImageDrawable(ContextCompat.getDrawable(context, mFriendsList.get(position).getId()));
     }
 
 
@@ -114,24 +89,30 @@ public class MembersAdapter extends RecyclerView.Adapter<MembersAdapter.ViewHold
         //takes results from performFiltering
         @Override
         protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-            mFriendsList.clear();;
+            mFriendsList.clear();
             mFriendsList.addAll((List)filterResults.values);
             notifyDataSetChanged();
         }
     };
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         //after receiving the itemView from onCreateViewHolder, assign the required views to it
         TextView name;
-        ImageView profilePhoto;
-        RelativeLayout itemLayout;
+        CircleImageView profilePhoto;
+        CardView itemLayout;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.memberName);
             profilePhoto = itemView.findViewById(R.id.profile_image);
-            itemLayout = itemView.findViewById(R.id.member_recyclerview_item);
+            itemLayout = itemView.findViewById(R.id.member_recyclerView_item);
+            itemLayout.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            Member selectedMember = mFriendsList.get(getAdapterPosition());
+            recyclerItemSelectedListener.onItemSelected(selectedMember); //make chip
         }
     }
-
 }

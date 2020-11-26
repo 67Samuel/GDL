@@ -19,6 +19,7 @@ public class Member implements Parcelable {
     static ArrayList<Integer> mIdList = new ArrayList<>();
     String mName;
     Integer mId=null;
+    //Integer mPicId;
     boolean mStatus;
     double mDebt;
     double mLent;
@@ -32,6 +33,7 @@ public class Member implements Parcelable {
     protected Member(Parcel in) {
         mName = in.readString();
         mId = in.readInt();
+        //mPicId = in.readInt();
         mStatus = in.readByte() != 0;
         mDebt = in.readDouble();
         mLent = in.readDouble();
@@ -53,6 +55,8 @@ public class Member implements Parcelable {
 
     public static void setIds(int n) {
         // populate mIdList with a bunch of numbers from 0 to n (simulate Ids from backend)
+        Log.d(TAG, "setIds: called");
+        mIdList.clear();
         for (int i=0; i<n; i++) {
             Log.d(TAG, "setIds: set id "+i);
             mIdList.add(i);
@@ -70,6 +74,7 @@ public class Member implements Parcelable {
 
     public Member(String name) {
         // create a Member obj with name and first available Id in mIdList
+        //TODO: get all data from database
         List<Integer> usedIdsList = getUsedIds();
         while (mId==null) {
             for (int id : mIdList) {
@@ -85,9 +90,9 @@ public class Member implements Parcelable {
         mDebt = 0;
         mLent = 0;
         mName = name;
+        //mPicId = 0;
 
-        System.out.println("all members: "+mAllMembers);
-        Log.d(TAG, "Member: a member has been initialized");
+        Log.d(TAG, "all members: "+mAllMembers);
     }
 
     @Override
@@ -133,4 +138,6 @@ public class Member implements Parcelable {
     public double getLent() {
         return mLent;
     }
+
+    //public Integer getPicId() {return mPicId; }
 }

@@ -31,7 +31,7 @@ public class CreateEventMain extends ActivityWithMenu implements View.OnClickLis
     private static final String sharedPrefFile = "com.example.gdl.createActivityMainSP";
     public static final String EVENT_NAME_KEY = "event name key";
     public static final String EVENT_DATE_KEY = "event date key";
-    private ArrayList<Member> mSelectedMembersList;
+    private ArrayList<Member> mSelectedMembersList = new ArrayList<>();
     SharedPreferences mPreferences;
 
     //UI components
@@ -46,6 +46,7 @@ public class CreateEventMain extends ActivityWithMenu implements View.OnClickLis
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG, "onCreate: called");
         setContentView(R.layout.activity_create_event_main);
 
         //set actionbar
@@ -73,6 +74,7 @@ public class CreateEventMain extends ActivityWithMenu implements View.OnClickLis
         //get intent from CreateEventSelectedMembers
         Intent selectedMembersIntent = getIntent();
         mSelectedMembersList = selectedMembersIntent.getParcelableArrayListExtra(CreateEventSelectMembers.SELECTED_MEMBERS_KEY);
+        //sets number for mNumberMembersSelected, try catch block for case where mSelectedMembersList == 0
         try {
             String formattedNumberSelected = getString(R.string.numberSelected, mSelectedMembersList.size());
             mNumberMembersSelected.setText(formattedNumberSelected);
@@ -101,6 +103,7 @@ public class CreateEventMain extends ActivityWithMenu implements View.OnClickLis
                 saveSharedPreferences();
                 //TODO: go to CreateEventSelectMembers
                 Intent selectMembersIntent = new Intent(this, CreateEventSelectMembers.class);
+                Log.d(TAG, "onClick: triggered");
                 startActivity(selectMembersIntent);
                 break;
             case R.id.add_photo_text_view:
@@ -139,5 +142,11 @@ public class CreateEventMain extends ActivityWithMenu implements View.OnClickLis
         Log.d(TAG, "onDateSet: day"+dayOfMonth);
         String currentDateString = DateFormat.getDateInstance(DateFormat.FULL).format(calendar.getTime());
         mEventDateTextView.setText(currentDateString);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d(TAG, "onStop: called");
     }
 }
