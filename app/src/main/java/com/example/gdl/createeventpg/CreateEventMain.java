@@ -28,7 +28,7 @@ public class CreateEventMain extends ActivityWithMenu implements View.OnClickLis
     private static final String TAG = "CreateEventMain";
 
     //vars
-    private final String sharedPrefFile = "com.example.gdl.createActivityMainSP";
+    private static final String sharedPrefFile = "com.example.gdl.createActivityMainSP";
     public static final String EVENT_NAME_KEY = "event name key";
     public static final String EVENT_DATE_KEY = "event date key";
     private ArrayList<Member> mSelectedMembersList;
