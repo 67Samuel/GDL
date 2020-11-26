@@ -2,26 +2,53 @@
     <string name="app_name">GoDutchLeh</string>
 
 
-
+<!--menu options-->
     <string name="menu_home">Home</string>
     <string name="menu_my_events">My Events</string>
     <string name="menu_my_friends">My Friends</string>
     <string name="menu_add_friend">Add Friend</string>
+    <string name="menu_log_out">Log Out</string>
 
-    <string name="pageHeader">CREATE EVENT</string>
-
+<!--    createEventPg-->
+    <string name="createEventPgName">Create an Event</string>
     <string name="enterEventName">Name: </string>
     <string name="enterEventDate">Date: </string>
     <string name="selectMembersUnderlined"><u>Select Members</u></string>
-    <string name="numberSelected">(%1$d selected)</string>
     <string name="addPhoto"><u>Add photo</u></string>
-    <string name="createEventButton">Create</string>
+    <string name="numberSelected">(%1$d selected)</string>
 
+<!--    myEventsPg-->
+    <string name="myEventsPgName">My Events</string>
+
+<!--    eventDetailsPg-->
+    <string name="eventDetailsPgName">Event Details</string>
+
+<!--    joinEventPg-->
+    <string name="joinEventPgName">Join an Event</string>
+
+<!--    addFriendPg-->
+    <string name="addFriendPgName">Add a Friend</string>
+
+<!--    myFriendsPg-->
+    <string name="myFriendsPgName">My Friends</string>
+
+<!--    SelectMembersPg-->
+    <string name="createEventSelectMembersPgName">Select Members</string>
     <string name="selectMembersBold">Select Members</string>
+    <string name="doneButton">Done</string>
+    <string name="event_id_type_hint">Event ID</string>
+
+<!--    Login pg-->
+    <string name="loginPgName">Login</string>
+
+<!--    old home page-->
+    <string name="review_them">Review Them</string>
+
+<!--    uncategorised-->
+    <string name="pageHeader">CREATE EVENT</string>
+    <string name="createEventButton">Create</string>
     <string name="searchMembers">Search: </string>
     <string name="searchForName">Search for name</string>
-    <string name="doneButton">Done</string>
-    <string name="review_them">Review Them</string>
 
 
 </resources>
