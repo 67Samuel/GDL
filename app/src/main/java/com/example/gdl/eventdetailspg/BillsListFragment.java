@@ -14,27 +14,29 @@ import com.example.gdl.R;
 import com.example.gdl.eventlistpg.EventAdapter;
 import com.example.gdl.models.Bill;
 import com.example.gdl.models.Item;
+import com.example.gdl.models.Member;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class BillsListFragment extends Fragment {
 
-    //save event data
     private List<Bill> billsList=new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.event_listview, container,false);
 
-        // get the date and use it to create adapter
+        View view = inflater.inflate(R.layout.bills_listview, container,false);
+
+        //create adapter
         testBills(); //initialize
-        BillsAdapter adapter=new BillsAdapter(getContext(), R.layout.event_item, billsList);
+        BillsAdapter adapter=new BillsAdapter(getContext(), R.layout.bill_item, billsList);
 
         // transfer the data from adapter to listView
-        ListView listView=view.findViewById(R.id.event_listview);
+        ListView listView=view.findViewById(R.id.bills_listview);
         listView.setAdapter(adapter);
+        listView.setItemsCanFocus(false);
 
         // onClick method for each event
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -54,8 +56,10 @@ public class BillsListFragment extends Fragment {
     public void testBills(){
         for(int i=0;i<5;i++){
             Bill bill = new Bill();
-            Item item = new Item();
-            bill.addItem(item);
+            bill.setDate("12/01");
+            bill.setName("Go Dutch");
+            Member member = new Member("Peter", 12345);
+            bill.setPayer(member);
             billsList.add(bill);
         }
     }

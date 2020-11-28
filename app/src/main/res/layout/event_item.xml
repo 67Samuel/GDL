@@ -2,24 +2,31 @@
 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
+    android:layout_height="fill_parent"
+    android:descendantFocusability="blocksDescendants"
+    android:padding="0dp">
 
     <TableRow
+        android:id="@+id/event_item_tablerow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
-        android:background="@color/lightGreen">
+        android:background="@color/lightGreen"
+        android:clickable="true"
+        android:focusable="auto">
 
         <ImageView
             android:id="@+id/event_image"
             android:layout_width="80dip"
-            android:layout_height="100dip"
+            android:layout_height="80dip"
+            android:focusable="auto"
             android:padding="5dip"
             app:srcCompat="@drawable/ashketchum" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:focusable="auto"
             android:orientation="vertical">
 
             <TextView
@@ -29,7 +36,9 @@
                 android:layout_marginTop="2dip"
                 android:layout_marginBottom="10dip"
                 android:ellipsize="end"
+                android:focusable="auto"
                 android:singleLine="true"
+                android:textColor="#000000"
                 android:textStyle="bold" />
 
 
@@ -38,7 +47,9 @@
                 android:layout_width="240dip"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
+                android:focusable="auto"
                 android:singleLine="true"
+                android:textColor="#000000"
                 android:textSize="12sp" />
 
             <TextView
@@ -46,7 +57,9 @@
                 android:layout_width="240dip"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
+                android:focusable="auto"
                 android:singleLine="true"
+                android:textColor="#000000"
                 android:textSize="12sp" />
 
             <TextView
@@ -54,19 +67,23 @@
                 android:layout_width="240dip"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
+                android:focusable="auto"
                 android:singleLine="true"
+                android:textColor="#000000"
                 android:textSize="12sp" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:focusable="auto"
             android:orientation="vertical">
 
             <ImageView
                 android:id="@+id/status_image"
                 android:layout_width="80dip"
-                android:layout_height="50dip"
+                android:layout_height="30dip"
+                android:focusable="auto"
                 android:padding="0dip"
                 app:srcCompat="@drawable/completed" />
 
@@ -75,7 +92,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@android:drawable/menuitem_background"
-                android:text="AddBill" />
+                android:focusable="false"
+                android:paddingLeft="4dp"
+                android:paddingTop="2dp"
+                android:paddingRight="4dp"
+                android:paddingBottom="2dp"
+                android:text="AddBill"
+                android:textSize="14sp" />
         </LinearLayout>
 
     </TableRow>

@@ -1,5 +1,6 @@
 package com.example.gdl.eventlistpg;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,8 @@ import androidx.fragment.app.Fragment;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.gdl.createeventpg.CreateEventMain;
+import com.example.gdl.eventdetailspg.EventActivity;
 import com.example.gdl.eventlistpg.EventAdapter;
 import com.example.gdl.models.Event;
 import com.example.gdl.R;
@@ -44,8 +47,20 @@ public class EventListFragment extends Fragment {
             }
         });
 
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Toast.makeText(getContext(), "Click item" + i, Toast.LENGTH_SHORT).show();
+            }
+        });
 
-
+        adapter.setOnAddbillClickListener(new EventAdapter.onAddbillListener() {
+            @Override
+            public void onAddbillClick() {
+                Intent intent = new Intent(getActivity(), EventActivity.class);
+                startActivity(intent);
+            }
+        });
         return view;
     }
 
