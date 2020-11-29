@@ -3,6 +3,7 @@ package com.example.gdl;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -14,8 +15,10 @@ import androidx.appcompat.widget.AppCompatButton;
 import com.example.gdl.createeventpg.CreateEventMain;
 import com.example.gdl.eventlistpg.EventListActivity;
 import com.example.gdl.myfriendspg.FriendListPage;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
-public class HomePage extends ActivityWithMenu {
+public class HomePage extends GDLActivity {
     public static final String ACTIVITY_TAG = "MainActivity";
     AppCompatButton joinEvent;
     AppCompatButton createEvent;
@@ -23,13 +26,13 @@ public class HomePage extends ActivityWithMenu {
     TextView myFriends;
     TextView pendingPayments;
     TextView addFriends;
-    SharedPreferences loginPreferences;
 
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home_page);
+
 
         //set actionbar
         ActionBar actionBar = getSupportActionBar();
@@ -103,14 +106,8 @@ public class HomePage extends ActivityWithMenu {
     protected void onResume() {
         super.onResume();
 
-        // Check if user has logged in before
-        loginPreferences = getSharedPreferences(LoginActivity.sharedPrefFile, MODE_PRIVATE);
-        boolean logged_In = loginPreferences.getBoolean(LoginActivity.loginStatus, false);
+        Log.d(TAG, "onResume: called");
 
-        if (!logged_In){
-            Intent intent = new Intent(HomePage.this, LoginActivity.class);
-            startActivity(intent);
-        }
     }
 
 

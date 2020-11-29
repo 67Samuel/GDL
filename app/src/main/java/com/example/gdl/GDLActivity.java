@@ -1,30 +1,54 @@
-package com.example.gdl;
+ package com.example.gdl;
 
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.PopupWindow;
-import android.widget.TextView;
 import android.widget.Toast;
-import android.view.ViewGroup.LayoutParams;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 
 import com.example.gdl.eventlistpg.EventListActivity;
 import com.example.gdl.myfriendspg.FriendListPage;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
-public class ActivityWithMenu extends AppCompatActivity {
+public class GDLActivity extends AppCompatActivity {
+    /*
+    Additional functionality:
+    Menu
+    Reference to database root
+     */
     public static final String TAG = "ActivityWithMenu";
+    public static DatabaseReference mRootDatabaseRef;
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mRootDatabaseRef = FirebaseDatabase.getInstance().getReference(); //get reference to root node
+        mAuth = FirebaseAuth.getInstance();
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+
+                if (firebaseAuth.getCurrentUser() == null) {
+                    startActivity(new Intent(GDLActivity.this, LoginActivity.class));
+                }
+
+            }
+        };
+    }
 
     @Override
     public boolean onCreateOptionsMenu(android.view.Menu menu) {
@@ -64,7 +88,7 @@ public class ActivityWithMenu extends AppCompatActivity {
 
             case R.id.menu_log_out:
                 //Context mContext = getApplicationContext();
-                AlertDialog.Builder builder = new AlertDialog.Builder(ActivityWithMenu.this);
+                AlertDialog.Builder builder = new AlertDialog.Builder(GDLActivity.this);
                 builder.setCancelable(true);
                 builder.setTitle("Confirm Log Out");
                 builder.setMessage("Are you sure you want to log out?");
@@ -72,11 +96,7 @@ public class ActivityWithMenu extends AppCompatActivity {
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                SharedPreferences.Editor loginPreferencesEditor = getSharedPreferences(LoginActivity.sharedPrefFile, Context.MODE_PRIVATE).edit();
-                                loginPreferencesEditor.clear();
-                                loginPreferencesEditor.apply();
-                                Intent intent = new Intent(ActivityWithMenu.this, HomePage.class);
-                                startActivity(intent);
+                                mAuth.signOut();
                             }
                         });
                 builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
@@ -95,4 +115,9 @@ public class ActivityWithMenu extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(mAuthListener);
+    }
 }
