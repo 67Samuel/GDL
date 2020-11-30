@@ -59,7 +59,7 @@
     <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/darkGreen2"
+        android:background="@color/darkGreen"
         android:layout_marginTop="30dp"
         android:layout_gravity="center_horizontal"
         android:id="@+id/select_members_save_button_container">

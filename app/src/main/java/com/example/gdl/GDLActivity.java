@@ -30,8 +30,8 @@ public class GDLActivity extends AppCompatActivity {
      */
     public static final String TAG = "ActivityWithMenu";
     public static DatabaseReference mRootDatabaseRef;
-    private FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener mAuthListener;
+    public FirebaseAuth mAuth;
+    public FirebaseAuth.AuthStateListener mAuthListener;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -43,6 +43,7 @@ public class GDLActivity extends AppCompatActivity {
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
 
                 if (firebaseAuth.getCurrentUser() == null) {
+                    Toast.makeText(GDLActivity.this, "Sign-in successful", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(GDLActivity.this, LoginActivity.class));
                 }
 

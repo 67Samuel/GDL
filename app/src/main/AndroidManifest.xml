@@ -9,15 +9,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.GDL">
-
-        <activity android:name=".HomePage">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+        <activity android:name=".HomePage"
+            android:label="Home Page">
         </activity>
-
         <activity
             android:name=".createeventpg.CreateEventMain"
             android:label="@string/createEventPgName">
@@ -25,7 +19,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".HomePage" />
         </activity>
-
         <activity
             android:name=".eventlistpg.EventListActivity"
             android:label="@string/myEventsPgName">
@@ -33,7 +26,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".HomePage" />
         </activity>
-
         <activity
             android:name=".eventdetailspg.EventActivity"
             android:label="@string/eventDetailsPgName">
@@ -41,7 +33,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".eventlistpg.EventListActivity" />
         </activity>
-
         <activity
             android:name=".JoinEventActivity"
             android:label="@string/joinEventPgName">
@@ -49,7 +40,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".HomePage" />
         </activity>
-
         <activity
             android:name=".AddFriendPage"
             android:label="@string/addFriendPgName">
@@ -57,7 +47,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".HomePage" />
         </activity>
-
         <activity
             android:name=".myfriendspg.FriendListPage"
             android:label="@string/myFriendsPgName">
@@ -65,7 +54,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".HomePage" />
         </activity>
-
         <activity
             android:name=".createeventpg.CreateEventSelectMembers"
             android:label="@string/createEventSelectMembersPgName">
@@ -73,13 +61,19 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".createeventpg.CreateEventMain" />
         </activity>
-
         <activity
             android:name=".LoginActivity"
             android:label="@string/loginPgName">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name=".SignInActivity"
+            android:label="Sign-in">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".LoginActivity" />
         </activity>
 
         <meta-data

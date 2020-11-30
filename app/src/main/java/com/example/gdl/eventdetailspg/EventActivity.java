@@ -1,10 +1,8 @@
 package com.example.gdl.eventdetailspg;
 
-import android.app.Activity;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import androidx.viewpager2.adapter.FragmentStateAdapter;
@@ -13,12 +11,11 @@ import androidx.viewpager2.widget.ViewPager2;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.example.gdl.ActivityWithMenu;
+import com.example.gdl.GDLActivity;
 import com.example.gdl.R;
-import com.example.gdl.eventlistpg.EventListFragment;
 import com.google.android.material.tabs.TabLayout;
 
-public class EventActivity extends ActivityWithMenu {
+public class EventActivity extends GDLActivity {
     TabLayout tabLayout;
     ViewPager2 viewPager;
 

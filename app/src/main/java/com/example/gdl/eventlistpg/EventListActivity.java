@@ -4,11 +4,6 @@ package com.example.gdl.eventlistpg;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.TableLayout;
-import android.widget.TableRow;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -19,15 +14,14 @@ import androidx.viewpager2.widget.ViewPager2;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.example.gdl.ActivityWithMenu;
+import com.example.gdl.GDLActivity;
 import com.example.gdl.createeventpg.CreateEventMain;
 import com.example.gdl.JoinEventActivity;
 import com.example.gdl.R;
-import com.example.gdl.eventdetailspg.EventActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 
-public class EventListActivity extends ActivityWithMenu {
+public class EventListActivity extends GDLActivity {
     TabLayout tabLayout;
     ViewPager2 viewPager;
     FloatingActionButton floatingButton_join;

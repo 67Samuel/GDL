@@ -64,36 +64,20 @@ public class LoginActivity extends AppCompatActivity {
         user_pswd = findViewById(R.id.login_pswd);
         user_create_acc = findViewById(R.id.create_account_hyperlink);
 
+        user_create_acc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(LoginActivity.this, "going to sign-in page", Toast.LENGTH_SHORT).show();                startActivity(new Intent(LoginActivity.this, SignInActivity.class));
+            }
+        });
+
         submit_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // TODO: send it to database and check. If authenticated, go to Home Page. If not, stay here and put a Toast saying that pswd/user is wrong
                 startLogIn();
-
-                // Dummy login
-                /*
-                if (userEmail.equals("lzx") && userPswd.equals("lzx")){
-                    Toast authenticated = Toast.makeText(LoginActivity.this, "User Authenticated. Logging in...", Toast.LENGTH_SHORT);
-
-                    loginPreferences = getSharedPreferences(LoginActivity.sharedPrefFile, MODE_PRIVATE);
-                    SharedPreferences.Editor editor = loginPreferences.edit();
-                    editor.putBoolean(loginStatus, true);
-                    editor.apply();
-                    Intent hp = new Intent(LoginActivity.this, HomePage.class);
-                    hp.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(hp);
-                }
-
-                 */
             }
         });
-
-//        user_create_acc.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//            }
-//        });
     }
 
     private void startLogIn() {
