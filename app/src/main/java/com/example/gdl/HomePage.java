@@ -19,25 +19,35 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.AppCompatButton;
 
+//import com.example.gdl.Glide.GlideApp;
+import com.example.gdl.Glide.GlideApp;
 import com.example.gdl.createeventpg.CreateEventMain;
 import com.example.gdl.eventlistpg.EventListActivity;
 import com.example.gdl.myfriendspg.FriendListPage;
 import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.database.snapshot.ChildrenNode;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class HomePage extends GDLActivity {
     public static final String ACTIVITY_TAG = "MainActivity";
@@ -65,6 +75,7 @@ public class HomePage extends GDLActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home_page);
 
+        Log.d(TAG, "onCreate: called");
 
         //set actionbar
         ActionBar actionBar = getSupportActionBar();
@@ -76,24 +87,16 @@ public class HomePage extends GDLActivity {
         mUserEmail = findViewById(R.id.user_email);
         mProfilePic = findViewById(R.id.profile_pic);
         FirebaseUser user = mAuth.getCurrentUser();
-        mUsername.setText((String)user.getDisplayName());
+        //TODO: get and set name from firestore
         mUserEmail.setText((String)user.getEmail());
-        if (user.getPhotoUrl() != null) {
-            Toast.makeText(this, "pic uri: "+user.getPhotoUrl(), Toast.LENGTH_SHORT).show();
-            try {
-                Task<ListResult> taskListResult = storageRef.child("background").listAll();
-                taskListResult.continueWithTask(new Continuation<ListResult, Task<byte[]>>() {
-                                                    @Override
-                                                    public Task<byte[]> then(@NonNull Task<ListResult> task) throws Exception {
-                                                        ListResult listResult = task.getResult();
-                                                        ArrayList<StorageReference> refs = new ArrayList<>(listResult.getItems());
-                                                        StorageReference ref = refs.get(0);
-                                                        return FireBaseUtils.downloadToImageView(HomePage.this, ref, mProfilePic);
-                                                    }
-                });
-            } catch (Exception e) {
-                Log.d(TAG, "pic creation error: "+e);
-            }
+        //TODO: check if user has a profile picture and if so, set it to the imageview using glide
+        if (true) {
+            Log.d(TAG, "onCreate: getting profile pic from storage");
+            StorageReference imageStorageRef = storageRef.child("Profile Images");
+            StorageReference userImageStorageRef = storageRef.child(""); //TODO: get user ID and put as child
+            GlideApp.with(this)
+                    .load(userImageStorageRef)
+                    .into(mProfilePic);
         }
 
         //get stuff from realtime database to display
@@ -102,74 +105,9 @@ public class HomePage extends GDLActivity {
         mAmtToReceive = findViewById(R.id.amt_to_receive);
 
         Uid = user.getUid();
-        //implement listener for debt
-        DatabaseReference userDebtRef = mRootDatabaseRef.child("Users/"+Uid+"/debt");
-        userDebtRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    String value = snapshot.getValue().toString();
-                    if (TextUtils.isEmpty(value)) {
-                        mPendingPaymentsAmt.setText("0");
-                    } else {
-                        mPendingPaymentsAmt.setText(value);
-                        if (value.equals("0")) {
-                            mPendingPaymentsAmt.setTextColor(Color.GREEN);
-                        } else {
-                            mPendingPaymentsAmt.setTextColor(Color.RED);
-                        }
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(HomePage.this, "pending payment retrieval error", Toast.LENGTH_SHORT).show();
-            }
-        });
-        //implement listener for to receive
-        DatabaseReference userLentRef = mRootDatabaseRef.child("Users/"+Uid+"/lent");
-        userLentRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    String value = snapshot.getValue().toString();
-                    if (TextUtils.isEmpty(value)) {
-                        mAmtToReceive.setText("0");
-                    } else {
-                        mAmtToReceive.setText(value);
-                        if (value == "0") {
-                            mAmtToReceive.setTextColor(Color.WHITE);
-                        } else {
-                            mAmtToReceive.setTextColor(Color.GREEN);
-                        }
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(HomePage.this, "amt to receive retrieval error", Toast.LENGTH_SHORT).show();
-            }
-        });
-        //implement listener for num events ongoing
-        DatabaseReference userNumEventsRef = mRootDatabaseRef.child("Users/"+Uid+"/events");
-        userNumEventsRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    mNoEventsOngoing.setText(String.valueOf(snapshot.getChildrenCount()));
-                } else {
-                    mNoEventsOngoing.setText("0");
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(HomePage.this, "num events ongoing retrieval error", Toast.LENGTH_SHORT).show();
-            }
-        });
-
+        //TODO: get debt from firestore
+        //TODO: get lent from firestore
+        //TODO: get num events ongoing from firestore
 
         myEvents = findViewById(R.id.my_events_button);
         myEvents.setOnClickListener(new View.OnClickListener() {

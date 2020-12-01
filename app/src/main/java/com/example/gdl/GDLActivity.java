@@ -21,22 +21,25 @@ import com.example.gdl.myfriendspg.FriendListPage;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.FirebaseFirestore;
 
-public class GDLActivity extends AppCompatActivity {
+ public class GDLActivity extends AppCompatActivity {
     /*
     Additional functionality:
     Menu
     Reference to database root
      */
     public static final String TAG = "ActivityWithMenu";
-    public static DatabaseReference mRootDatabaseRef;
+    //public static DatabaseReference mRootDatabaseRef;
+    public FirebaseFirestore db;
     public FirebaseAuth mAuth;
     public FirebaseAuth.AuthStateListener mAuthListener;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mRootDatabaseRef = FirebaseDatabase.getInstance().getReference(); //get reference to root node
+        db = FirebaseFirestore.getInstance();
+        //mRootDatabaseRef = FirebaseDatabase.getInstance().getReference(); //get reference to root node
         mAuth = FirebaseAuth.getInstance();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override

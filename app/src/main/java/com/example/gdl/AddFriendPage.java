@@ -54,7 +54,7 @@ public class AddFriendPage extends GDLActivity {
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO: query database using the edittext text
+                //TODO: query database using the editText text, get user info
                 //Query getMember = mRootDatabaseRef.child("Users").equalTo(editTextFriendID.getText().toString());
             }
         });

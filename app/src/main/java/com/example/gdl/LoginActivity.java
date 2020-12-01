@@ -32,7 +32,6 @@ public class LoginActivity extends AppCompatActivity {
     TextView user_create_acc;
     SharedPreferences loginPreferences;
 
-    //private boolean LOGGING_IN;
 
     public static final String sharedPrefFile = "com.example.gdl.LoginPageSP";
     public static final String loginStatus = "loginStatus";
@@ -45,8 +44,6 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_page);
-
-        //LOGGING_IN = false;
 
         //database
         mRootDatabaseRef = FirebaseDatabase.getInstance().getReference(); //get reference to root node
