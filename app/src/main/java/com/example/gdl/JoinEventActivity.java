@@ -1,12 +1,8 @@
 package com.example.gdl;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import com.example.gdl.R;
-
 import android.os.Bundle;
 
-public class JoinEventActivity extends ActivityWithMenu {
+public class JoinEventActivity extends GDLActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

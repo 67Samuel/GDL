@@ -15,7 +15,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.ActionBar;
 import androidx.fragment.app.DialogFragment;
 
-import com.example.gdl.ActivityWithMenu;
+import com.example.gdl.GDLActivity;
 import com.example.gdl.R;
 import com.example.gdl.models.Member;
 
@@ -23,7 +23,7 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class CreateEventMain extends ActivityWithMenu implements View.OnClickListener, DatePickerDialog.OnDateSetListener {
+public class CreateEventMain extends GDLActivity implements View.OnClickListener, DatePickerDialog.OnDateSetListener {
 
     private static final String TAG = "CreateEventMain";
 
@@ -31,8 +31,9 @@ public class CreateEventMain extends ActivityWithMenu implements View.OnClickLis
     private static final String sharedPrefFile = "com.example.gdl.createActivityMainSP";
     public static final String EVENT_NAME_KEY = "event name key";
     public static final String EVENT_DATE_KEY = "event date key";
-    private ArrayList<Member> mSelectedMembersList = new ArrayList<>();
+    private ArrayList<Member> mSelectedMembersIdList = new ArrayList<>();
     SharedPreferences mPreferences;
+
 
     //UI components
     EditText mEventNameEditText;
@@ -48,6 +49,7 @@ public class CreateEventMain extends ActivityWithMenu implements View.OnClickLis
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate: called");
         setContentView(R.layout.activity_create_event_main);
+
 
         //set actionbar
         ActionBar actionBar = getSupportActionBar();
@@ -72,12 +74,12 @@ public class CreateEventMain extends ActivityWithMenu implements View.OnClickLis
 
         //get intent from CreateEventSelectedMembers
         Intent selectedMembersIntent = getIntent();
-        mSelectedMembersList = selectedMembersIntent.getParcelableArrayListExtra(CreateEventSelectMembers.SELECTED_MEMBERS_ID_KEY);
+        mSelectedMembersIdList = selectedMembersIntent.getParcelableArrayListExtra(CreateEventSelectMembers.SELECTED_MEMBERS_ID_KEY);
         //sets number for mNumberMembersSelected, try catch block for case where mSelectedMembersList == 0
         try {
-            String formattedNumberSelected = getString(R.string.numberSelected, mSelectedMembersList.size());
+            String formattedNumberSelected = getString(R.string.numberSelected, mSelectedMembersIdList.size());
             mNumberMembersSelected.setText(formattedNumberSelected);
-            Log.d(TAG, "onCreate: mSelectedMembersList=" + mSelectedMembersList);
+            Log.d(TAG, "onCreate: mSelectedMembersList=" + mSelectedMembersIdList);
         } catch (Exception e) {
             String formattedNumberSelected = getString(R.string.numberSelected, 0);
             mNumberMembersSelected.setText(formattedNumberSelected);
@@ -107,10 +109,13 @@ public class CreateEventMain extends ActivityWithMenu implements View.OnClickLis
                 break;
                 //TODO: implicit intent to photo gallery to get photo
             case R.id.create_event_button:
-                Toast.makeText(this, "go to MyEvents", Toast.LENGTH_SHORT).show();
+                if (mSelectedMembersIdList.isEmpty()) {
+                    Toast.makeText(this, "An event must have members!", Toast.LENGTH_SHORT).show();
+                } else {
+
+                }
                 break;
-                //TODO: check if there are any members in the event, if not then toast and return
-                //TODO: if there are, create the specified Event object
+                //TODO: if there are, create the specified Event object with name, date, members id and photo
                 //TODO: go to MyEvents (should auto update the list within MyEvents)
             case R.id.event_date_text_view:
                 DialogFragment datePicker = new com.example.gdl.createeventpg.DatePickerFragment();

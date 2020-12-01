@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "720405022688",
+    "firebase_url": "https://gdlfirebase.firebaseio.com",
+    "project_id": "gdlfirebase",
+    "storage_bucket": "gdlfirebase.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:720405022688:android:5df73274cc369acf220d85",
+        "android_client_info": {
+          "package_name": "com.example.gdl"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "720405022688-kjcoam91c8sji40l9rnfbvromoe1ask3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDUaZM-8MofSYGYtUWXAbsqDcbY5kVNci0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "720405022688-kjcoam91c8sji40l9rnfbvromoe1ask3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

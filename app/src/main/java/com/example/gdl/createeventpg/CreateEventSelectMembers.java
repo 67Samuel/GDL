@@ -1,9 +1,7 @@
 package com.example.gdl.createeventpg;
 
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -15,7 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.example.gdl.ActivityWithMenu;
+import com.example.gdl.GDLActivity;
 import com.example.gdl.R;
 import com.example.gdl.models.Member;
 import com.google.android.material.chip.Chip;
@@ -26,7 +24,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
-public class CreateEventSelectMembers extends ActivityWithMenu implements RecyclerItemSelectedListener {
+public class CreateEventSelectMembers extends GDLActivity implements RecyclerItemSelectedListener {
 
     //TODO: make shared preferences to store previously created ArrayList so that user does not have to re-enter members just to add/remove one
 

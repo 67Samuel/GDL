@@ -38,7 +38,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/montserrat"
                         android:text="Marcus Ho"
-                        android:textColor="@color/darkGreen"
+                        android:textColor="@color/lightGreen"
                         android:textSize="36sp"
                         android:textStyle="bold"/>
 
@@ -47,7 +47,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="marcus_ho@mymail.sutd.edu.sg"
-                        android:textColor="@color/darkGreen"
+                        android:textColor="@color/lightGreen"
                         android:textSize="12sp"
                         android:textStyle="bold"/>
                 </LinearLayout>
@@ -70,7 +70,7 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="bottom">
                     <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/no_of_bills_settled"
+                        android:id="@+id/no_of_events_ongoing"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center"
@@ -79,7 +79,7 @@
                         android:textColor="@color/white"
                         android:textStyle="bold"/>
                     <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/no_of_paid_events"
+                        android:id="@+id/pending_payments_amt"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center"
@@ -88,7 +88,7 @@
                         android:textColor="@color/white"
                         android:textStyle="bold"/>
                     <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/no_of_bills_to_pay_for"
+                        android:id="@+id/amt_to_receive"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center"
@@ -103,30 +103,30 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="top">
                     <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/bills_settled_text"
+                        android:id="@+id/event_ongoing_text"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center"
-                        android:text="Bills Settled"
-                        android:textColor="@color/darkGreen"
+                        android:text="@string/events_ongoing"
+                        android:textColor="@color/lightGreen"
                         android:textSize="12sp"
                         android:fontFamily="@font/montserrat"/>
                     <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/paid_events_text"
+                        android:id="@+id/pending_payments_text"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center"
-                        android:text="Paid Events"
-                        android:textColor="@color/darkGreen"
+                        android:text="@string/pending_payment"
+                        android:textColor="@color/lightGreen"
                         android:textSize="12sp"
                         android:fontFamily="@font/montserrat"/>
                     <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/to_pay_for_text"
+                        android:id="@+id/to_receive_text"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center"
-                        android:text="To Pay for"
-                        android:textColor="@color/darkGreen"
+                        android:text="@string/to_receive"
+                        android:textColor="@color/lightGreen"
                         android:textSize="12sp"
                         android:fontFamily="@font/montserrat"/>
 
