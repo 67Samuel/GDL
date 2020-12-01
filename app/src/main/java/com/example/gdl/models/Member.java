@@ -1,48 +1,46 @@
 package com.example.gdl.models;
 
+import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
-import android.widget.ImageView;
 
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 
 public class Member implements Parcelable {
 
     private static final String TAG = "Member";
 
-    static ArrayList<Member> mAllMembers = new ArrayList<>();
-    static ArrayList<Integer> mIdList = new ArrayList<>();
-    String mName;
-    Integer mId=null;
-    //Integer mPicId;
-    boolean mStatus;
-    double mDebt;
-    double mLent;
-    //TODO: get photo from database and set it to mProfilePhoto
-    ImageView mProfilePhoto; //hard to get this
-    HashMap<Integer, Event> mEvents;
-
-    boolean IN_DEBT = false;
-    boolean NOT_IN_DEBT = true;
+    private String name;
+    private String id;
+    private Uri picId;
+    private double debt;
+    private double lent;
+    private ArrayList<Event> eventsList;
 
     //For use only to calculate amt owed per event   ~Zhixuan
-    double credit = 0.0;
-    double debit = 0.0;
+    private double credit = 0.0;
+    private double debit = 0.0;
+
+    public Member() {
+    }
+
+    public Member(String mName, String mId) {
+        this.name = mName;
+        this.id = mId;
+        this.debt = 0;
+        this.lent = 0;
+    }
 
     protected Member(Parcel in) {
-        mName = in.readString();
-        mId = in.readInt();
-        //mPicId = in.readInt();
-        mStatus = in.readByte() != 0;
-        mDebt = in.readDouble();
-        mLent = in.readDouble();
-        IN_DEBT = in.readByte() != 0;
-        NOT_IN_DEBT = in.readByte() != 0;
+        name = in.readString();
+        id = in.readString();
+        picId = in.readParcelable(Uri.class.getClassLoader());
+        debt = in.readDouble();
+        lent = in.readDouble();
+        eventsList = in.createTypedArrayList(Event.CREATOR);
+        credit = in.readDouble();
+        debit = in.readDouble();
     }
 
     public static final Creator<Member> CREATOR = new Creator<Member>() {
@@ -57,18 +55,68 @@ public class Member implements Parcelable {
         }
     };
 
+    @Override
+    public String toString() {
+        return "Member{" +
+                "Id=" + id +
+                "Name=" + name +
+                '}';
+    }
 
-    public Member(String name, int id) {
-        // create a Member obj with name and first available Id in mIdList
-        //TODO: get all data from database
-        mId = id;
-        mAllMembers.add(this);
-        //Log.d(TAG, "Member: new member added: " + this);
-        mStatus = NOT_IN_DEBT;
-        mDebt = 0;
-        mLent = 0;
-        mName = name;
-        //mPicId = 0;
+    public void setPicId(Uri mPicId) {
+        this.picId = mPicId;
+    }
+
+    public void setDebt(double mDebt) {
+        this.debt = mDebt;
+    }
+
+    public void setLent(double mLent) {
+        this.lent = mLent;
+    }
+
+    public void setEventsList(ArrayList<Event> mEvents) {
+        this.eventsList = mEvents;
+    }
+
+    public void setCredit(double credit) {
+        this.credit = credit;
+    }
+
+    public void setDebit(double debit) {
+        this.debit = debit;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public Uri getPicId() {
+        return picId;
+    }
+
+    public double getDebt() {
+        return debt;
+    }
+
+    public double getLent() {
+        return lent;
+    }
+
+    public ArrayList<Event> getEventsList() {
+        return eventsList;
+    }
+
+    public double getCredit() {
+        return credit;
+    }
+
+    public double getDebit() {
+        return debit;
     }
 
     @Override
@@ -78,42 +126,14 @@ public class Member implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(mName);
-        dest.writeInt(mId);
-        dest.writeByte((byte) (mStatus ? 1 : 0));
-        dest.writeDouble(mDebt);
-        dest.writeDouble(mLent);
-        dest.writeByte((byte) (IN_DEBT ? 1 : 0));
-        dest.writeByte((byte) (NOT_IN_DEBT ? 1 : 0));
+        dest.writeString(name);
+        dest.writeString(id);
+        dest.writeParcelable(picId, flags);
+        dest.writeDouble(debt);
+        dest.writeDouble(lent);
+        dest.writeTypedList(eventsList);
+        dest.writeDouble(credit);
+        dest.writeDouble(debit);
     }
 
-    @Override
-    public String toString() {
-        return "Member{" +
-                "Id=" + mId +
-                "Name=" + mName +
-                '}';
-    }
-
-    public String getName() {
-        return mName;
-    }
-
-    public Integer getId() {
-        return mId;
-    }
-
-    public boolean isStatus() {
-        return mStatus;
-    }
-
-    public double getDebt() {
-        return mDebt;
-    }
-
-    public double getLent() {
-        return mLent;
-    }
-
-    //public Integer getPicId() {return mPicId; }
 }

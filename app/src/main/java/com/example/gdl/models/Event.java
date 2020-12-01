@@ -1,29 +1,49 @@
 package com.example.gdl.models;
 
+import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class Event implements Parcelable {
 
-    //Samuel's attributes
-    private String mStartDate;
-    private String mEventName;
-    private ArrayList<Member> mEventMembers;
-    private ArrayList<Bill> mEventBills;
+    private String id;
+    private String name;
+    private Uri eventPicture = null;
+    private long timeInitialized;
+    private boolean status; //completed=true, ongoing=false
+    private double totalSpent;
+    private ArrayList<Member> membersList;
+    private ArrayList<Bill> billsList;
+    private String date;
 
-    //Zichen's attributes
-    public String eventName;
-    public String eventTime;
-    public String eventSpending;
-    public String eventMembers;
-    public int imageId;
-    public boolean status;
+    public Event() {
+    }
 
-    // Zhixuan's Parcelable implementation
+    public Event(String id, String name, ArrayList<Member> membersList, String date) {
+        this.id = id;
+        this.name = name;
+        this.membersList = membersList;
+        Date date1 = new Date();
+        this.timeInitialized = date1.getTime();
+        this.status = false;
+        this.date = date;
+        this.totalSpent = 0;
+    }
+
+    protected Event(Parcel in) {
+        id = in.readString();
+        name = in.readString();
+        timeInitialized = in.readLong();
+        status = in.readByte() != 0;
+        membersList = in.createTypedArrayList(Member.CREATOR);
+        billsList = in.createTypedArrayList(Bill.CREATOR);
+    }
+
     public static final Creator<Event> CREATOR = new Creator<Event>() {
         @Override
         public Event createFromParcel(Parcel in) {
@@ -36,81 +56,84 @@ public class Event implements Parcelable {
         }
     };
 
-    // Samuel's constructor function
-    public Event(String mStartDate, String mEventName, ArrayList<Member> mEventMembers) {
-        //Samuel's attributes
-        this.mStartDate = mStartDate;
-        this.mEventName = mEventName;
-        this.mEventMembers = mEventMembers;
-    }
-
-    // Zichen's constructor function
-    public Event(String eventName, String eventTime, String eventSpending, String eventMembers, int imageId, boolean status) {
-
-        this.eventName = eventName;
-        this.imageId = imageId;
-        this.eventName = eventName;
-        this.eventTime = eventTime;
-        this.eventSpending = eventSpending;
-        this.eventMembers = eventMembers;
-        this.status = status;
-    }
-
-    protected Event(Parcel in) {
-        mStartDate = in.readString();
-        mEventName = in.readString();
-        mEventMembers = in.createTypedArrayList(Member.CREATOR);
-        mEventBills = in.createTypedArrayList(Bill.CREATOR);
-        eventName = in.readString();
-        eventTime = in.readString();
-        eventSpending = in.readString();
-        eventMembers = in.readString();
-        imageId = in.readInt();
-        status = in.readByte() != 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(mStartDate);
-        dest.writeString(mEventName);
-        dest.writeTypedList(mEventMembers);
-        dest.writeTypedList(mEventBills);
-        dest.writeString(eventName);
-        dest.writeString(eventTime);
-        dest.writeString(eventSpending);
-        dest.writeString(eventMembers);
-        dest.writeInt(imageId);
-        dest.writeByte((byte) (status ? 1 : 0));
-    }
-
     @Override
     public int describeContents() {
         return 0;
     }
 
-    public String getEventName(){
-        return eventName;
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(name);
+        dest.writeLong(timeInitialized);
+        dest.writeByte((byte) (status ? 1 : 0));
+        dest.writeTypedList(membersList);
+        dest.writeTypedList(billsList);
     }
-    public String getEventTime(){
-        return eventTime;
+
+    public void setStatus(boolean status) {
+        this.status = status;
     }
-    public String getEventSpending(){
-        return eventSpending;
+
+    public void setBillsList(ArrayList<Bill> billsList) {
+        this.billsList = billsList;
     }
-    public String getEventMembers(){
-        return eventMembers;
+
+    public void setEventPicture(Uri eventPicture) {
+        this.eventPicture = eventPicture;
     }
-    public int getImageId(){
-        return imageId;
+
+    public String getId() {
+        return id;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public double getTotalSpent() {
+        return totalSpent;
+    }
+
+    public long getTimeInitialized() {
+        return timeInitialized;
+    }
+
     public boolean getStatus() {
         return status;
     }
 
-    // Zhixuan's add-on methods
-    public ArrayList<Bill> getmEventBills() {
-        return mEventBills;
+    public ArrayList<Member> getMembersList() {
+        return membersList;
     }
 
+    public ArrayList<Bill> getBillsList() {
+        return billsList;
+    }
 
+    public Uri getEventPicture() {
+        return eventPicture;
+    }
+
+    @Override
+    public String toString() {
+        return "Event{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", timeInitialized=" + timeInitialized +
+                ", status=" + status +
+                ", membersList=" + membersList +
+                ", billsList=" + billsList +
+                '}';
+    }
+
+    public void calculateTotalSpent() {
+        for (Bill bill : billsList) {
+            totalSpent+=bill.getTotalCost();
+        }
+    }
 }

@@ -44,7 +44,7 @@ public class CreateEventSelectMembers extends GDLActivity implements RecyclerIte
     SharedPreferences mPreferences;
     private static final String sharedPrefFile = "com.example.gdl.createeventpg.CreateEventSelectMembers.preffile";
     public final static String SELECTED_MEMBERS_ID_KEY = "com.example.gdl.CreateEventActivities.selected_members_ids_key";
-    public ArrayList<Integer> mSelectedMembersIds = new ArrayList<>();
+    public ArrayList<String> mSelectedMembersIds = new ArrayList<>();
 
 
     @Override
@@ -76,7 +76,7 @@ public class CreateEventSelectMembers extends GDLActivity implements RecyclerIte
             mSelectedMembersIds.clear();
             Log.d(TAG, "onCreate: clearing mSelectedMembersIds");
             for (String s : membersIdsSet) {
-                onItemSelected(Integer.valueOf(s));
+                onItemSelected(s);
             }
         }
 
@@ -124,20 +124,20 @@ public class CreateEventSelectMembers extends GDLActivity implements RecyclerIte
     }
 
     public void getFakeMembers() {
-        mFakeMembers.add(new Member("sally", 0));
-        mFakeMembers.add(new Member("james", 1));
-        mFakeMembers.add(new Member("dillon", 2));
-        mFakeMembers.add(new Member("rebecca", 3));
-        mFakeMembers.add(new Member("lucy", 4));
-        mFakeMembers.add(new Member("isaac", 5));
-        mFakeMembers.add(new Member("joshua", 6));
-        mFakeMembers.add(new Member("kelly", 7));
-        mFakeMembers.add(new Member("percy", 8));
+        mFakeMembers.add(new Member("sally", "0"));
+        mFakeMembers.add(new Member("james", "1"));
+        mFakeMembers.add(new Member("dillon", "2"));
+        mFakeMembers.add(new Member("rebecca", "3"));
+        mFakeMembers.add(new Member("lucy", "4"));
+        mFakeMembers.add(new Member("isaac", "5"));
+        mFakeMembers.add(new Member("joshua", "6"));
+        mFakeMembers.add(new Member("kelly", "7"));
+        mFakeMembers.add(new Member("percy", "8"));
         Log.d(TAG, "getFakeMembers: fake members made");
     }
 
     @Override
-    public void onItemSelected(Integer id) {
+    public void onItemSelected(String id) {
         if (!mSelectedMembersIds.contains(id)) {
             Log.d(TAG, "onItemSelected: making chip");
             Chip chip = new Chip(this);
@@ -172,7 +172,7 @@ public class CreateEventSelectMembers extends GDLActivity implements RecyclerIte
             int count = mSelectedMembersIds.size();
             if (count > 0) {
                 Set<String> selectedMembersIdsSet = new HashSet<String>();
-                for (Integer i : mSelectedMembersIds) {
+                for (String i : mSelectedMembersIds) {
                     selectedMembersIdsSet.add(String.valueOf(i));
                 }
                 preferencesEditor.putStringSet(SELECTED_MEMBERS_ID_KEY, selectedMembersIdsSet);

@@ -8,7 +8,7 @@ import java.util.Set;
 
 public class BillProcessor {
     private List<Bill> billList;
-    private Map<Integer, Member> memberMasterMap;
+    private Map<String, Member> memberMasterMap;
     private Map<Member, Integer> memberIndexMap;
     private Member[] orderedMemberList;
     private double[][] optimisedComputationalGraph;
@@ -21,7 +21,7 @@ public class BillProcessor {
         this.readBillList();
     }
     BillProcessor(Event event){
-        this.billList = event.getmEventBills();
+        this.billList = event.getBillsList();
         this.readBillList();
     }
 
@@ -34,7 +34,7 @@ public class BillProcessor {
         return this.announcements;
     }
 
-    public Map<Integer, Member> memberMasterMap() {
+    public Map<String, Member> memberMasterMap() {
         return memberMasterMap;
     }
 
@@ -50,7 +50,7 @@ public class BillProcessor {
     }
 
     private void consolidateMembers(){
-        this.memberMasterMap = new HashMap<Integer, Member>();
+        this.memberMasterMap = new HashMap<String, Member>();
 //        for(Bill b : billList){
 //            for(Member m : b.getmMembersList()){
 //                if(!this.memberMasterMap.containsKey(m.mId)){
@@ -60,13 +60,13 @@ public class BillProcessor {
 //        }
         for(int bill = 0; bill < this.billList.size(); bill++){
             Bill b = this.billList.get(bill);
-            List<Member> membersList = b.getmMembersList();
+            List<Member> membersList = b.getMembersList();
             int memberListSize = membersList.size();
 
             for(int member = 0; member < memberListSize; member++){
                 Member m = membersList.get(member);
-                if(!this.memberMasterMap.containsKey(m.mId)){
-                    this.memberMasterMap.put(m.mId, m);
+                if(!this.memberMasterMap.containsKey(m.getId())){
+                    this.memberMasterMap.put(m.getId(), m);
                 }
             }
         }
@@ -92,7 +92,7 @@ public class BillProcessor {
         computationalGraph = new double[len][len];
         for(Bill b : billList){
             Member payer = b.getPayer();
-            Map<Member,Double> billExpensesMap = b.getmExpensesMap();
+            Map<Member,Double> billExpensesMap = b.getExpensesMap();
             Set<Member> billPayees = billExpensesMap.keySet();
             for(Member m : billPayees){
                 computationalGraph[memberIndexMap.get(m)][memberIndexMap.get(payer)] = billExpensesMap.get(m);

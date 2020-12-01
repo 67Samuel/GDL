@@ -52,11 +52,13 @@ public class OverviewFragment extends Fragment {
 
     public void testBills(){
         for(int i=0;i<5;i++){
-            Bill bill = new Bill();
-            bill.setDate("12/01");
-            bill.setName("Go Dutch");
-            Member member = new Member("Peter", 12345);
-            bill.setPayer(member);
+            Member member = new Member("Peter", "12sdf345");
+            Member member1 = new Member("John", "1233adf45");
+            Member member2 = new Member("James", "123s4545");
+            ArrayList<Member> payeeList = new ArrayList<>();
+            payeeList.add(member1);
+            payeeList.add(member2);
+            Bill bill = new Bill("12asd3", "bill"+i, member, payeeList, 100);
             billsList.add(bill);
         }
     }

@@ -23,11 +23,15 @@ import androidx.appcompat.widget.AppCompatButton;
 import com.example.gdl.Glide.GlideApp;
 import com.example.gdl.createeventpg.CreateEventMain;
 import com.example.gdl.eventlistpg.EventListActivity;
+import com.example.gdl.models.Bill;
+import com.example.gdl.models.Event;
+import com.example.gdl.models.Member;
 import com.example.gdl.myfriendspg.FriendListPage;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -75,6 +79,57 @@ public class HomePage extends GDLActivity {
 
         Log.d(TAG, "onCreate: called");
 
+        //test
+        Log.d(TAG, "onCreate: start of test");
+        DocumentReference userRef = db.collection("Users").document(); //creates a doc with unique ID
+        String userId = userRef.getId();
+        Log.d(TAG, "onCreate: test user id: "+userId);
+        Member payer = new Member("payerGuy", userId);
+        DocumentReference userRef1 = db.collection("Users").document(); //creates a doc with unique ID
+        String userId1 = userRef.getId();
+        Member payee1 = new Member("payeeGuy1", userId1);
+        DocumentReference userRef2 = db.collection("Users").document(); //creates a doc with unique ID
+        String userId2 = userRef.getId();
+        Member payee2 = new Member("payeeGuy2", userId2);
+        ArrayList<Member> payeeList = new ArrayList<>();
+        payeeList.add(payee1);
+        payeeList.add(payee2);
+        ArrayList<Member> eventMembersList = new ArrayList<>();
+        eventMembersList.add(payer);
+        eventMembersList.add(payee1);
+        eventMembersList.add(payee2);
+
+        Log.d(TAG, "onCreate: start of bill test");
+        DocumentReference billRef = db.collection("Bills").document(); //creates a doc with unique ID
+        String billId = billRef.getId();
+        Log.d(TAG, "onCreate: bill id: "+billId);
+        Bill bill = new Bill(billId, "Bill1", payer, payeeList, 100);
+        Log.d(TAG, "onCreate: bill before sending to db: "+bill.toString());
+        billRef.set(bill);
+
+        billRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                Bill billFromdb = documentSnapshot.toObject(Bill.class);
+                Log.d(TAG, "onSuccess: bill returned from db: "+billFromdb.toString());
+            }
+        });
+
+        DocumentReference eventRef = db.collection("Events").document(); //creates a doc with unique ID
+        String eventId = eventRef.getId();
+        Event event = new Event(eventId, "event1", eventMembersList, "1/12/2020");
+        Log.d(TAG, "onCreate: event before sending to db: "+event.toString());
+        eventRef.set(event);
+
+        eventRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                Event eventFromdb = documentSnapshot.toObject(Event.class);
+                Log.d(TAG, "onSuccess: event returned from db: "+eventFromdb.toString());
+            }
+        });
+        //test
+
         //set actionbar
         ActionBar actionBar = getSupportActionBar();
         assert actionBar != null;
@@ -84,25 +139,20 @@ public class HomePage extends GDLActivity {
         mUsername = findViewById(R.id.username);
         mUserEmail = findViewById(R.id.user_email);
         mProfilePic = findViewById(R.id.profile_pic);
-        FirebaseUser user = mAuth.getCurrentUser();
         //TODO: get and set name from firestore
         mUserEmail.setText((String)user.getEmail());
-        //TODO: check if user has a profile picture and if so, set it to the imageview using glide
-        if (true) {
-            Log.d(TAG, "onCreate: getting profile pic from storage");
-            try {
-                StorageReference imageStorageRef = storageRef.child("Profile Images");
-                Log.d(TAG, "onCreate: uid: "+user.getUid());
-                StorageReference userImageStorageRef = imageStorageRef.child(user.getUid()+".jpg"); //TODO: get user ID and put as child
-                GlideApp.with(this)
-                        .load(userImageStorageRef)
-                        .into(mProfilePic);
-            } catch (Exception e) {
-                Log.d(TAG, "onCreate: error getting profile pic: "+e);
-            }
+        Log.d(TAG, "onCreate: getting profile pic from storage");
+        try {
+            StorageReference imageStorageRef = storageRef.child("Profile Images");
+            Log.d(TAG, "onCreate: uid: "+user.getUid());
+            StorageReference userImageStorageRef = imageStorageRef.child(user.getUid()+".jpg");
+            GlideApp.with(this)
+                    .load(userImageStorageRef)
+                    .into(mProfilePic);
+        } catch (Exception e) {
+            Log.d(TAG, "onCreate: error getting profile pic: "+e);
         }
 
-        //get stuff from realtime database to display
         mNoEventsOngoing = findViewById(R.id.no_of_events_ongoing);
         mPendingPaymentsAmt = findViewById(R.id.pending_payments_amt);
         mAmtToReceive = findViewById(R.id.amt_to_receive);

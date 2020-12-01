@@ -19,6 +19,7 @@ import com.example.gdl.eventdetailspg.EventActivity;
 import com.example.gdl.eventlistpg.EventAdapter;
 import com.example.gdl.models.Event;
 import com.example.gdl.R;
+import com.example.gdl.models.Member;
 
 public class EventListFragment extends Fragment {
 
@@ -43,7 +44,7 @@ public class EventListFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Event event=EventList.get(position);
-                Toast.makeText(getContext(), event.getEventName(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), event.getName(), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -67,9 +68,14 @@ public class EventListFragment extends Fragment {
 
     public void testEvents(){
         for(int i=0;i<5;i++){
-            Event a=new Event("Event a", "07/11/2020", "20", "3", R.drawable.ashketchum, true);
+            Member testMember1 = new Member("payeeGuy1", "g2g345");
+            Member testMember2 = new Member("payeeGuy1", "nb23g4h5");
+            ArrayList<Member> testMemberList = new ArrayList<>();
+            testMemberList.add(testMember1);
+            testMemberList.add(testMember2);
+            Event a=new Event("12fv3j6g4", "testEvent1", testMemberList, "date1");
             EventList.add(a);
-            Event b=new Event("Event b", "08/11/2020", "15", "4", R.drawable.ashketchum, false);
+            Event b=new Event("12ff2v3g4", "testEvent2", testMemberList, "date2");
             EventList.add(b);
         }
     }

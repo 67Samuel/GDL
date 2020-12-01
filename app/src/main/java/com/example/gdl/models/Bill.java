@@ -1,26 +1,41 @@
 package com.example.gdl.models;
 
+import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import androidx.annotation.NonNull;
-
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class Bill implements Parcelable {
 
-    int mId;
-    String mName;
-    String mDate;
-    //photo
-    Member mPayer;
-    List<Member> mMembersList = new ArrayList<>(); //members who are splitting this bill, including payer
-    Map<Member, Double> mExpensesMap = new HashMap<>(); //members and how much they owe, doesn't include payer
-    int memberSize = 0;
-    double spending = 0.0;
+    private String id;
+    private String name;
+    private long timeInitialized;
+    private Uri receiptPicture = null;
+    private Member payer;
+    private List<Member> membersList; //members who are splitting this bill, including payer
+    private Map<Member, Double> expensesMap; //members and how much they owe, doesn't include payer
+    private int memberSize = 0;
+    private double totalCost = 0.0;
+
+    public Bill() {
+    }
+
+    public Bill(String mId, String mName, Member mPayer, List<Member> mMembersList, double totalCost) {
+        this.id = mId;
+        this.name = mName;
+        Date date = new Date();
+        this.timeInitialized = date.getTime();
+        this.payer = mPayer;
+        this.membersList = mMembersList;
+        this.totalCost = totalCost;
+
+        memberSize = mMembersList.size();
+    }
+
     public static final Creator<Bill> CREATOR = new Creator<Bill>() {
         @Override
         public Bill createFromParcel(Parcel in) {
@@ -33,36 +48,65 @@ public class Bill implements Parcelable {
         }
     };
 
-    public Bill() {
-    }
-
-    public Bill(String name, String date, double cost, Member payer){
-        this.mName = name;
-        this.mDate = date;
-        this.spending = cost;
-        this.mPayer = payer;
-
-    }
-
     protected Bill(Parcel in) {
-        mId = in.readInt();
-        mName = in.readString();
-        mDate = in.readString();
-        mPayer = in.readParcelable(Member.class.getClassLoader());
-        mMembersList = in.createTypedArrayList(Member.CREATOR);
+        id = in.readString();
+        name = in.readString();
+        timeInitialized = in.readInt();
+        receiptPicture = in.readParcelable(Uri.class.getClassLoader());
+        payer = in.readParcelable(Member.class.getClassLoader());
+        membersList = in.createTypedArrayList(Member.CREATOR);
         memberSize = in.readInt();
-        spending = in.readDouble();
+        totalCost = in.readDouble();
     }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(mId);
-        dest.writeString(mName);
-        dest.writeString(mDate);
-        dest.writeParcelable(mPayer, flags);
-        dest.writeTypedList(mMembersList);
-        dest.writeInt(memberSize);
-        dest.writeDouble(spending);
+    public void setReceiptPicture(Uri mReceiptPicture) {
+        this.receiptPicture = mReceiptPicture;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public long getTimeInitialized() {
+        return timeInitialized;
+    }
+
+    public Uri getReceiptPicture() {
+        return receiptPicture;
+    }
+
+    public Member getPayer() {
+        return payer;
+    }
+
+    public List<Member> getMembersList() {
+        return membersList;
+    }
+
+    public Map<Member, Double> getExpensesMap() {
+        return expensesMap;
+    }
+
+    public int getMemberSize() {
+        return memberSize;
+    }
+
+    public double getTotalCost() {
+        return totalCost;
+    }
+
+    public void calculateSplit() {
+        double amtEachPerson = this.totalCost / this.getMemberSize();
+        this.expensesMap = new HashMap<>();
+        for(Member m : this.membersList){
+            if(!m.equals(this.payer)) {
+                this.expensesMap.put(m, amtEachPerson);
+            }
+        }
     }
 
     @Override
@@ -70,81 +114,30 @@ public class Bill implements Parcelable {
         return 0;
     }
 
-
-
-    public int getmId() {
-        return mId;
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(name);
+        dest.writeLong(timeInitialized);
+        dest.writeParcelable(receiptPicture, flags);
+        dest.writeParcelable(payer, flags);
+        dest.writeTypedList(membersList);
+        dest.writeInt(memberSize);
+        dest.writeDouble(totalCost);
     }
 
-    public void setmId(int mId) {
-        this.mId = mId;
-    }
-
-    public String getName() {
-        return mName;
-    }
-
-    public void setName(String mName) {
-        this.mName = mName;
-    }
-
-    public String getDate() {
-        return mDate;
-    }
-
-    public void setDate(String mDate) {
-        this.mDate = mDate;
-    }
-
-    public Member getPayer() {
-        return mPayer;
-    }
-
-    public void setPayer(Member mPayer) {
-        this.mPayer = mPayer;
-    }
-
-    public void addMember(Member member) {
-        mMembersList.add(member);
-    }
-
-    public void removeMember(Member member) {
-        mMembersList.remove(member);
-    }
-
-    public int getMemberSize(){
-        return mMembersList.size();
-    }
-
-    public double getSpending(){
-        return spending;
-    }
-
-    public List<Member> getmMembersList() {
-        return mMembersList;
-    }
-
-    public void setmMembersList(List<Member> mMembersList) {
-        this.mMembersList = mMembersList;
-    }
-
-    public Map<Member, Double> getmExpensesMap() {
-        return mExpensesMap;
-    }
-
-    public void calculateSplit() {
-        double amtEachPerson = this.spending / this.getMemberSize();
-        this.mExpensesMap = new HashMap<>();
-        for(Member m : this.mMembersList){
-            if(!m.equals(this.mPayer)) {
-                this.mExpensesMap.put(m, amtEachPerson);
-            }
-        }
-    }
-
-    @NonNull
     @Override
     public String toString() {
-        return "Bill(" + mName + ", " + spending + ")";
+        return "Bill{" +
+                "Id='" + id + '\'' +
+                ", Name='" + name + '\'' +
+                ", TimeInitialized=" + timeInitialized +
+                ", ReceiptPicture=" + receiptPicture +
+                ", Payer=" + payer +
+                ", MembersList=" + membersList +
+                ", ExpensesMap=" + expensesMap +
+                ", memberSize=" + memberSize +
+                ", totalCost=" + totalCost +
+                '}';
     }
 }
