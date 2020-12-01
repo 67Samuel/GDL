@@ -43,7 +43,7 @@ public class GDLActivity extends AppCompatActivity {
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
 
                 if (firebaseAuth.getCurrentUser() == null) {
-                    Toast.makeText(GDLActivity.this, "Sign-in successful", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(GDLActivity.this, "Log out successful", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(GDLActivity.this, LoginActivity.class));
                 }
 
