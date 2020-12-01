@@ -30,6 +30,10 @@ public class Member implements Parcelable {
     boolean IN_DEBT = false;
     boolean NOT_IN_DEBT = true;
 
+    //For use only to calculate amt owed per event   ~Zhixuan
+    double credit = 0.0;
+    double debit = 0.0;
+
     protected Member(Parcel in) {
         mName = in.readString();
         mId = in.readInt();
@@ -59,7 +63,7 @@ public class Member implements Parcelable {
         //TODO: get all data from database
         mId = id;
         mAllMembers.add(this);
-        Log.d(TAG, "Member: new member added: " + this);
+        //Log.d(TAG, "Member: new member added: " + this);
         mStatus = NOT_IN_DEBT;
         mDebt = 0;
         mLent = 0;
