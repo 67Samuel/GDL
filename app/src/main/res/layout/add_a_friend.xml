@@ -11,53 +11,55 @@
     <ImageView
         android:id="@+id/imageView2"
         android:layout_width="414dp"
-        android:layout_height="103dp"
+        android:layout_height="40dp"
         android:scaleX="4"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:contentDescription="TODO" />
 
 
-    <ImageView
+    <FrameLayout
         android:id="@+id/imageView3"
-        android:layout_width="187dp"
-        android:layout_height="86dp"
+        android:layout_width="300dp"
+        android:layout_height="110dp"
         android:layout_marginTop="44dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView2"
-        app:srcCompat="@color/buttonGreen" />
+        android:background="@color/buttonGreen">
 
-    <TextView
-        android:id="@+id/personalIDNumber"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="52dp"
-        android:layout_marginLeft="52dp"
-        android:text="000123"
-        android:textSize="24sp"
-        app:layout_constraintStart_toStartOf="@+id/imageView3"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="104dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/user_id_text_view"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@+id/imageView3"
+            app:layout_constraintTop_toTopOf="@+id/imageView3" />
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="52dp"
-        android:layout_marginLeft="52dp"
-        android:layout_marginTop="8dp"
-        android:text="Your ID:"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@+id/imageView3"
-        app:layout_constraintTop_toTopOf="@+id/imageView3" />
+        <TextView
+            android:id="@+id/personalIDNumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="41dp"
+            android:layout_marginHorizontal="10dp"
+            android:text="@string/user_id_text"
+            android:gravity="center_horizontal"
+            android:textSize="24sp"
+            android:textColor="@color/black"/>
+
+    </FrameLayout>
 
     <TextView
         android:id="@+id/textView6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="28dp"
-        android:text="Search for a friend using their ID"
+        android:text="@string/search_for_a_friend_using_their_id"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -66,13 +68,13 @@
     <ImageView
         android:id="@+id/imageView4"
         android:layout_width="185dp"
-        android:layout_height="39dp"
+        android:layout_height="40dp"
         android:layout_marginStart="116dp"
-        android:layout_marginLeft="116dp"
         android:layout_marginTop="16dp"
+        android:background="@color/darkGreen"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView6"
-        app:srcCompat="@color/design_default_color_secondary" />
+        app:srcCompat="@color/design_default_color_secondary"/>
 
     <EditText
         android:id="@+id/editTextFriendID"
@@ -82,11 +84,13 @@
         android:layout_marginTop="16dp"
         android:ems="10"
         android:gravity="center"
-        android:inputType="number"
+        android:hint="friend's ID"
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView6" />
+
+
 
     <ImageView
         android:id="@+id/imageView5"
@@ -103,7 +107,6 @@
         android:layout_width="80dp"
         android:layout_height="73dp"
         android:layout_marginStart="24dp"
-        android:layout_marginLeft="24dp"
         android:layout_marginTop="16dp"
         app:layout_constraintStart_toStartOf="@+id/imageView5"
         app:layout_constraintTop_toTopOf="@+id/imageView5"
@@ -114,9 +117,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="112dp"
-        android:layout_marginLeft="112dp"
         android:layout_marginTop="40dp"
-        android:text="Insert Friend Name"
+        android:text="@string/insert_friend_name"
         android:textSize="24sp"
         app:layout_constraintStart_toStartOf="@+id/imageView5"
         app:layout_constraintTop_toTopOf="@+id/imageView5" />

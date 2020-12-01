@@ -102,20 +102,22 @@ public class HomePage extends GDLActivity {
         mAmtToReceive = findViewById(R.id.amt_to_receive);
 
         Uid = user.getUid();
-        //TODO: implement listener for debt
+        //implement listener for debt
         DatabaseReference userDebtRef = mRootDatabaseRef.child("Users/"+Uid+"/debt");
         userDebtRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String value = snapshot.getValue(String.class);
-                if (TextUtils.isEmpty(value)) {
-                    mPendingPaymentsAmt.setText("0");
-                } else {
-                    mPendingPaymentsAmt.setText(value);
-                    if (value.equals("0")) {
-                        mPendingPaymentsAmt.setTextColor(Color.GREEN);
+                if (snapshot.exists()) {
+                    String value = snapshot.getValue().toString();
+                    if (TextUtils.isEmpty(value)) {
+                        mPendingPaymentsAmt.setText("0");
                     } else {
-                        mPendingPaymentsAmt.setTextColor(Color.RED);
+                        mPendingPaymentsAmt.setText(value);
+                        if (value.equals("0")) {
+                            mPendingPaymentsAmt.setTextColor(Color.GREEN);
+                        } else {
+                            mPendingPaymentsAmt.setTextColor(Color.RED);
+                        }
                     }
                 }
             }
@@ -125,20 +127,22 @@ public class HomePage extends GDLActivity {
                 Toast.makeText(HomePage.this, "pending payment retrieval error", Toast.LENGTH_SHORT).show();
             }
         });
-        //TODO: implement listener for to receive
+        //implement listener for to receive
         DatabaseReference userLentRef = mRootDatabaseRef.child("Users/"+Uid+"/lent");
         userLentRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String value = snapshot.getValue(String.class);
-                if (TextUtils.isEmpty(value)) {
-                    mAmtToReceive.setText("0");
-                } else {
-                    mAmtToReceive.setText(value);
-                    if (value == "0") {
-                        mAmtToReceive.setTextColor(Color.WHITE);
+                if (snapshot.exists()) {
+                    String value = snapshot.getValue().toString();
+                    if (TextUtils.isEmpty(value)) {
+                        mAmtToReceive.setText("0");
                     } else {
-                        mAmtToReceive.setTextColor(Color.GREEN);
+                        mAmtToReceive.setText(value);
+                        if (value == "0") {
+                            mAmtToReceive.setTextColor(Color.WHITE);
+                        } else {
+                            mAmtToReceive.setTextColor(Color.GREEN);
+                        }
                     }
                 }
             }
@@ -148,12 +152,16 @@ public class HomePage extends GDLActivity {
                 Toast.makeText(HomePage.this, "amt to receive retrieval error", Toast.LENGTH_SHORT).show();
             }
         });
-        //TODO: implement listener for num events ongoing
+        //implement listener for num events ongoing
         DatabaseReference userNumEventsRef = mRootDatabaseRef.child("Users/"+Uid+"/events");
         userNumEventsRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                mNoEventsOngoing.setText(String.valueOf(snapshot.getChildrenCount()));
+                if (snapshot.exists()) {
+                    mNoEventsOngoing.setText(String.valueOf(snapshot.getChildrenCount()));
+                } else {
+                    mNoEventsOngoing.setText("0");
+                }
             }
 
             @Override
@@ -161,8 +169,6 @@ public class HomePage extends GDLActivity {
                 Toast.makeText(HomePage.this, "num events ongoing retrieval error", Toast.LENGTH_SHORT).show();
             }
         });
-
-
 
 
         myEvents = findViewById(R.id.my_events_button);
@@ -189,7 +195,7 @@ public class HomePage extends GDLActivity {
         pendingPayments.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast pendingPaymentsPg = Toast.makeText(HomePage.this, "Go to pendingpayments", Toast.LENGTH_SHORT);
+                Toast pendingPaymentsPg = Toast.makeText(HomePage.this, "Go to pending payments", Toast.LENGTH_SHORT);
                 pendingPaymentsPg.show();
             }
         });

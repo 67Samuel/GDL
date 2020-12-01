@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -22,10 +23,21 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.IOException;
+import java.security.PrivateKey;
+import java.util.Date;
+import java.util.concurrent.CountDownLatch;
 
 public class SignInActivity extends AppCompatActivity {
 
@@ -36,13 +48,19 @@ public class SignInActivity extends AppCompatActivity {
     EditText mPassword;
     Button mSaveButton;
     Button mSetPic;
-    ImageView mPicPreview;
+    CropImageView mPicPreview;
 
     private Uri pic_uri;
+    private String downloadUrl;
 
     private final int REQUEST_IMAGE_GET = 123;
+    private boolean GET_PROFILE_PICTURE = false;
 
     private FirebaseAuth mAuth;
+    public static DatabaseReference mUsersDatabaseRef;
+    private StorageReference mUserProfileImageRef;
+
+    private FirebaseUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,9 +72,12 @@ public class SignInActivity extends AppCompatActivity {
         mPassword = findViewById(R.id.sign_in_password);
         mSaveButton = findViewById(R.id.sign_in_save_button);
         mSetPic = findViewById(R.id.sign_in_set_profile_photo_button);
-        mPicPreview = findViewById(R.id.sign_in_pic_preview);
+        mPicPreview = findViewById(R.id.cropImageView);
 
+        //database stuff
         mAuth = FirebaseAuth.getInstance();
+        mUsersDatabaseRef = FirebaseDatabase.getInstance().getReferenceFromUrl("https://gdlfirebase.firebaseio.com/Users");
+        mUserProfileImageRef = FirebaseStorage.getInstance().getReference().child("Profile Images");
 
         mSaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,14 +86,13 @@ public class SignInActivity extends AppCompatActivity {
             }
         });
 
-        mSetPic.setOnClickListener(new View.OnClickListener(){
+        mSetPic.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.setType("image/*");
-                if (intent.resolveActivity(getPackageManager()) != null) {
-                    startActivityForResult(intent, REQUEST_IMAGE_GET);
-                }
+            public void onClick(View v) {
+                //GET_PROFILE_PICTURE = true;
+                Log.d(TAG, "onComplete: GETTING PROFILE PICTURE");
+                CropImage.activity().setGuidelines(CropImageView.Guidelines.ON).setAspectRatio(1,1).start(SignInActivity.this);
+                //startSignIn();
             }
         });
     }
@@ -86,30 +106,71 @@ public class SignInActivity extends AppCompatActivity {
         if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password) || TextUtils.isEmpty(username)) {
             Toast.makeText(this, "Fields are empty", Toast.LENGTH_SHORT).show();
         } else {
-            mAuth.createUserWithEmailAndPassword(email, password)
+            mAuth.createUserWithEmailAndPassword(email, password) //once this is called, the code moves on sequentially while this runs in the background (its fkin weird)
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
-                            //TODO: give a loading toast and make thread sleep for a bit until name can update
+                            //TODO: if user cancels anything in this process, then remove the user
                             if (task.isSuccessful()) {
                                 // Sign in success, update UI with the signed-in user's information
                                 Log.d(TAG, "createUserWithEmail:success");
-                                FirebaseUser user = mAuth.getCurrentUser();
-                                Log.d(TAG, "username: "+username);
+
+                                user = mAuth.getCurrentUser();
+                                //if (GET_PROFILE_PICTURE) {
+                                    //Log.d(TAG, "onComplete: GETTING PROFILE PICTURE");
+                                    //CropImage.activity().setGuidelines(CropImageView.Guidelines.ON).setAspectRatio(1,1).start(SignInActivity.this);
+                                //}
+
                                 user.updateProfile(new UserProfileChangeRequest.Builder().setDisplayName(username).build());
-                                if (pic_uri != null) {
+                                if (downloadUrl != null) {
                                     try {
-                                        Log.d(TAG, "pic url: " + pic_uri);
-                                        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-                                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(SignInActivity.this.getContentResolver(), pic_uri);
-                                        FireBaseUtils.uploadImageToStorage(SignInActivity.this, storageRef, bitmap);
+                                        StorageReference filePath = mUserProfileImageRef.child(user.getUid() + ".jpg");
+                                        filePath.putFile(pic_uri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                                                                                            @Override
+                                                                                            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                                                                                                if (task.isSuccessful()) {
+                                                                                                    Log.d(TAG, "onComplete: Profile Image stored to firebase storage");
+                                                                                                    downloadUrl = task.getResult().getMetadata().getReference().getDownloadUrl().toString();
+                                                                                                    mUsersDatabaseRef.child(user.getUid());
+                                                                                                    DatabaseReference mCurrentUserRef = mUsersDatabaseRef.child(user.getUid());
+                                                                                                    mCurrentUserRef.child("profile picture").setValue(downloadUrl);
+                                                                                                    Log.d(TAG, "onComplete: Profile Image stored to firebase database");
+                                                                                                }
+                                                                                            }
+                                                                                        });
+                                        //Log.d(TAG, "pic uri: " + pic_uri);
                                         user.updateProfile(new UserProfileChangeRequest.Builder().setPhotoUri(pic_uri).build());
-                                    } catch (IOException e) {
-                                        Toast.makeText(SignInActivity.this, "io error", Toast.LENGTH_LONG);
+                                    } catch (Exception e) {
+                                        Log.d(TAG, "onComplete: "+e);
                                     }
                                 }
                                 Log.d(TAG, "User added: name = "+user.getDisplayName()+", email = "+user.getEmail()+
                                                 ", photoUrl = "+user.getPhotoUrl()+", uid = "+user.getUid());
+
+                                //wait for user profile to update
+                                Date date = new Date();
+                                long startTime = date.getTime();
+                                long endTime;
+                                while (user.getDisplayName() == null || user.getEmail() == null) {
+                                    endTime = date.getTime();
+                                    if (endTime-startTime>10000) {
+                                        Log.d(TAG, "error: updating profile took too long (10s)");
+                                        break;
+                                    }
+                                }
+
+                                //create user profile in realtime database
+                                mUsersDatabaseRef.child(user.getUid());
+                                DatabaseReference mCurrentUserRef = mUsersDatabaseRef.child(user.getUid());
+                                mCurrentUserRef.child("name").setValue(user.getDisplayName());
+                                mCurrentUserRef.child("email").setValue(user.getEmail());
+                                mCurrentUserRef.child("lent").setValue(0);
+                                mCurrentUserRef.child("debt").setValue(0);
+                                //friends and events will come after some are added
+
+                                Intent intent = new Intent(SignInActivity.this, LoginActivity.class);
+                                startActivity(intent);
+
                             } else {
                                 // If sign in fails, display a message to the user.
                                 Log.w(TAG, "createUserWithEmail:failure", task.getException());
@@ -124,12 +185,30 @@ public class SignInActivity extends AppCompatActivity {
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_IMAGE_GET && resultCode == RESULT_OK) {
-            pic_uri = data.getData();
-            Toast.makeText(this, "pic received", Toast.LENGTH_SHORT).show();
-            mPicPreview.setImageURI(pic_uri);
-        } else {
-            Toast.makeText(SignInActivity.this, "file not found", Toast.LENGTH_LONG);
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == RESULT_OK) {
+                pic_uri = result.getUri();
+                Toast.makeText(this, "photo uri obtained", Toast.LENGTH_SHORT).show();
+                //StorageReference filePath = mUserProfileImageRef.child(user.getUid() + ".jpg");
+                //filePath.putFile(pic_uri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                    //@Override
+                    //public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                        //if (task.isSuccessful()) {
+                            //Log.d(TAG, "onComplete: Profile Image stored to firebase storage");
+                            //downloadUrl = task.getResult().getMetadata().getReference().getDownloadUrl().toString(); //to be stored in database
+                            //mUsersDatabaseRef.child(user.getUid());
+                            //DatabaseReference mCurrentUserRef = mUsersDatabaseRef.child(user.getUid());
+                            //mCurrentUserRef.child("profile picture").setValue(downloadUrl);
+                            //Log.d(TAG, "onComplete: Profile Image stored to firebase database");
+                            //Intent intent = new Intent(SignInActivity.this, LoginActivity.class);
+                            //startActivity(intent);
+                        //}
+                    //}
+                //});
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Exception error = result.getError();
+            }
         }
 
     }
