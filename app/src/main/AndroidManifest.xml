@@ -65,6 +65,10 @@
                 android:value=".createeventpg.CreateEventMain" />
         </activity>
         <activity
+            android:name=".addbillspg.AddBillActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+
+        <activity
             android:name=".LoginActivity"
             android:label="@string/loginPgName">
             <intent-filter>

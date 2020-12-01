@@ -97,7 +97,7 @@
                 android:paddingTop="2dp"
                 android:paddingRight="4dp"
                 android:paddingBottom="2dp"
-                android:text="AddBill"
+                android:text="Details"
                 android:textSize="14sp" />
         </LinearLayout>
 

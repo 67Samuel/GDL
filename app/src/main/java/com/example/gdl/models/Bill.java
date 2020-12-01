@@ -1,23 +1,84 @@
 package com.example.gdl.models;
 
-import java.lang.reflect.Array;
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import androidx.annotation.NonNull;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-public class Bill {
+public class Bill implements Parcelable {
 
     int mId;
     String mName;
     String mDate;
+    //photo
     Member mPayer;
-    ArrayList<Member> mMembersList; //members who are splitting this bill
-    HashMap<Member, Double> mExpensesMap; //members and how much they owe
-    HashMap<Item, ArrayList<Member>> mItemsList; //items to pay for in bill
-
+    List<Member> mMembersList = new ArrayList<>(); //members who are splitting this bill, including payer
+    Map<Member, Double> mExpensesMap = new HashMap<>(); //members and how much they owe, doesn't include payer
     int memberSize = 0;
     double spending = 0.0;
+    public static final Creator<Bill> CREATOR = new Creator<Bill>() {
+        @Override
+        public Bill createFromParcel(Parcel in) {
+            return new Bill(in);
+        }
+
+        @Override
+        public Bill[] newArray(int size) {
+            return new Bill[size];
+        }
+    };
+
+    public Bill() {
+    }
+
+    public Bill(String name, String date, double cost, Member payer){
+        this.mName = name;
+        this.mDate = date;
+        this.spending = cost;
+        this.mPayer = payer;
+
+    }
+
+    protected Bill(Parcel in) {
+        mId = in.readInt();
+        mName = in.readString();
+        mDate = in.readString();
+        mPayer = in.readParcelable(Member.class.getClassLoader());
+        mMembersList = in.createTypedArrayList(Member.CREATOR);
+        memberSize = in.readInt();
+        spending = in.readDouble();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(mId);
+        dest.writeString(mName);
+        dest.writeString(mDate);
+        dest.writeParcelable(mPayer, flags);
+        dest.writeTypedList(mMembersList);
+        dest.writeInt(memberSize);
+        dest.writeDouble(spending);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
 
 
+
+    public int getmId() {
+        return mId;
+    }
+
+    public void setmId(int mId) {
+        this.mId = mId;
+    }
 
     public String getName() {
         return mName;
@@ -43,50 +104,47 @@ public class Bill {
         this.mPayer = mPayer;
     }
 
-    public Bill() {
-        mMembersList = new ArrayList<Member>();
-        mExpensesMap= new HashMap<Member, Double>();
-        mItemsList = new HashMap<Item, ArrayList<Member>>();
-    }
-
     public void addMember(Member member) {
         mMembersList.add(member);
-        memberSize++;
     }
 
-    public void addItem(Item item) {
-        //default: all members are splitting this item
-        mItemsList.put(item, mMembersList);
-        spending = spending + item.mCost;
+    public void removeMember(Member member) {
+        mMembersList.remove(member);
     }
 
-    public void addItem(Item item, ArrayList<Member> membersList) {
-        //specify which members are splitting this item
-        mItemsList.put(item, membersList);
-    }
-
-    public int memberSize(){
-        return memberSize;
+    public int getMemberSize(){
+        return mMembersList.size();
     }
 
     public double getSpending(){
         return spending;
     }
 
-
-    private void calculateSplit() {
-        //call all items in this bill, calculate itemExpensesMap for each of them and aggregate into mExpensesMap
-        HashMap<Member, Double> itemExpensesMap;
-        for (Item item : mItemsList.keySet()) {
-            itemExpensesMap = item.splitExpense(); //get expenseMap from each item
-            for (Member member : itemExpensesMap.keySet()) {
-                Double itemValue = itemExpensesMap.get(member);
-                if (mExpensesMap.containsKey(member)) {
-                    mExpensesMap.put(member, mExpensesMap.get(member)+itemValue); //update each member's expense for each item
-                }
-            }
-        }
-
+    public List<Member> getmMembersList() {
+        return mMembersList;
     }
 
+    public void setmMembersList(List<Member> mMembersList) {
+        this.mMembersList = mMembersList;
+    }
+
+    public Map<Member, Double> getmExpensesMap() {
+        return mExpensesMap;
+    }
+
+    public void calculateSplit() {
+        double amtEachPerson = this.spending / this.getMemberSize();
+        this.mExpensesMap = new HashMap<>();
+        for(Member m : this.mMembersList){
+            if(!m.equals(this.mPayer)) {
+                this.mExpensesMap.put(m, amtEachPerson);
+            }
+        }
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "Bill(" + mName + ", " + spending + ")";
+    }
 }

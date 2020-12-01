@@ -11,4 +11,10 @@
     <color name="lightGreen">#03A762</color>
     <color name="darkGreen">#004E2D</color>
     <color name="lightGrey">#0D000000</color>
+
+
+<!--    addbill pg-->
+    <color name="colorPrimary">#6200EE</color>
+    <color name="colorPrimaryDark">#3700B3</color>
+    <color name="colorAccent">#03DAC5</color>
 </resources>
