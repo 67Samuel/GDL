@@ -70,7 +70,7 @@ public class BillsAdapter extends ArrayAdapter<Bill> {
 
         viewHolder.billsName.setText(bill.getName());
         viewHolder.billsPayer.setText("Paid by: "+bill.getPayer().getName());
-        viewHolder.billsMembers.setText("Members: "+bill.memberSize());
+        viewHolder.billsMembers.setText("Members: "+bill.getMemberSize());
         viewHolder.billsSpending.setText("Total Spending: "+bill.getSpending());
 
         //TODO: find a way to judge the status of bill
