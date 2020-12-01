@@ -1,5 +1,6 @@
 package com.example.gdl.models;
 
+
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
@@ -15,34 +16,25 @@ public class Member implements Parcelable {
 
     private static final String TAG = "Member";
 
-    static ArrayList<Member> mAllMembers = new ArrayList<>();
-    static ArrayList<Integer> mIdList = new ArrayList<>();
-    String mName;
-    Integer mId=null;
-    //Integer mPicId;
-    boolean mStatus;
-    double mDebt;
-    double mLent;
-    //TODO: get photo from database and set it to mProfilePhoto
-    ImageView mProfilePhoto; //hard to get this
-    HashMap<Integer, Event> mEvents;
+    private String id;
+    private String name;
+    private String email;
+    private String status;
+    private double debt;
+    private double lent;
+    private List<String> events;
+    private List<String> friends;
 
-    boolean IN_DEBT = false;
-    boolean NOT_IN_DEBT = true;
-
-    //For use only to calculate amt owed per event   ~Zhixuan
-    double credit = 0.0;
-    double debit = 0.0;
 
     protected Member(Parcel in) {
-        mName = in.readString();
-        mId = in.readInt();
-        //mPicId = in.readInt();
-        mStatus = in.readByte() != 0;
-        mDebt = in.readDouble();
-        mLent = in.readDouble();
-        IN_DEBT = in.readByte() != 0;
-        NOT_IN_DEBT = in.readByte() != 0;
+        id = in.readString();
+        name = in.readString();
+        email = in.readString();
+        status = in.readString();
+        debt = in.readDouble();
+        lent = in.readDouble();
+        events = in.createStringArrayList();
+        friends = in.createStringArrayList();
     }
 
     public static final Creator<Member> CREATOR = new Creator<Member>() {
@@ -57,20 +49,6 @@ public class Member implements Parcelable {
         }
     };
 
-
-    public Member(String name, int id) {
-        // create a Member obj with name and first available Id in mIdList
-        //TODO: get all data from database
-        mId = id;
-        mAllMembers.add(this);
-        //Log.d(TAG, "Member: new member added: " + this);
-        mStatus = NOT_IN_DEBT;
-        mDebt = 0;
-        mLent = 0;
-        mName = name;
-        //mPicId = 0;
-    }
-
     @Override
     public int describeContents() {
         return 0;
@@ -78,42 +56,77 @@ public class Member implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(mName);
-        dest.writeInt(mId);
-        dest.writeByte((byte) (mStatus ? 1 : 0));
-        dest.writeDouble(mDebt);
-        dest.writeDouble(mLent);
-        dest.writeByte((byte) (IN_DEBT ? 1 : 0));
-        dest.writeByte((byte) (NOT_IN_DEBT ? 1 : 0));
+        dest.writeString(id);
+        dest.writeString(name);
+        dest.writeString(email);
+        dest.writeString(status);
+        dest.writeDouble(debt);
+        dest.writeDouble(lent);
+        dest.writeStringList(events);
+        dest.writeStringList(friends);
     }
 
-    @Override
-    public String toString() {
-        return "Member{" +
-                "Id=" + mId +
-                "Name=" + mName +
-                '}';
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName() {
-        return mName;
+        return name;
     }
 
-    public Integer getId() {
-        return mId;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public boolean isStatus() {
-        return mStatus;
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public double getDebt() {
-        return mDebt;
+        return debt;
+    }
+
+    public void setDebt(double debt) {
+        this.debt = debt;
     }
 
     public double getLent() {
-        return mLent;
+        return lent;
     }
 
-    //public Integer getPicId() {return mPicId; }
+    public void setLent(double lent) {
+        this.lent = lent;
+    }
+
+    public List<String> getEvents() {
+        return events;
+    }
+
+    public void setEvents(List<String> events) {
+        this.events = events;
+    }
+
+    public List<String> getFriends() {
+        return friends;
+    }
+
+    public void setFriends(List<String> friends) {
+        this.friends = friends;
+    }
 }
