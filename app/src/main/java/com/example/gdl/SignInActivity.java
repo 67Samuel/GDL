@@ -4,17 +4,13 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -23,13 +19,15 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
-import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SignInActivity extends AppCompatActivity {
 
@@ -42,6 +40,8 @@ public class SignInActivity extends AppCompatActivity {
     Button mSetPic;
     CropImageView mPicPreview;
 
+    Map<String, Object> userInfo;
+
     private Uri pic_uri;
     private String downloadUrl;
 
@@ -50,6 +50,7 @@ public class SignInActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private StorageReference mUserProfileImageRef;
+    public FirebaseFirestore db;
 
     private FirebaseUser user;
 
@@ -67,6 +68,10 @@ public class SignInActivity extends AppCompatActivity {
 
         //database stuff
         mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
+
+        //init map for user data
+        userInfo = new HashMap<>();
 
         mSaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,10 +83,8 @@ public class SignInActivity extends AppCompatActivity {
         mSetPic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //GET_PROFILE_PICTURE = true;
                 Log.d(TAG, "onComplete: GETTING PROFILE PICTURE");
                 CropImage.activity().setGuidelines(CropImageView.Guidelines.ON).setAspectRatio(1,1).start(SignInActivity.this);
-                //startSignIn();
             }
         });
     }
@@ -91,6 +94,10 @@ public class SignInActivity extends AppCompatActivity {
         String username = mUsername.getText().toString();
         String email = mEmail.getText().toString();
         String password = mPassword.getText().toString();
+        userInfo.put("name", username);
+        userInfo.put("email", email);
+        userInfo.put("debt", 0);
+        userInfo.put("lent", 0);
 
         if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password) || TextUtils.isEmpty(username)) {
             Toast.makeText(this, "Fields are empty", Toast.LENGTH_SHORT).show();
@@ -99,16 +106,10 @@ public class SignInActivity extends AppCompatActivity {
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
-                            //TODO: if user cancels anything in this process, then remove the user
                             if (task.isSuccessful()) {
-                                // Sign in success, update UI with the signed-in user's information
                                 Log.d(TAG, "createUserWithEmail:success");
 
                                 user = mAuth.getCurrentUser();
-                                //if (GET_PROFILE_PICTURE) {
-                                    //Log.d(TAG, "onComplete: GETTING PROFILE PICTURE");
-                                    //CropImage.activity().setGuidelines(CropImageView.Guidelines.ON).setAspectRatio(1,1).start(SignInActivity.this);
-                                //}
 
                                 user.updateProfile(new UserProfileChangeRequest.Builder().setDisplayName(username).build());
                                 if (pic_uri != null) {
@@ -119,8 +120,9 @@ public class SignInActivity extends AppCompatActivity {
                                                                                             @Override
                                                                                             public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                                                                                                 if (task.isSuccessful()) {
+                                                                                                    Toast.makeText(SignInActivity.this, "profile pic stored in storage", Toast.LENGTH_SHORT).show();
                                                                                                     downloadUrl = task.getResult().getMetadata().getReference().getDownloadUrl().toString();
-                                                                                                    //TODO: store downloadUrl in user's document in firestore
+                                                                                                    userInfo.put("profile picture storage link", downloadUrl);
                                                                                                 }
                                                                                             }
                                                                                         });
@@ -129,6 +131,8 @@ public class SignInActivity extends AppCompatActivity {
                                     } catch (Exception e) {
                                         Log.d(TAG, "onComplete: "+e);
                                     }
+                                } else {
+                                    Log.d(TAG, "onComplete: pic_uri is null");
                                 }
                                 Log.d(TAG, "User added: name = "+user.getDisplayName()+", email = "+user.getEmail()+
                                                 ", photoUrl = "+user.getPhotoUrl()+", uid = "+user.getUid());
@@ -145,7 +149,7 @@ public class SignInActivity extends AppCompatActivity {
                                     }
                                 }
 
-                                //TODO: create user profile in firestore, excluding friends and events
+                                db.collection("Users").document(user.getUid()).set(userInfo);
 
                                 Intent intent = new Intent(SignInActivity.this, LoginActivity.class);
                                 startActivity(intent);
@@ -168,6 +172,7 @@ public class SignInActivity extends AppCompatActivity {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {
                 pic_uri = result.getUri();
+                userInfo.put("profile picture uri", pic_uri.toString());
                 Toast.makeText(this, "photo uri obtained", Toast.LENGTH_SHORT).show();
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();

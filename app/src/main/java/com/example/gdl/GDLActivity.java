@@ -39,7 +39,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         db = FirebaseFirestore.getInstance();
-        //mRootDatabaseRef = FirebaseDatabase.getInstance().getReference(); //get reference to root node
         mAuth = FirebaseAuth.getInstance();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override

@@ -50,7 +50,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class HomePage extends GDLActivity {
-    public static final String ACTIVITY_TAG = "MainActivity";
+
+    private static final String TAG = "HomePage";
+    
     AppCompatButton joinEvent;
     AppCompatButton createEvent;
     TextView myEvents;
@@ -64,8 +66,6 @@ public class HomePage extends GDLActivity {
     TextView mNoEventsOngoing;
     TextView mPendingPaymentsAmt;
     TextView mAmtToReceive;
-
-    String Uid;
 
     final StorageReference storageRef = FirebaseStorage.getInstance().getReference();
 
@@ -92,11 +92,16 @@ public class HomePage extends GDLActivity {
         //TODO: check if user has a profile picture and if so, set it to the imageview using glide
         if (true) {
             Log.d(TAG, "onCreate: getting profile pic from storage");
-            StorageReference imageStorageRef = storageRef.child("Profile Images");
-            StorageReference userImageStorageRef = storageRef.child(""); //TODO: get user ID and put as child
-            GlideApp.with(this)
-                    .load(userImageStorageRef)
-                    .into(mProfilePic);
+            try {
+                StorageReference imageStorageRef = storageRef.child("Profile Images");
+                Log.d(TAG, "onCreate: uid: "+user.getUid());
+                StorageReference userImageStorageRef = imageStorageRef.child(user.getUid()+".jpg"); //TODO: get user ID and put as child
+                GlideApp.with(this)
+                        .load(userImageStorageRef)
+                        .into(mProfilePic);
+            } catch (Exception e) {
+                Log.d(TAG, "onCreate: error getting profile pic: "+e);
+            }
         }
 
         //get stuff from realtime database to display
@@ -104,7 +109,6 @@ public class HomePage extends GDLActivity {
         mPendingPaymentsAmt = findViewById(R.id.pending_payments_amt);
         mAmtToReceive = findViewById(R.id.amt_to_receive);
 
-        Uid = user.getUid();
         //TODO: get debt from firestore
         //TODO: get lent from firestore
         //TODO: get num events ongoing from firestore
