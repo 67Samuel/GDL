@@ -19,9 +19,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.gdl.eventlistpg.EventListActivity;
 import com.example.gdl.myfriendspg.FriendListPage;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
  public class GDLActivity extends AppCompatActivity {
     /*
@@ -34,12 +37,16 @@ import com.google.firebase.firestore.FirebaseFirestore;
     public FirebaseFirestore db;
     public FirebaseAuth mAuth;
     public FirebaseAuth.AuthStateListener mAuthListener;
+    public FirebaseUser user;
+
+    final StorageReference storageRef = FirebaseStorage.getInstance().getReference();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
+        user = mAuth.getCurrentUser();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {

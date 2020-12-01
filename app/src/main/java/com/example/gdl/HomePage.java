@@ -67,8 +67,6 @@ public class HomePage extends GDLActivity {
     TextView mPendingPaymentsAmt;
     TextView mAmtToReceive;
 
-    final StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

@@ -20,6 +20,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.theartofdev.edmodo.cropper.CropImage;
@@ -45,14 +46,12 @@ public class SignInActivity extends AppCompatActivity {
     private Uri pic_uri;
     private String downloadUrl;
 
-    private final int REQUEST_IMAGE_GET = 123;
-    private boolean GET_PROFILE_PICTURE = false;
-
     private FirebaseAuth mAuth;
     private StorageReference mUserProfileImageRef;
     public FirebaseFirestore db;
 
     private FirebaseUser user;
+    final StorageReference storageRef = FirebaseStorage.getInstance().getReference();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,17 +114,22 @@ public class SignInActivity extends AppCompatActivity {
                                 if (pic_uri != null) {
                                     try {
                                         Log.d(TAG, "onComplete: trying to store picture");
+                                        mUserProfileImageRef = storageRef.child("Profile Images");
                                         StorageReference filePath = mUserProfileImageRef.child(user.getUid() + ".jpg");
+                                        Log.d(TAG, "onComplete: filepath computed");
                                         filePath.putFile(pic_uri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                                                                                             @Override
                                                                                             public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                                                                                                 if (task.isSuccessful()) {
-                                                                                                    Toast.makeText(SignInActivity.this, "profile pic stored in storage", Toast.LENGTH_SHORT).show();
+                                                                                                    Log.d(TAG, "onComplete: profile pic is stored in storage");
                                                                                                     downloadUrl = task.getResult().getMetadata().getReference().getDownloadUrl().toString();
                                                                                                     userInfo.put("profile picture storage link", downloadUrl);
+                                                                                                } else {
+                                                                                                    Log.d(TAG, "onComplete: profile pic was not stored in storage");
                                                                                                 }
                                                                                             }
                                                                                         });
+
                                         Log.d(TAG, "pic uri: trying to set photo in userprofile");
                                         user.updateProfile(new UserProfileChangeRequest.Builder().setPhotoUri(pic_uri).build());
                                     } catch (Exception e) {
