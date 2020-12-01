@@ -1,40 +1,46 @@
 package com.example.gdl.models;
 
-
+import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
-import android.widget.ImageView;
 
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 
 public class Member implements Parcelable {
 
     private static final String TAG = "Member";
 
-    private String id;
     private String name;
-    private String email;
-    private String status;
+    private String id;
+    private Uri picId;
     private double debt;
     private double lent;
-    private List<String> events;
-    private List<String> friends;
+    private ArrayList<Event> eventsList;
 
+    //For use only to calculate amt owed per event   ~Zhixuan
+    private double credit = 0.0;
+    private double debit = 0.0;
+
+    public Member() {
+    }
+
+    public Member(String mName, String mId) {
+        this.name = mName;
+        this.id = mId;
+        this.debt = 0;
+        this.lent = 0;
+    }
 
     protected Member(Parcel in) {
-        id = in.readString();
         name = in.readString();
-        email = in.readString();
-        status = in.readString();
+        id = in.readString();
+        picId = in.readParcelable(Uri.class.getClassLoader());
         debt = in.readDouble();
         lent = in.readDouble();
-        events = in.createStringArrayList();
-        friends = in.createStringArrayList();
+        eventsList = in.createTypedArrayList(Event.CREATOR);
+        credit = in.readDouble();
+        debit = in.readDouble();
     }
 
     public static final Creator<Member> CREATOR = new Creator<Member>() {
@@ -50,83 +56,84 @@ public class Member implements Parcelable {
     };
 
     @Override
-    public int describeContents() {
-        return 0;
+    public String toString() {
+        return "Member{" +
+                "Id=" + id +
+                "Name=" + name +
+                '}';
     }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(id);
-        dest.writeString(name);
-        dest.writeString(email);
-        dest.writeString(status);
-        dest.writeDouble(debt);
-        dest.writeDouble(lent);
-        dest.writeStringList(events);
-        dest.writeStringList(friends);
+    public void setPicId(Uri mPicId) {
+        this.picId = mPicId;
     }
 
-    public String getId() {
-        return id;
+    public void setDebt(double mDebt) {
+        this.debt = mDebt;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setLent(double mLent) {
+        this.lent = mLent;
+    }
+
+    public void setEventsList(ArrayList<Event> mEvents) {
+        this.eventsList = mEvents;
+    }
+
+    public void setCredit(double credit) {
+        this.credit = credit;
+    }
+
+    public void setDebit(double debit) {
+        this.debit = debit;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public String getId() {
+        return id;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
+    public Uri getPicId() {
+        return picId;
     }
 
     public double getDebt() {
         return debt;
     }
 
-    public void setDebt(double debt) {
-        this.debt = debt;
-    }
-
     public double getLent() {
         return lent;
     }
 
-    public void setLent(double lent) {
-        this.lent = lent;
+    public ArrayList<Event> getEventsList() {
+        return eventsList;
     }
 
-    public List<String> getEvents() {
-        return events;
+    public double getCredit() {
+        return credit;
     }
 
-    public void setEvents(List<String> events) {
-        this.events = events;
+    public double getDebit() {
+        return debit;
     }
 
-    public List<String> getFriends() {
-        return friends;
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
-    public void setFriends(List<String> friends) {
-        this.friends = friends;
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(name);
+        dest.writeString(id);
+        dest.writeParcelable(picId, flags);
+        dest.writeDouble(debt);
+        dest.writeDouble(lent);
+        dest.writeTypedList(eventsList);
+        dest.writeDouble(credit);
+        dest.writeDouble(debit);
     }
+
 }

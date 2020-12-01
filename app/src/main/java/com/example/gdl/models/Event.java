@@ -1,21 +1,49 @@
 package com.example.gdl.models;
 
+import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Date;
 
 public class Event implements Parcelable {
 
     private String id;
     private String name;
+    private Uri eventPicture = null;
+    private long timeInitialized;
+    private boolean status; //completed=true, ongoing=false
+    private double totalSpent;
+    private ArrayList<Member> membersList;
+    private ArrayList<Bill> billsList;
     private String date;
-    private String status;
-    private List<String> membersIDs;
-    private List<String> billsIDs;
+
+    public Event() {
+    }
+
+    public Event(String id, String name, ArrayList<Member> membersList, String date) {
+        this.id = id;
+        this.name = name;
+        this.membersList = membersList;
+        Date date1 = new Date();
+        this.timeInitialized = date1.getTime();
+        this.status = false;
+        this.date = date;
+        this.totalSpent = 0;
+    }
+
+    protected Event(Parcel in) {
+        id = in.readString();
+        name = in.readString();
+        timeInitialized = in.readLong();
+        status = in.readByte() != 0;
+        membersList = in.createTypedArrayList(Member.CREATOR);
+        billsList = in.createTypedArrayList(Bill.CREATOR);
+    }
+
     public static final Creator<Event> CREATOR = new Creator<Event>() {
         @Override
         public Event createFromParcel(Parcel in) {
@@ -28,81 +56,84 @@ public class Event implements Parcelable {
         }
     };
 
-    protected Event(Parcel in) {
-        id = in.readString();
-        name = in.readString();
-        date = in.readString();
-        status = in.readString();
-        membersIDs = in.createStringArrayList();
-        billsIDs = in.createStringArrayList();
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(id);
         dest.writeString(name);
-        dest.writeString(date);
-        dest.writeString(status);
-        dest.writeStringList(membersIDs);
-        dest.writeStringList(billsIDs);
+        dest.writeLong(timeInitialized);
+        dest.writeByte((byte) (status ? 1 : 0));
+        dest.writeTypedList(membersList);
+        dest.writeTypedList(billsList);
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
+    public void setStatus(boolean status) {
+        this.status = status;
     }
 
+    public void setBillsList(ArrayList<Bill> billsList) {
+        this.billsList = billsList;
+    }
+
+    public void setEventPicture(Uri eventPicture) {
+        this.eventPicture = eventPicture;
+    }
 
     public String getId() {
         return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getDate() {
         return date;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public double getTotalSpent() {
+        return totalSpent;
     }
 
-    public String getStatus() {
+    public long getTimeInitialized() {
+        return timeInitialized;
+    }
+
+    public boolean getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public ArrayList<Member> getMembersList() {
+        return membersList;
     }
 
-    public List<String> getMembersIDs() {
-        return membersIDs;
+    public ArrayList<Bill> getBillsList() {
+        return billsList;
     }
 
-    public void setMembersIDs(List<String> membersIDs) {
-        this.membersIDs = membersIDs;
+    public Uri getEventPicture() {
+        return eventPicture;
     }
 
-    public List<String> getBillsIDs() {
-        return billsIDs;
+    @Override
+    public String toString() {
+        return "Event{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", timeInitialized=" + timeInitialized +
+                ", status=" + status +
+                ", membersList=" + membersList +
+                ", billsList=" + billsList +
+                '}';
     }
 
-    public void setBillsIDs(List<String> billsIDs) {
-        this.billsIDs = billsIDs;
+    public void calculateTotalSpent() {
+        for (Bill bill : billsList) {
+            totalSpent+=bill.getTotalCost();
+        }
     }
-
-
-
-
-
 }

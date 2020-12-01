@@ -69,11 +69,11 @@ public class EventAdapter extends ArrayAdapter<Event> {
             viewHolder = (ViewHolder) view.getTag();
         }
 
-        viewHolder.eventImage.setImageResource(event.getImageId());
-        viewHolder.eventName.setText(event.getEventName());
-        viewHolder.eventTime.setText(event.getEventTime());
-        viewHolder.eventMembers.setText("Members: "+event.getEventMembers());
-        viewHolder.eventSpending.setText("Total Spending: "+event.getEventSpending());
+        viewHolder.eventImage.setImageURI(event.getEventPicture());
+        viewHolder.eventName.setText(event.getName());
+        viewHolder.eventTime.setText(event.getDate());
+        viewHolder.eventMembers.setText("Members: "+event.getMembersList());
+        viewHolder.eventSpending.setText("Total Spending: "+event.getTotalSpent());
         if (event.getStatus()){
             viewHolder.statusImage.setImageResource(R.drawable.completed);
         } else {
