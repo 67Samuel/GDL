@@ -38,14 +38,12 @@ import com.google.firebase.storage.StorageReference;
     public FirebaseAuth mAuth;
     public FirebaseAuth.AuthStateListener mAuthListener;
     public FirebaseUser user;
-    public DBUtils utils;
 
     final StorageReference storageRef = FirebaseStorage.getInstance().getReference();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        utils = new DBUtils();
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();

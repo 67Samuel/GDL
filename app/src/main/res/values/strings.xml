@@ -56,10 +56,10 @@
     <string name="user_id_text_view">Your ID:</string>
     <string name="search_for_a_friend_using_their_id">Search for a friend using their ID</string>
     <string name="insert_friend_name">Insert Friend Name</string>
-    <string name="set_profile_photo">Sign in with Profile Pic</string>
+    <string name="set_profile_photo">Set Profile Photo</string>
     <string name="password">password</string>
     <string name="username">username</string>
-    <string name="sign_in">Sign in without Profile Pic</string>
+    <string name="sign_in">Sign up</string>
 
 
 </resources>
