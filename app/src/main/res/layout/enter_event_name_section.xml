@@ -22,17 +22,17 @@
         </TextView>
 
         <EditText
+            android:id="@+id/eventNameEditText"
             android:layout_width="270dp"
             android:layout_height="40dp"
-            android:id="@+id/eventNameEditText"
-            android:background="@color/buttonGreen"
-            android:padding="5dp"
             android:layout_gravity="center"
+            android:layout_marginLeft="30dp"
+            android:background="@color/translucentGreen"
             android:gravity="start|center"
-            android:maxLines="1"
             android:inputType="text"
-            android:textSize="17sp"
-            android:layout_marginLeft="30dp">
+            android:maxLines="1"
+            android:padding="5dp"
+            android:textSize="17sp">
 
         </EditText>
 

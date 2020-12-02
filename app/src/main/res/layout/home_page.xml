@@ -40,7 +40,8 @@
                         android:text="Marcus Ho"
                         android:textColor="@color/lightGreen"
                         android:textSize="36sp"
-                        android:textStyle="bold"/>
+                        android:textStyle="bold"
+                        android:layout_gravity="center"/>
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/user_email"
@@ -159,6 +160,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center">
+
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/create_event_button"
                     android:layout_width="80dp"

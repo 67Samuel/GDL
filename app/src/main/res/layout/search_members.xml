@@ -16,10 +16,10 @@
     </TextView>
 
     <EditText
+        android:id="@+id/searchMemberEditText"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:id="@+id/searchMemberEditText"
-        android:background="@color/buttonGreen"
+        android:background="@color/translucentGreen"
         android:padding="5dp">
 
     </EditText>
