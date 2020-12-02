@@ -4,9 +4,6 @@ import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -17,7 +14,6 @@ public class Event implements Parcelable {
     private Uri eventPicture = null;
     private long timeInitialized;
     private boolean status; //completed=true, ongoing=false
-    private boolean settled;
     private double totalSpent;
     private List<Member> membersList;
     private List<Bill> billsList;
@@ -50,6 +46,19 @@ public class Event implements Parcelable {
         date = in.readString();
     }
 
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(name);
+        dest.writeParcelable(eventPicture, flags);
+        dest.writeLong(timeInitialized);
+        dest.writeByte((byte) (status ? 1 : 0));
+        dest.writeDouble(totalSpent);
+        dest.writeTypedList(membersList);
+        dest.writeTypedList(billsList);
+        dest.writeString(date);
+    }
+
     public static final Creator<Event> CREATOR = new Creator<Event>() {
         @Override
         public Event createFromParcel(Parcel in) {
@@ -61,14 +70,6 @@ public class Event implements Parcelable {
             return new Event[size];
         }
     };
-
-    public boolean isSettled() {
-        return settled;
-    }
-
-    public void setSettled(boolean settled) {
-        this.settled = settled;
-    }
 
     public void setStatus(boolean status) {
         this.status = status;
@@ -125,14 +126,14 @@ public class Event implements Parcelable {
                 ", name='" + name + '\'' +
                 ", timeInitialized=" + timeInitialized +
                 ", status=" + status +
-                ", membersList=" + membersList +
-                ", billsList=" + billsList +
+                ", membersList=" + membersList.toString() +
+                ", billsList=" + billsList.toString() +
                 '}';
     }
 
     public void calculateTotalSpent() {
         for (Bill bill : billsList) {
-            totalSpent+=bill.getTotalCost();
+            totalSpent += bill.getTotalCost();
         }
     }
 
@@ -141,16 +142,5 @@ public class Event implements Parcelable {
         return 0;
     }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(id);
-        dest.writeString(name);
-        dest.writeParcelable(eventPicture, flags);
-        dest.writeLong(timeInitialized);
-        dest.writeByte((byte) (status ? 1 : 0));
-        dest.writeDouble(totalSpent);
-        dest.writeTypedList(membersList);
-        dest.writeTypedList(billsList);
-        dest.writeString(date);
-    }
+
 }

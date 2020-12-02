@@ -83,6 +83,8 @@ public class Bill implements Parcelable {
         return payer;
     }
 
+    public void setPayer(Member m){ payer = m; }
+
     public List<String> getMembersList() {
         return membersList;
     }
@@ -100,12 +102,11 @@ public class Bill implements Parcelable {
     }
 
     public void calculateSplit() {
-        double amtEachPerson = this.totalCost / this.getMemberSize();
+        double amtEachPerson = this.totalCost / (this.membersList.size() + 1);
         this.expensesMap = new HashMap<>();
         for(String m : this.membersList){
-            if(!m.equals(this.payer)) {
-                this.expensesMap.put(m, amtEachPerson);
-            }
+            // assuming payer not inside here
+            this.expensesMap.put(m, amtEachPerson);
         }
     }
 
