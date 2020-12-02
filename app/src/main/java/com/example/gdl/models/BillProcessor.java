@@ -2,15 +2,15 @@ package com.example.gdl.models;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 public class BillProcessor {
     private List<Bill> billList;
-    private Map<String, Member> memberMasterMap;
-    private Map<Member, Integer> memberIndexMap;
-    private Member[] orderedMemberList;
+    private List<String> memberMasterList;
+    private Map<String, Integer> memberIndexMap;
     private double[][] optimisedComputationalGraph;
     private double[][] computationalGraph;
     private ArrayList<String> announcements = new ArrayList<>();
@@ -34,15 +34,6 @@ public class BillProcessor {
         return this.announcements;
     }
 
-    public Map<String, Member> memberMasterMap() {
-        return memberMasterMap;
-    }
-
-    public Member[] getOrderedMemberList() {
-        return orderedMemberList;
-    }
-
-
     private void readBillList(){
         consolidateMembers();
         indexMembers();
@@ -50,63 +41,49 @@ public class BillProcessor {
     }
 
     private void consolidateMembers(){
-        this.memberMasterMap = new HashMap<String, Member>();
-//        for(Bill b : billList){
-//            for(Member m : b.getmMembersList()){
-//                if(!this.memberMasterMap.containsKey(m.mId)){
-//                    this.memberMasterMap.put(m.mId, m);
-//                }
-//            }
-//        }
+        ArrayList<String> allMembers = new ArrayList<>();
         for(int bill = 0; bill < this.billList.size(); bill++){
             Bill b = this.billList.get(bill);
-            List<String> membersIdList = b.getMembersList();
-            int memberListSize = membersIdList.size();
+            Member payer = b.getPayer();
+            String payerID = payer.getId();
+            if(!allMembers.contains(payerID)){
+                allMembers.add(payerID);
+            }
 
-            for(int member = 0; member < memberListSize; member++){
-                Member member1 = new Member();
-                Member member2 = new Member();
-                List<Member> membersList = new ArrayList<>();
-                membersList.add(member1);
-                membersList.add(member2);
-                Member m = membersList.get(member);
-                if(!this.memberMasterMap.containsKey(m.getId())){
-                    this.memberMasterMap.put(m.getId(), m);
+            List<String> billMembersList = b.getMembersList();
+            for(int member = 0; member < billMembersList.size(); member++){
+                String payeeID = billMembersList.get(member);
+                if(!allMembers.contains(payeeID)){
+                    allMembers.add(payeeID);
                 }
             }
         }
+        memberMasterList = allMembers;
     }
 
     private void indexMembers(){
-        List<Member> membersList = new ArrayList<Member>(memberMasterMap.values());
-        Map<Member, Integer> membersIndex = new HashMap<>();
-        for(int i = 0; i < membersList.size(); i++){
-            membersIndex.put(membersList.get(i), i);
+        Map<String, Integer> indexMap = new HashMap<>();
+        for(int member = 0; member < memberMasterList.size(); member++){
+            indexMap.put(memberMasterList.get(member), member);
         }
-        memberIndexMap = membersIndex;
-
-        Set<Member> membersKey = memberIndexMap.keySet();
-        orderedMemberList = new Member[memberIndexMap.size()];
-        for(Member m : membersKey){
-            orderedMemberList[memberIndexMap.get(m)] = m;
-        }
+        memberIndexMap = indexMap;
     }
 
     private void createComputationalGraph(){
-        int len = orderedMemberList.length;
+        int len = memberMasterList.size();
         computationalGraph = new double[len][len];
-        for(Bill b : billList){
-            Member payer = b.getPayer();
-            Member m1 = new Member();
-            Member m2 = new Member();
+        for(int bill = 0; bill < billList.size(); bill++){
+            Bill currentBill = billList.get(bill);
+            currentBill.calculateSplit();
+            Map<String, Double> expMap = currentBill.getExpensesMap();
+            String payerID = currentBill.getPayer().getId();
 
-            //Map<Member,Double> billExpensesMap = b.getExpensesMap();
-            List<Member> billPayees = new ArrayList<>();
-            billPayees.add(m1);
-            billPayees.add(m2);
-            //for(Member m : billPayees){
-            //    computationalGraph[memberIndexMap.get(m)][memberIndexMap.get(payer)] = billExpensesMap.get(m);
-            //}
+            Set<String> payeeIDs = expMap.keySet();
+            Iterator<String> it = payeeIDs.iterator();
+            while(it.hasNext()){
+                String currentPayee = it.next();
+                computationalGraph[memberIndexMap.get(currentPayee)][memberIndexMap.get(payerID)] = expMap.get(currentPayee);
+            }
         }
     }
 
@@ -116,16 +93,16 @@ public class BillProcessor {
         opt.optimise();
         optimisedComputationalGraph = opt.getOptimisedComputationalGraph();
 
-        int len = orderedMemberList.length;
-        for(int i = 0; i < len; i++){
-            for(int j = 0; j < len; j++){
-                double sumOfMoney = optimisedComputationalGraph[i][j];
-                if(sumOfMoney != -0.0 && sumOfMoney != 0.0){
-                    announcements.add(orderedMemberList[i].getName() + " owes "
-                            + orderedMemberList[j].getName() + " $" + sumOfMoney);
-                }
-            }
-        }
+//        int len = memberMasterList.size();
+//        for(int i = 0; i < len; i++){
+//            for(int j = 0; j < len; j++){
+//                double sumOfMoney = optimisedComputationalGraph[i][j];
+//                if(sumOfMoney != -0.0 && sumOfMoney != 0.0){
+//                    announcements.add(memberMasterList.get(i).getName() + " owes "
+//                            + orderedMemberList[j].getName() + " $" + sumOfMoney);
+//                }
+//            }
+//        }
     }
 
     public double[][] getOptimisedComputationalGraph() {
