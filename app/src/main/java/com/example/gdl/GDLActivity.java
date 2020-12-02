@@ -32,7 +32,7 @@ import com.google.firebase.storage.StorageReference;
     Menu
     Reference to database root
      */
-    public static final String TAG = "ActivityWithMenu";
+    public static final String TAG = "GDLActivity";
     //public static DatabaseReference mRootDatabaseRef;
     public FirebaseFirestore db;
     public FirebaseAuth mAuth;
@@ -71,27 +71,22 @@ import com.google.firebase.storage.StorageReference;
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_home: //title of item is it's id
-                Toast.makeText(this, "Go to Home", Toast.LENGTH_SHORT).show();
-                //go to home activity
+//                Toast.makeText(this, "Go to Home", Toast.LENGTH_SHORT).show();
                 Intent homeIntent = new Intent(this, HomePage.class);
                 startActivity(homeIntent);
                 return true;
             case R.id.menu_my_events:
-                Toast.makeText(this, "Go to My Events", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(this, "Go to My Events", Toast.LENGTH_SHORT).show();
                 Intent myEventsIntent = new Intent(this, EventListActivity.class);
                 startActivity(myEventsIntent);
-                //go to my_events activity
                 return true;
             case R.id.menu_my_friends:
-                Toast.makeText(this, "Go to My Friends", Toast.LENGTH_SHORT).show();
-                //go to my_friends activity
+//                Toast.makeText(this, "Go to My Friends", Toast.LENGTH_SHORT).show();
                 Intent myFriendsIntent = new Intent(this, FriendListPage.class);
                 startActivity(myFriendsIntent);
                 return true;
             case R.id.menu_add_friend:
-                Toast.makeText(this, "Go to Add Friends", Toast.LENGTH_SHORT).show();
-                //save instance state
-                //go to add_friends activity
+//                Toast.makeText(this, "Go to Add Friends", Toast.LENGTH_SHORT).show();
                 Intent addFriendsIntent = new Intent(this, AddFriendPage.class);
                 startActivity(addFriendsIntent);
                 return true;
