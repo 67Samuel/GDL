@@ -8,6 +8,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class Event implements Parcelable {
 
@@ -16,15 +17,16 @@ public class Event implements Parcelable {
     private Uri eventPicture = null;
     private long timeInitialized;
     private boolean status; //completed=true, ongoing=false
+    private boolean settled;
     private double totalSpent;
-    private ArrayList<Member> membersList;
-    private ArrayList<Bill> billsList;
+    private List<Member> membersList;
+    private List<Bill> billsList;
     private String date;
 
     public Event() {
     }
 
-    public Event(String id, String name, ArrayList<Member> membersList, String date) {
+    public Event(String id, String name, List<Member> membersList, String date) {
         this.id = id;
         this.name = name;
         this.membersList = membersList;
@@ -60,11 +62,19 @@ public class Event implements Parcelable {
         }
     };
 
+    public boolean isSettled() {
+        return settled;
+    }
+
+    public void setSettled(boolean settled) {
+        this.settled = settled;
+    }
+
     public void setStatus(boolean status) {
         this.status = status;
     }
 
-    public void setBillsList(ArrayList<Bill> billsList) {
+    public void setBillsList(List<Bill> billsList) {
         this.billsList = billsList;
     }
 
@@ -96,11 +106,11 @@ public class Event implements Parcelable {
         return status;
     }
 
-    public ArrayList<Member> getMembersList() {
+    public List<Member> getMembersList() {
         return membersList;
     }
 
-    public ArrayList<Bill> getBillsList() {
+    public List<Bill> getBillsList() {
         return billsList;
     }
 

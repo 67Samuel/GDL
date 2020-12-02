@@ -6,6 +6,7 @@ import android.os.Parcelable;
 
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Member implements Parcelable {
 
@@ -17,12 +18,9 @@ public class Member implements Parcelable {
     private Uri picId;
     private double debt;
     private double lent;
-    private ArrayList<Event> eventsList = null;
-    private  ArrayList<String> friendsList = null;
+    private List<String> eventsList = null;
+    private List<String> friendsList = null;
 
-    //For use only to calculate amt owed per event   ~Zhixuan
-    private double credit = 0.0;
-    private double debit = 0.0;
 
     public Member() {
     }
@@ -34,6 +32,7 @@ public class Member implements Parcelable {
         this.lent = 0;
         this.picId = null;
         this.email = null;
+
     }
 
 
@@ -44,10 +43,9 @@ public class Member implements Parcelable {
         picId = in.readParcelable(Uri.class.getClassLoader());
         debt = in.readDouble();
         lent = in.readDouble();
-        eventsList = in.createTypedArrayList(Event.CREATOR);
+        eventsList = in.createStringArrayList();
         friendsList = in.createStringArrayList();
-        credit = in.readDouble();
-        debit = in.readDouble();
+
     }
 
     public static final Creator<Member> CREATOR = new Creator<Member>() {
@@ -90,16 +88,8 @@ public class Member implements Parcelable {
         this.lent = mLent;
     }
 
-    public void setEventsList(ArrayList<Event> mEvents) {
+    public void setEventsList(List<String> mEvents) {
         this.eventsList = mEvents;
-    }
-
-    public void setCredit(double credit) {
-        this.credit = credit;
-    }
-
-    public void setDebit(double debit) {
-        this.debit = debit;
     }
 
     public String getName() {
@@ -122,17 +112,10 @@ public class Member implements Parcelable {
         return lent;
     }
 
-    public ArrayList<Event> getEventsList() {
+    public List<String> getEventsList() {
         return eventsList;
     }
 
-    public double getCredit() {
-        return credit;
-    }
-
-    public double getDebit() {
-        return debit;
-    }
 
 
     @Override
@@ -148,9 +131,7 @@ public class Member implements Parcelable {
         dest.writeParcelable(picId, flags);
         dest.writeDouble(debt);
         dest.writeDouble(lent);
-        dest.writeTypedList(eventsList);
+        dest.writeStringList(eventsList);
         dest.writeStringList(friendsList);
-        dest.writeDouble(credit);
-        dest.writeDouble(debit);
     }
 }
