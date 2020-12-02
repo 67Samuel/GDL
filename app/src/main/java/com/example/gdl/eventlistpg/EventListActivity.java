@@ -21,6 +21,8 @@ import com.example.gdl.JoinEventActivity;
 import com.example.gdl.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.firestore.FieldPath;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class EventListActivity extends GDLActivity {
     TabLayout tabLayout;
@@ -39,7 +41,6 @@ public class EventListActivity extends GDLActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.event_list);
-
         tabLayout = findViewById(R.id.event_list_tablayout);
         viewPager = findViewById(R.id.event_list_viewpager);
         floatingButton_join = findViewById(R.id.eventlist_floatingbutton_join);

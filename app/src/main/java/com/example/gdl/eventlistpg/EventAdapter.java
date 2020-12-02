@@ -72,7 +72,7 @@ public class EventAdapter extends ArrayAdapter<Event> {
         viewHolder.eventImage.setImageURI(event.getEventPicture());
         viewHolder.eventName.setText(event.getName());
         viewHolder.eventTime.setText(event.getDate());
-        viewHolder.eventMembers.setText("Members: "+event.getMembersList());
+        viewHolder.eventMembers.setText("Members: "+event.getMembersList().size());
         viewHolder.eventSpending.setText("Total Spending: "+event.getTotalSpent());
         if (event.getStatus()){
             viewHolder.statusImage.setImageResource(R.drawable.completed);
@@ -82,14 +82,14 @@ public class EventAdapter extends ArrayAdapter<Event> {
         viewHolder.addBill.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mOnAddbillListener.onAddbillClick();
+                mOnAddbillListener.onAddbillClick(event);
             }
         });
         return view;
     }
 
     public interface onAddbillListener {
-        void onAddbillClick();
+        void onAddbillClick(Event event);
     }
 
     private onAddbillListener mOnAddbillListener;
