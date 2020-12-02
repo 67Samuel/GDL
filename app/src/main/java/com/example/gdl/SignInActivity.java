@@ -26,6 +26,7 @@ import com.google.firebase.storage.UploadTask;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -97,6 +98,8 @@ public class SignInActivity extends AppCompatActivity {
         userInfo.put("email", email);
         userInfo.put("debt", 0);
         userInfo.put("lent", 0);
+        userInfo.put("friendsList", new ArrayList<String>());
+        userInfo.put("eventsList", new ArrayList<String>());
 
         if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password) || TextUtils.isEmpty(username)) {
             Toast.makeText(this, "Fields are empty", Toast.LENGTH_SHORT).show();

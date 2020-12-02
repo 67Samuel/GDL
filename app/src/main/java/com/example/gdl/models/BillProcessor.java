@@ -60,10 +60,15 @@ public class BillProcessor {
 //        }
         for(int bill = 0; bill < this.billList.size(); bill++){
             Bill b = this.billList.get(bill);
-            List<Member> membersList = b.getMembersList();
-            int memberListSize = membersList.size();
+            List<String> membersIdList = b.getMembersList();
+            int memberListSize = membersIdList.size();
 
             for(int member = 0; member < memberListSize; member++){
+                Member member1 = new Member();
+                Member member2 = new Member();
+                List<Member> membersList = new ArrayList<>();
+                membersList.add(member1);
+                membersList.add(member2);
                 Member m = membersList.get(member);
                 if(!this.memberMasterMap.containsKey(m.getId())){
                     this.memberMasterMap.put(m.getId(), m);
@@ -92,11 +97,16 @@ public class BillProcessor {
         computationalGraph = new double[len][len];
         for(Bill b : billList){
             Member payer = b.getPayer();
-            Map<Member,Double> billExpensesMap = b.getExpensesMap();
-            Set<Member> billPayees = billExpensesMap.keySet();
-            for(Member m : billPayees){
-                computationalGraph[memberIndexMap.get(m)][memberIndexMap.get(payer)] = billExpensesMap.get(m);
-            }
+            Member m1 = new Member();
+            Member m2 = new Member();
+
+            //Map<Member,Double> billExpensesMap = b.getExpensesMap();
+            List<Member> billPayees = new ArrayList<>();
+            billPayees.add(m1);
+            billPayees.add(m2);
+            //for(Member m : billPayees){
+            //    computationalGraph[memberIndexMap.get(m)][memberIndexMap.get(payer)] = billExpensesMap.get(m);
+            //}
         }
     }
 

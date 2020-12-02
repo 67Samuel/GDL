@@ -17,14 +17,14 @@ public class Event implements Parcelable {
     private long timeInitialized;
     private boolean status; //completed=true, ongoing=false
     private double totalSpent;
-    private ArrayList<String> membersList;
+    private ArrayList<Member> membersList;
     private ArrayList<Bill> billsList;
     private String date;
 
     public Event() {
     }
 
-    public Event(String id, String name, ArrayList<String> membersList, String date) {
+    public Event(String id, String name, ArrayList<Member> membersList, String date) {
         this.id = id;
         this.name = name;
         this.membersList = membersList;
@@ -35,6 +35,7 @@ public class Event implements Parcelable {
         this.totalSpent = 0;
     }
 
+
     protected Event(Parcel in) {
         id = in.readString();
         name = in.readString();
@@ -42,7 +43,7 @@ public class Event implements Parcelable {
         timeInitialized = in.readLong();
         status = in.readByte() != 0;
         totalSpent = in.readDouble();
-        membersList = in.createStringArrayList();
+        membersList = in.createTypedArrayList(Member.CREATOR);
         billsList = in.createTypedArrayList(Bill.CREATOR);
         date = in.readString();
     }
@@ -95,7 +96,7 @@ public class Event implements Parcelable {
         return status;
     }
 
-    public ArrayList<String> getMembersList() {
+    public ArrayList<Member> getMembersList() {
         return membersList;
     }
 
@@ -138,7 +139,7 @@ public class Event implements Parcelable {
         dest.writeLong(timeInitialized);
         dest.writeByte((byte) (status ? 1 : 0));
         dest.writeDouble(totalSpent);
-        dest.writeStringList(membersList);
+        dest.writeTypedList(membersList);
         dest.writeTypedList(billsList);
         dest.writeString(date);
     }

@@ -18,7 +18,7 @@ import androidx.fragment.app.DialogFragment;
 
 import com.example.gdl.GDLActivity;
 import com.example.gdl.R;
-import com.example.gdl.SignInActivity;
+import com.example.gdl.eventlistpg.EventListActivity;
 import com.example.gdl.models.Event;
 import com.example.gdl.models.Member;
 import com.google.firebase.firestore.DocumentReference;
@@ -38,7 +38,7 @@ public class CreateEventMain extends GDLActivity implements View.OnClickListener
     private static final String sharedPrefFile = "com.example.gdl.createActivityMainSP";
     public static final String EVENT_NAME_KEY = "event name key";
     public static final String EVENT_DATE_KEY = "event date key";
-    private ArrayList<String> mSelectedMembersIdList = new ArrayList<>();
+    private ArrayList<Member> mSelectedMembersList = new ArrayList<>();
     SharedPreferences mPreferences;
     Uri event_pic_uri;
     Map<String, Object> eventInfo;
@@ -61,12 +61,14 @@ public class CreateEventMain extends GDLActivity implements View.OnClickListener
 
 
         //set actionbar
+        Log.d(TAG, "onCreate: set actionbar");
         ActionBar actionBar = getSupportActionBar();
         assert actionBar != null;
         actionBar.setTitle("Create Event");
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         //find all views
+        Log.d(TAG, "onCreate: find all views");
         mEventNameEditText = findViewById(R.id.eventNameEditText);
         mEventDateTextView = findViewById(R.id.event_date_text_view);
         mSelectMembersTextView = findViewById(R.id.select_members_text_view);
@@ -77,19 +79,26 @@ public class CreateEventMain extends GDLActivity implements View.OnClickListener
         setListeners();
 
         //retrieve shared preferences
+        Log.d(TAG, "onCreate: retrieve shared preferences");
         mPreferences = getSharedPreferences(sharedPrefFile, MODE_PRIVATE);
         mEventNameEditText.setText(mPreferences.getString(EVENT_NAME_KEY, ""));
         mEventDateTextView.setText(mPreferences.getString(EVENT_DATE_KEY, ""));
 
         //get intent from CreateEventSelectedMembers and update selected members list to be sent to db
         Intent selectedMembersIntent = getIntent();
-        mSelectedMembersIdList = selectedMembersIntent.getStringArrayListExtra(CreateEventSelectMembers.SELECTED_MEMBERS_ID_KEY);
-        eventInfo.put("selected members list", mSelectedMembersIdList);
+        mSelectedMembersList = selectedMembersIntent.getParcelableArrayListExtra(CreateEventSelectMembers.SELECTED_MEMBERS_ID_KEY);
+        try {
+            Log.d(TAG, "onCreate: " + mSelectedMembersList);
+            eventInfo.put("selected members list", mSelectedMembersList);
+        } catch (Exception e) {
+            Log.d(TAG, "onCreate: "+e);
+            mSelectedMembersList = new ArrayList<Member>();
+        }
         //set number for mNumberMembersSelected, try catch block for case where mSelectedMembersList == 0
         try {
-            String formattedNumberSelected = getString(R.string.numberSelected, mSelectedMembersIdList.size());
+            String formattedNumberSelected = getString(R.string.numberSelected, mSelectedMembersList.size());
             mNumberMembersSelected.setText(formattedNumberSelected);
-            Log.d(TAG, "onCreate: mSelectedMembersList=" + mSelectedMembersIdList);
+            Log.d(TAG, "onCreate: mSelectedMembersList=" + mSelectedMembersList);
         } catch (Exception e) {
             String formattedNumberSelected = getString(R.string.numberSelected, 0);
             mNumberMembersSelected.setText(formattedNumberSelected);
@@ -105,34 +114,32 @@ public class CreateEventMain extends GDLActivity implements View.OnClickListener
         mEventDateTextView.setOnClickListener(this);
     }
 
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.select_members_text_view:
+                Log.d(TAG, "onClick: going to create event select members page");
                 Intent selectMembersIntent = new Intent(this, CreateEventSelectMembers.class);
-                Log.d(TAG, "onClick: triggered");
                 startActivity(selectMembersIntent);
                 break;
             case R.id.add_photo_text_view:
                 Log.d(TAG, "onClick: getting event pic from crop activity");
                 CropImage.activity().setGuidelines(CropImageView.Guidelines.ON).setAspectRatio(1,1).start(CreateEventMain.this);
                 break;
-                //TODO: implicit intent to photo gallery to get photo
             case R.id.create_event_button:
-                if (mSelectedMembersIdList.isEmpty()) {
+                if (mSelectedMembersList.isEmpty()) {
                     Toast.makeText(this, "An event must have members!", Toast.LENGTH_SHORT).show();
                 } else {
-                    //TODO: store all info in db
                     DocumentReference eventRef = db.collection("Events").document(); //creates a doc with unique ID
                     String eventId = eventRef.getId();
-                    Event event = new Event(eventId, mEventNameEditText.getText().toString(), mSelectedMembersIdList, mEventDateTextView.getText().toString());
-                    
-                    //TODO: go to add bills page
+                    Event event = new Event(eventId, mEventNameEditText.getText().toString(), mSelectedMembersList, mEventDateTextView.getText().toString());
+                    eventRef.set(event);
+                    //wait a bit for db to update
+                    Log.d(TAG, "onClick: going to event list page");
+                    Intent eventListIntent = new Intent(this, EventListActivity.class);
+                    startActivity(eventListIntent);
                 }
                 break;
-                //TODO: if there are, create the specified Event object with name, date, members id and photo
-                //TODO: go to MyEvents (should auto update the list within MyEvents)
             case R.id.event_date_text_view:
                 DialogFragment datePicker = new com.example.gdl.createeventpg.DatePickerFragment();
                 datePicker.show(getSupportFragmentManager(), "date picker");
@@ -171,7 +178,6 @@ public class CreateEventMain extends GDLActivity implements View.OnClickListener
                 Exception error = result.getError();
             }
         }
-
     }
 
     @Override

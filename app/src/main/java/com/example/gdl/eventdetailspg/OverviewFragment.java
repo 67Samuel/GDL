@@ -55,9 +55,9 @@ public class OverviewFragment extends Fragment {
             Member member = new Member("Peter", "12sdf345");
             Member member1 = new Member("John", "1233adf45");
             Member member2 = new Member("James", "123s4545");
-            ArrayList<Member> payeeList = new ArrayList<>();
-            payeeList.add(member1);
-            payeeList.add(member2);
+            ArrayList<String> payeeList = new ArrayList<>();
+            payeeList.add(member1.getId());
+            payeeList.add(member2.getId());
             Bill bill = new Bill("12asd3", "bill"+i, member, payeeList, 100);
             billsList.add(bill);
         }
