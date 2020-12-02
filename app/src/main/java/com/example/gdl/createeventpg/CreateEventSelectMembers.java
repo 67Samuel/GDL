@@ -51,7 +51,7 @@ public class CreateEventSelectMembers extends GDLActivity implements RecyclerIte
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate: called");
-        setContentView(R.layout.activity_create_event_select_members);
+        setContentView(R.layout.create_event_select_members);
         Log.d(TAG, "onCreate: layout set up");
 
         //set actionbar

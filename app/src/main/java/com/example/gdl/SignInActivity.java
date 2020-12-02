@@ -56,7 +56,7 @@ public class SignInActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sign_in_page);
+        setContentView(R.layout.sign_in_page);
 
         mUsername = findViewById(R.id.sign_in_username);
         mEmail = findViewById(R.id.sign_in_email);
