@@ -23,6 +23,11 @@ public class BillsListFragment extends Fragment {
 
     private List<Bill> billsList=new ArrayList<>();
 
+    BillsListFragment(List<Bill> billsList){
+        super();
+        this.billsList = billsList;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -30,7 +35,7 @@ public class BillsListFragment extends Fragment {
         View view = inflater.inflate(R.layout.bills_listview, container,false);
 
         //create adapter
-        testBills(); //initialize
+        //testBills(); //initialize
         BillsAdapter adapter=new BillsAdapter(getContext(), R.layout.bill_item, billsList);
 
         // transfer the data from adapter to listView
@@ -53,7 +58,7 @@ public class BillsListFragment extends Fragment {
     }
 
 
-    public void testBills(){
+    /**public void testBills(){
         for(int i=0;i<5;i++){
             Member member = new Member("Peter", "12sdf345");
             Member member1 = new Member("John", "1233adf45");
@@ -64,5 +69,5 @@ public class BillsListFragment extends Fragment {
             Bill bill = new Bill("12asd3", "bill"+i, member, payeeList, 100);
             billsList.add(bill);
         }
-    }
+    }*/
 }
