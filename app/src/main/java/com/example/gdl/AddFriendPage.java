@@ -80,7 +80,7 @@ public class AddFriendPage extends GDLActivity {
                             DocumentSnapshot document = task.getResult();
                             if (document.exists()) {
                                 current_Friend_ID = editTextFriendID.getText().toString();
-                                current_Friend_Name = document.getData().get("name").toString(); //change key to whatever the name is
+                                current_Friend_Name = document.getData().get("name").toString();
                                 friendNameTextView.setText(current_Friend_Name);
                                 search_Successful = true;
                             } else {
@@ -98,10 +98,10 @@ public class AddFriendPage extends GDLActivity {
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (search_Successful = true) {
+                if (search_Successful) {
 
                     //get the current friend's list, add this one if it's not inside
-                    DocumentReference docRef = db.collection("Users").document(user.getUid()); //change id to friend's id (editTextFriendID)
+                    DocumentReference docRef = db.collection("Users").document(user.getUid());
                     docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<DocumentSnapshot> task) {
