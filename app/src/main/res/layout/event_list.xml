@@ -43,9 +43,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="30dp"
-                android:layout_marginBottom="100dp"
+                android:layout_marginBottom="30dp"
                 android:clickable="true"
-                app:backgroundTint="@color/buttonGreen"
+                app:backgroundTint="@color/lightGreen"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:maxImageSize="25dp"
@@ -58,11 +58,57 @@
                 android:layout_marginEnd="30dp"
                 android:layout_marginBottom="30dp"
                 android:clickable="true"
-                app:backgroundTint="@color/buttonGreen"
+                app:backgroundTint="@color/lightGreen"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:maxImageSize="25dp"
                 app:srcCompat="@drawable/floatingbutton" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/open_FAB_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:backgroundTint="@color/lightGreen"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:maxImageSize="25dp"
+                app:srcCompat="@drawable/floatingbutton"
+                android:layout_marginEnd="30dp"
+                android:layout_marginBottom="30dp"/>
+
+            <TextView
+                android:id="@+id/create_event_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="100dp"
+                android:layout_marginBottom="50dp"
+                android:background="@color/lightGreen"
+                android:text="Create an event"
+                android:textColor="#000000"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:padding="3dp"
+                android:paddingRight="3dp"
+                android:paddingLeft="3dp"/>
+
+            <TextView
+                android:id="@+id/join_event_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="100dp"
+                android:layout_marginBottom="50dp"
+                android:background="@color/lightGreen"
+                android:text="Join an event"
+                android:textColor="#000000"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:padding="3dp"
+                android:paddingRight="3dp"
+                android:paddingLeft="3dp"/>
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 

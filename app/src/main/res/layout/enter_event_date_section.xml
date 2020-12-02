@@ -22,17 +22,17 @@
         </TextView>
 
         <TextView
+            android:id="@+id/event_date_text_view"
             android:layout_width="270dp"
             android:layout_height="40dp"
-            android:id="@+id/event_date_text_view"
-            android:background="@color/buttonGreen"
-            android:padding="5dp"
             android:layout_gravity="center"
-            android:maxLines="1"
-            android:textColor="@color/black"
-            android:textSize="17sp"
+            android:layout_marginLeft="30dp"
+            android:background="@color/translucentGreen"
             android:gravity="center|start"
-            android:layout_marginLeft="30dp">
+            android:maxLines="1"
+            android:padding="5dp"
+            android:textColor="@color/black"
+            android:textSize="17sp">
 
         </TextView>
 
