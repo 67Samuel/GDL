@@ -41,7 +41,7 @@ public class EventActivity extends GDLActivity {
 
 
         //save instances of fragment to fragments
-        fragments.add(new OverviewFragment());
+        fragments.add(new OverviewFragment(event));
         fragments.add(new BillsListFragment(event.getBillsList()));
         fragments.add(new MembersFragment());
 

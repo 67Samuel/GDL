@@ -13,12 +13,15 @@ import androidx.annotation.NonNull;
 
 import com.example.gdl.R;
 import com.example.gdl.models.Bill;
+import com.example.gdl.models.BillProcessor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
-public class BillsOverviewAdapter extends ArrayAdapter<Bill> {
+public class BillsOverviewAdapter extends ArrayAdapter<String> {
     private int resourceId;
+
 
     //save view as cache
     class ViewHolder {
@@ -27,13 +30,13 @@ public class BillsOverviewAdapter extends ArrayAdapter<Bill> {
     }
 
     //instructor, accept data
-    public BillsOverviewAdapter(@NonNull Context context, int textViewResourceId, @NonNull List<Bill> objects) {
+    public BillsOverviewAdapter(@NonNull Context context, int textViewResourceId, @NonNull List<String> objects) {
         super(context, textViewResourceId, objects);
         resourceId = textViewResourceId;
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
-        Bill bill = getItem(position); //get event instance
+        String string = getItem(position); //get event instance
 
         View view;
         ViewHolder viewHolder;
@@ -54,14 +57,8 @@ public class BillsOverviewAdapter extends ArrayAdapter<Bill> {
             viewHolder = (ViewHolder) view.getTag();
         }
 
-        viewHolder.billName.setText(bill.getName());
-
-        //TODO: find a way to judge the status of bill
-        /**if (bill.getStatus()){
-            do some thing;
-        } else {
-            do some thing;
-        }*/
+        viewHolder.billName.setText(string);
+        //no way to judge the states of bills, default to be true
         viewHolder.checkBox.setChecked(true);
         return view;
     }
