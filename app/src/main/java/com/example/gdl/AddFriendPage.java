@@ -19,6 +19,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.SetOptions;
+import com.google.firebase.storage.StorageException;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -107,17 +108,17 @@ public class AddFriendPage extends GDLActivity {
                             if (task.isSuccessful()) {
                                 DocumentSnapshot document = task.getResult();
                                 if (document.exists()) {
-                                    friend_list = (ArrayList) document.getData().get("friends"); // get friendlist
-                                    if (friend_list.contains(current_Friend_ID) == false) { // if searched user not in list
-                                        friend_list.add(current_Friend_ID); //add to list
-                                        Map <String, Object> friendToAdd = new HashMap<>();
-                                        friendToAdd.put("friends", friend_list);
-                                        db.collection("Users").document(user.getUid()).set(friendToAdd, SetOptions.merge()); //update list
-                                        Toast.makeText(AddFriendPage.this, "Friend added", Toast.LENGTH_LONG).show();
+                                        friend_list = (ArrayList) document.getData().get("friendsList"); // get friendlist
+                                        if (friend_list.contains(current_Friend_ID) == false) { // if searched user not in list
+                                            friend_list.add(current_Friend_ID); //add to list
+                                            Map<String, Object> friendToAdd = new HashMap<>();
+                                            friendToAdd.put("friendsList", friend_list);
+                                            db.collection("Users").document(user.getUid()).set(friendToAdd, SetOptions.merge()); //update list
+                                            Toast.makeText(AddFriendPage.this, "Friend added", Toast.LENGTH_LONG).show();
+                                        } else {
+                                            Toast.makeText(AddFriendPage.this, "Already a friend", Toast.LENGTH_SHORT).show();
+                                        }
                                     } else {
-                                        Toast.makeText(AddFriendPage.this, "Already a friend", Toast.LENGTH_SHORT).show();
-                                }
-                                } else {
                                     //Toast.makeText(AddFriendPage.this, "Friend not found", Toast.LENGTH_LONG).show();
                                     friendNameTextView.setText("Friend not found");
                                 }
