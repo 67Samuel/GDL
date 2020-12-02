@@ -81,6 +81,8 @@ public class HomePage extends GDLActivity {
 
         //test
         Log.d(TAG, "onCreate: start of test");
+        //creating members
+        Log.d(TAG, "onCreate: creating members");
         DocumentReference userRef = db.collection("Users").document(); //creates a doc with unique ID
         String userId = userRef.getId();
         Log.d(TAG, "onCreate: test user id: "+userId);
@@ -91,13 +93,27 @@ public class HomePage extends GDLActivity {
         DocumentReference userRef2 = db.collection("Users").document(); //creates a doc with unique ID
         String userId2 = userRef.getId();
         Member payee2 = new Member("payeeGuy2", userId2);
-        ArrayList<Member> payeeList = new ArrayList<>();
-        payeeList.add(payee1);
-        payeeList.add(payee2);
-        ArrayList<Member> eventMembersList = new ArrayList<>();
-        eventMembersList.add(payer);
-        eventMembersList.add(payee1);
-        eventMembersList.add(payee2);
+        ArrayList<String> payeeList = new ArrayList<>();
+        payeeList.add(payee1.getId());
+        payeeList.add(payee2.getId());
+        ArrayList<String> eventMembersList = new ArrayList<>();
+        eventMembersList.add(payer.getId());
+        eventMembersList.add(payee1.getId());
+        eventMembersList.add(payee2.getId());
+        Log.d(TAG, "onCreate: adding members to db");
+        Log.d(TAG, "onCreate: payer before sending to db: "+payer.toString());
+        userRef.set(payer);
+        userRef1.set(payee1);
+        userRef2.set(payee2);
+        Log.d(TAG, "onCreate: getting members from db");
+        userRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                Member payerfromdb = documentSnapshot.toObject(Member.class);
+                Log.d(TAG, "onSuccess: payer returned from db: "+payerfromdb.toString());
+            }
+        });
+        
 
         Log.d(TAG, "onCreate: start of bill test");
         DocumentReference billRef = db.collection("Bills").document(); //creates a doc with unique ID
@@ -115,6 +131,7 @@ public class HomePage extends GDLActivity {
             }
         });
 
+        Log.d(TAG, "onCreate: start of event test");
         DocumentReference eventRef = db.collection("Events").document(); //creates a doc with unique ID
         String eventId = eventRef.getId();
         Event event = new Event(eventId, "event1", eventMembersList, "1/12/2020");

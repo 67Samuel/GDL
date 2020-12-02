@@ -16,15 +16,15 @@ public class Bill implements Parcelable {
     private long timeInitialized;
     private Uri receiptPicture = null;
     private Member payer;
-    private List<Member> membersList; //members who are splitting this bill, including payer
-    private Map<Member, Double> expensesMap; //members and how much they owe, doesn't include payer
+    private List<String> membersList; //members who are splitting this bill, including payer
+    private Map<String, Double> expensesMap; //members and how much they owe, doesn't include payer
     private int memberSize = 0;
     private double totalCost = 0.0;
 
     public Bill() {
     }
 
-    public Bill(String mId, String mName, Member mPayer, List<Member> mMembersList, double totalCost) {
+    public Bill(String mId, String mName, Member mPayer, List<String> mMembersList, double totalCost) {
         this.id = mId;
         this.name = mName;
         Date date = new Date();
@@ -34,6 +34,17 @@ public class Bill implements Parcelable {
         this.totalCost = totalCost;
 
         memberSize = mMembersList.size();
+    }
+
+    protected Bill(Parcel in) {
+        id = in.readString();
+        name = in.readString();
+        timeInitialized = in.readLong();
+        receiptPicture = in.readParcelable(Uri.class.getClassLoader());
+        payer = in.readParcelable(Member.class.getClassLoader());
+        membersList = in.createStringArrayList();
+        memberSize = in.readInt();
+        totalCost = in.readDouble();
     }
 
     public static final Creator<Bill> CREATOR = new Creator<Bill>() {
@@ -47,17 +58,6 @@ public class Bill implements Parcelable {
             return new Bill[size];
         }
     };
-
-    protected Bill(Parcel in) {
-        id = in.readString();
-        name = in.readString();
-        timeInitialized = in.readInt();
-        receiptPicture = in.readParcelable(Uri.class.getClassLoader());
-        payer = in.readParcelable(Member.class.getClassLoader());
-        membersList = in.createTypedArrayList(Member.CREATOR);
-        memberSize = in.readInt();
-        totalCost = in.readDouble();
-    }
 
     public void setReceiptPicture(Uri mReceiptPicture) {
         this.receiptPicture = mReceiptPicture;
@@ -83,11 +83,11 @@ public class Bill implements Parcelable {
         return payer;
     }
 
-    public List<Member> getMembersList() {
+    public List<String> getMembersList() {
         return membersList;
     }
 
-    public Map<Member, Double> getExpensesMap() {
+    public Map<String, Double> getExpensesMap() {
         return expensesMap;
     }
 
@@ -102,28 +102,11 @@ public class Bill implements Parcelable {
     public void calculateSplit() {
         double amtEachPerson = this.totalCost / this.getMemberSize();
         this.expensesMap = new HashMap<>();
-        for(Member m : this.membersList){
+        for(String m : this.membersList){
             if(!m.equals(this.payer)) {
                 this.expensesMap.put(m, amtEachPerson);
             }
         }
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(id);
-        dest.writeString(name);
-        dest.writeLong(timeInitialized);
-        dest.writeParcelable(receiptPicture, flags);
-        dest.writeParcelable(payer, flags);
-        dest.writeTypedList(membersList);
-        dest.writeInt(memberSize);
-        dest.writeDouble(totalCost);
     }
 
     @Override
@@ -139,5 +122,22 @@ public class Bill implements Parcelable {
                 ", memberSize=" + memberSize +
                 ", totalCost=" + totalCost +
                 '}';
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(name);
+        dest.writeLong(timeInitialized);
+        dest.writeParcelable(receiptPicture, flags);
+        dest.writeParcelable(payer, flags);
+        dest.writeStringList(membersList);
+        dest.writeInt(memberSize);
+        dest.writeDouble(totalCost);
     }
 }
