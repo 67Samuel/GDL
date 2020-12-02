@@ -15,6 +15,7 @@ import com.example.gdl.R;
 import com.example.gdl.models.Bill;
 import com.example.gdl.models.BillProcessor;
 import com.example.gdl.models.Event;
+import com.example.gdl.models.GraphOptimiser;
 import com.example.gdl.models.GreedyAlgorithm;
 import com.example.gdl.models.Member;
 import com.google.firebase.database.DatabaseReference;
@@ -68,7 +69,7 @@ public class OverviewFragment extends Fragment {
         List<String> nameList = getNameFromMembersList(memberList);
 
         BillProcessor billProcessor = new BillProcessor(billsList);
-        GreedyAlgorithm greedyAlgorithm = new GreedyAlgorithm(billProcessor.getComputationalGraph());
+        GraphOptimiser greedyAlgorithm = new GreedyAlgorithm();
         billProcessor.optimiseTransactions(greedyAlgorithm);
 
         //here should be better algorithm to get name of member
