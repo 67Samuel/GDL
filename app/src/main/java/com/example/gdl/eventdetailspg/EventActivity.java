@@ -1,5 +1,6 @@
 package com.example.gdl.eventdetailspg;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -13,6 +14,7 @@ import java.util.List;
 
 import com.example.gdl.GDLActivity;
 import com.example.gdl.R;
+import com.example.gdl.models.Event;
 import com.google.android.material.tabs.TabLayout;
 
 public class EventActivity extends GDLActivity {
@@ -27,6 +29,9 @@ public class EventActivity extends GDLActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.event);
 
+        Intent intent = getIntent();
+        Event event = intent.getParcelableExtra("EVENT");
+
         tabLayout = findViewById(R.id.event_tablayout);
         viewPager = findViewById(R.id.event_viewpager);
 
@@ -37,7 +42,7 @@ public class EventActivity extends GDLActivity {
 
         //save instances of fragment to fragments
         fragments.add(new OverviewFragment());
-        fragments.add(new BillsListFragment());
+        fragments.add(new BillsListFragment(event.getBillsList()));
         fragments.add(new MembersFragment());
 
         viewPager.setAdapter(new FragmentStateAdapter(getSupportFragmentManager(), getLifecycle()) {
