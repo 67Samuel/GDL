@@ -20,7 +20,6 @@ import java.util.Map;
 import java.util.Set;
 
 import com.example.gdl.eventdetailspg.EventActivity;
-import com.example.gdl.models.DBUtils;
 import com.example.gdl.models.Event;
 import com.example.gdl.R;
 import com.example.gdl.models.Member;
