@@ -90,21 +90,21 @@
                 android:id="@+id/join_event_name"
                 android:layout_width="200dp"
                 android:layout_height="50dp"
+                android:layout_gravity="center"
                 android:layout_weight="1"
-                android:text="join_event_name"
+                android:text="Event Name"
                 android:textColor="#000000"
-                android:textSize="24sp"
-                android:layout_gravity="center"/>
+                android:textSize="24sp" />
 
             <TextView
                 android:id="@+id/join_event_owner"
                 android:layout_width="200dp"
                 android:layout_height="50dp"
+                android:layout_gravity="center"
                 android:layout_weight="1"
-                android:text="join_event_owner"
+                android:text="Event Owner"
                 android:textColor="#000000"
-                android:textSize="24sp"
-                android:layout_gravity="center"/>
+                android:textSize="24sp" />
         </LinearLayout>
 
     </LinearLayout>
