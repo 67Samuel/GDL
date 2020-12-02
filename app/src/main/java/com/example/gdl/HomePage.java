@@ -19,7 +19,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.AppCompatButton;
 
-//import com.example.gdl.Glide.GlideApp;
 import com.example.gdl.Glide.GlideApp;
 import com.example.gdl.createeventpg.CreateEventMain;
 import com.example.gdl.eventlistpg.EventListActivity;
@@ -50,8 +49,11 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.xml.parsers.DocumentBuilder;
 
 public class HomePage extends GDLActivity {
 
@@ -71,6 +73,9 @@ public class HomePage extends GDLActivity {
     TextView mPendingPaymentsAmt;
     TextView mAmtToReceive;
 
+    Member currentUser = null;
+    StorageReference userImageStorageRef;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -78,74 +83,6 @@ public class HomePage extends GDLActivity {
         setContentView(R.layout.home_page);
 
         Log.d(TAG, "onCreate: called");
-
-        //test
-        Log.d(TAG, "onCreate: start of test");
-        //creating members
-        Log.d(TAG, "onCreate: creating members");
-        DocumentReference userRef = db.collection("Users").document(); //creates a doc with unique ID
-        String userId = userRef.getId();
-        Log.d(TAG, "onCreate: test user id: "+userId);
-        Member payer = new Member("payerGuy", userId);
-        DocumentReference userRef1 = db.collection("Users").document(); //creates a doc with unique ID
-        String userId1 = userRef.getId();
-        Member payee1 = new Member("payeeGuy1", userId1);
-        DocumentReference userRef2 = db.collection("Users").document(); //creates a doc with unique ID
-        String userId2 = userRef.getId();
-        Member payee2 = new Member("payeeGuy2", userId2);
-        ArrayList<String> payeeList = new ArrayList<>();
-        payeeList.add(payee1.getId());
-        payeeList.add(payee2.getId());
-        ArrayList<String> eventMembersList = new ArrayList<>();
-        eventMembersList.add(payer.getId());
-        eventMembersList.add(payee1.getId());
-        eventMembersList.add(payee2.getId());
-        Log.d(TAG, "onCreate: adding members to db");
-        Log.d(TAG, "onCreate: payer before sending to db: "+payer.toString());
-        userRef.set(payer);
-        userRef1.set(payee1);
-        userRef2.set(payee2);
-        Log.d(TAG, "onCreate: getting members from db");
-        userRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                Member payerfromdb = documentSnapshot.toObject(Member.class);
-                Log.d(TAG, "onSuccess: payer returned from db: "+payerfromdb.toString());
-            }
-        });
-        
-
-        Log.d(TAG, "onCreate: start of bill test");
-        DocumentReference billRef = db.collection("Bills").document(); //creates a doc with unique ID
-        String billId = billRef.getId();
-        Log.d(TAG, "onCreate: bill id: "+billId);
-        Bill bill = new Bill(billId, "Bill1", payer, payeeList, 100);
-        Log.d(TAG, "onCreate: bill before sending to db: "+bill.toString());
-        billRef.set(bill);
-
-        billRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                Bill billFromdb = documentSnapshot.toObject(Bill.class);
-                Log.d(TAG, "onSuccess: bill returned from db: "+billFromdb.toString());
-            }
-        });
-
-        Log.d(TAG, "onCreate: start of event test");
-        DocumentReference eventRef = db.collection("Events").document(); //creates a doc with unique ID
-        String eventId = eventRef.getId();
-        Event event = new Event(eventId, "event1", eventMembersList, "1/12/2020");
-        Log.d(TAG, "onCreate: event before sending to db: "+event.toString());
-        eventRef.set(event);
-
-        eventRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                Event eventFromdb = documentSnapshot.toObject(Event.class);
-                Log.d(TAG, "onSuccess: event returned from db: "+eventFromdb.toString());
-            }
-        });
-        //test
 
         //set actionbar
         ActionBar actionBar = getSupportActionBar();
@@ -156,27 +93,46 @@ public class HomePage extends GDLActivity {
         mUsername = findViewById(R.id.username);
         mUserEmail = findViewById(R.id.user_email);
         mProfilePic = findViewById(R.id.profile_pic);
-        //TODO: get and set name from firestore
-        mUserEmail.setText((String)user.getEmail());
-        Log.d(TAG, "onCreate: getting profile pic from storage");
-        try {
-            StorageReference imageStorageRef = storageRef.child("Profile Images");
-            Log.d(TAG, "onCreate: uid: "+user.getUid());
-            StorageReference userImageStorageRef = imageStorageRef.child(user.getUid()+".jpg");
-            GlideApp.with(this)
-                    .load(userImageStorageRef)
-                    .into(mProfilePic);
-        } catch (Exception e) {
-            Log.d(TAG, "onCreate: error getting profile pic: "+e);
-        }
-
         mNoEventsOngoing = findViewById(R.id.no_of_events_ongoing);
         mPendingPaymentsAmt = findViewById(R.id.pending_payments_amt);
         mAmtToReceive = findViewById(R.id.amt_to_receive);
+        Log.d(TAG, "onCreate: getting profile pic from storage");
+        StorageReference imageStorageRef = storageRef.child("Profile Images");
+        Log.d(TAG, "onCreate: uid: "+user.getUid());
+        userImageStorageRef = imageStorageRef.child(user.getUid() + ".jpg");
+        try {
+            GlideApp.with(this)
+                    .load(userImageStorageRef)
+                    .into(mProfilePic);
+            Log.d(TAG, "onCreate: profile pic obtained");
+        } catch (Exception e) {
+            Log.d(TAG, "onCreate: cannot set photo");
+        }
 
-        //TODO: get debt from firestore
-        //TODO: get lent from firestore
-        //TODO: get num events ongoing from firestore
+        //mUserEmail.setText(user.getEmail());
+        Log.d(TAG, "onCreate: getting user details from firestore");
+        DocumentReference userRef = db.collection("Users").document(user.getUid());
+        userRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                currentUser = documentSnapshot.toObject(Member.class);
+                Log.d(TAG, "onSuccess: obtained current user details from firestore");
+                Log.d(TAG, "onCreate: setting current user details to views");
+                String lent = ""+currentUser.getLent();
+                String numEventsOngoing = "0";
+                if (currentUser.getEventsList() != null) {
+                    numEventsOngoing = ""+currentUser.getEventsList().size();
+                }
+                String debt = ""+currentUser.getDebt();
+                String name = ""+currentUser.getName();
+                String email = ""+currentUser.getEmail();
+                mUserEmail.setText(email);
+                mAmtToReceive.setText(lent);
+                mNoEventsOngoing.setText(numEventsOngoing);
+                mPendingPaymentsAmt.setText(debt);
+                mUsername.setText(name);
+            }
+        });
 
         myEvents = findViewById(R.id.my_events_button);
         myEvents.setOnClickListener(new View.OnClickListener() {

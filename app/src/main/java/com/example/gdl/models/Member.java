@@ -13,10 +13,12 @@ public class Member implements Parcelable {
 
     private String name;
     private String id;
+    private String email;
     private Uri picId;
     private double debt;
     private double lent;
-    private ArrayList<Event> eventsList;
+    private ArrayList<Event> eventsList = null;
+    private  ArrayList<String> friendsList = null;
 
     //For use only to calculate amt owed per event   ~Zhixuan
     private double credit = 0.0;
@@ -30,15 +32,20 @@ public class Member implements Parcelable {
         this.id = mId;
         this.debt = 0;
         this.lent = 0;
+        this.picId = null;
+        this.email = null;
     }
+
 
     protected Member(Parcel in) {
         name = in.readString();
         id = in.readString();
+        email = in.readString();
         picId = in.readParcelable(Uri.class.getClassLoader());
         debt = in.readDouble();
         lent = in.readDouble();
         eventsList = in.createTypedArrayList(Event.CREATOR);
+        friendsList = in.createStringArrayList();
         credit = in.readDouble();
         debit = in.readDouble();
     }
@@ -61,6 +68,14 @@ public class Member implements Parcelable {
                 "Id=" + id +
                 "Name=" + name +
                 '}';
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public void setPicId(Uri mPicId) {
@@ -119,6 +134,7 @@ public class Member implements Parcelable {
         return debit;
     }
 
+
     @Override
     public int describeContents() {
         return 0;
@@ -128,12 +144,13 @@ public class Member implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(name);
         dest.writeString(id);
+        dest.writeString(email);
         dest.writeParcelable(picId, flags);
         dest.writeDouble(debt);
         dest.writeDouble(lent);
         dest.writeTypedList(eventsList);
+        dest.writeStringList(friendsList);
         dest.writeDouble(credit);
         dest.writeDouble(debit);
     }
-
 }

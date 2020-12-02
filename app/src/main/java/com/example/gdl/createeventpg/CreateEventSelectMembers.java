@@ -1,5 +1,6 @@
 package com.example.gdl.createeventpg;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -16,17 +17,23 @@ import android.widget.Toast;
 import com.example.gdl.GDLActivity;
 import com.example.gdl.R;
 import com.example.gdl.models.Member;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipDrawable;
 import com.google.android.material.chip.ChipGroup;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
 public class CreateEventSelectMembers extends GDLActivity implements RecyclerItemSelectedListener {
-
-    //TODO: make shared preferences to store previously created ArrayList so that user does not have to re-enter members just to add/remove one
 
     private static final String TAG = "CreateEventMembers";
 
@@ -39,12 +46,11 @@ public class CreateEventSelectMembers extends GDLActivity implements RecyclerIte
     private ChipGroup mSelectedMembersChipGroup;
 
     //vars
-    public ArrayList<Member> mFakeMembers = new ArrayList<>();
-    //TODO: change the sending of member objs to sending just their ids
     SharedPreferences mPreferences;
     private static final String sharedPrefFile = "com.example.gdl.createeventpg.CreateEventSelectMembers.preffile";
     public final static String SELECTED_MEMBERS_ID_KEY = "com.example.gdl.CreateEventActivities.selected_members_ids_key";
     public ArrayList<String> mSelectedMembersIds = new ArrayList<>();
+    public ArrayList<Member> friendsList = new ArrayList<>();
 
 
     @Override
@@ -80,12 +86,27 @@ public class CreateEventSelectMembers extends GDLActivity implements RecyclerIte
             }
         }
 
-        getFakeMembers();
-        Log.d(TAG, "onCreate: fake members made");
+        //TODO: get all friends of user (Member objs) and store in friendsList, find out if friends is a collection or subcollection
+        DocumentReference userRef = db.collection("Users").document(user.getUid()); //ref to list of friends
+        CollectionReference friendsRef = userRef.collection("friends");
+        friendsRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        Log.d(TAG, document.getId() + " => " + document.getData());
+                        Member friend = document.toObject(Member.class);
+                        friendsList.add(friend);
+                    }
+                } else {
+                    Log.d(TAG, "Error getting documents: ", task.getException());
+                }
+            }
+        });
 
         mMemberLayoutManager = new LinearLayoutManager(this);
         mMemberRecyclerView.setLayoutManager(mMemberLayoutManager);
-        mMembersAdapter = new MembersAdapter(this, mFakeMembers);
+        mMembersAdapter = new MembersAdapter(this, friendsList);
         mMemberRecyclerView.setAdapter(mMembersAdapter);
         Log.d(TAG, "onCreate: recyclerview set up");
 
@@ -121,19 +142,6 @@ public class CreateEventSelectMembers extends GDLActivity implements RecyclerIte
             }
         });
 
-    }
-
-    public void getFakeMembers() {
-        mFakeMembers.add(new Member("sally", "0"));
-        mFakeMembers.add(new Member("james", "1"));
-        mFakeMembers.add(new Member("dillon", "2"));
-        mFakeMembers.add(new Member("rebecca", "3"));
-        mFakeMembers.add(new Member("lucy", "4"));
-        mFakeMembers.add(new Member("isaac", "5"));
-        mFakeMembers.add(new Member("joshua", "6"));
-        mFakeMembers.add(new Member("kelly", "7"));
-        mFakeMembers.add(new Member("percy", "8"));
-        Log.d(TAG, "getFakeMembers: fake members made");
     }
 
     @Override

@@ -47,9 +47,7 @@ public class MembersAdapter extends RecyclerView.Adapter<MembersAdapter.ViewHold
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         //bind specific data to the views in each itemView
         holder.name.setText(mFriendsList.get(position).getName());
-        holder.profilePhoto.setImageResource(R.drawable.ashketchum);
-        //The below code is probably better than the one above for when we take the image from database
-        //holder.profilePhoto.setImageDrawable(ContextCompat.getDrawable(context, mFriendsList.get(position).getId()));
+        holder.profilePhoto.setImageURI(mFriendsList.get(position).getPicId());
     }
 
 
