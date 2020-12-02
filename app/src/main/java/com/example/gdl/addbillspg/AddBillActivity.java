@@ -6,6 +6,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -66,6 +67,7 @@ public class AddBillActivity extends AppCompatActivity {
 
         if(id == R.id.buttonSaveBill) {
             // TODO 4.3 Call finish() to go back to the originating Activity
+            // Dummy Data
             Map<String, Object> billData = new HashMap<>();
             billData.put("name", "Bill2");
             billData.put("amount", 100);
@@ -73,6 +75,8 @@ public class AddBillActivity extends AppCompatActivity {
             billData.put("memberIDLists", mAdapter.memberViewHolder.payeeID);
             billData.put("payerID", mAdapter.memberViewHolder.payerID);
             db.collection("Bills").add(billData);
+
+            finish();
 
         }
         return super.onOptionsItemSelected(item);
