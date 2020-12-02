@@ -66,7 +66,6 @@ public class EventListFragment extends Fragment {
         event_listview = view.findViewById(R.id.event_listview);
 
         // get the date and use it to create adapter
-//        testEvents(); //initialize
         user = mAuth.getCurrentUser();
 
 
@@ -79,29 +78,33 @@ public class EventListFragment extends Fragment {
                 @Override
                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
                     if (task.isSuccessful()) {
-                        QuerySnapshot querySnap = task.getResult();
-                        List<DocumentSnapshot> docSnapList = querySnap.getDocuments();
-                        DocumentSnapshot docSnap = docSnapList.get(0);
-                        Map<String,Object> s = docSnap.getData();
-                        List<String> eventsIds = (List<String>) s.get("eventsList");
-                        db.collection("Events")
-                                .whereIn("id",eventsIds)
-                                .get()
-                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                        if (task.isSuccessful()) {
-                                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                                eventList.add(document.toObject(Event.class));
+                        try {
+                            QuerySnapshot querySnap = task.getResult();
+                            List<DocumentSnapshot> docSnapList = querySnap.getDocuments();
+                            DocumentSnapshot docSnap = docSnapList.get(0);
+                            Map<String, Object> s = docSnap.getData();
+                            List<String> eventsIds = (List<String>) s.get("eventsList");
+                            db.collection("Events")
+                                    .whereIn("id", eventsIds)
+                                    .get()
+                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                            if (task.isSuccessful()) {
+                                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                                    eventList.add(document.toObject(Event.class));
+                                                }
+                                                adapter[0] = new EventAdapter(getContext(), R.layout.event_item, eventList);
                                             }
-                                            adapter[0] = new EventAdapter(getContext(), R.layout.event_item, eventList);
                                         }
-                                    }
-                                });
+                                    });
 
-                        Log.d(TAG, "Task successful");
-                        Log.d(TAG,eventsIds.toString());
-                        Log.d(TAG, docSnap.getId());
+                            Log.d(TAG, "Task successful");
+                            Log.d(TAG, eventsIds.toString());
+                            Log.d(TAG, docSnap.getId());
+                        }catch(IllegalArgumentException e){
+                            Log.w(TAG,"No event");
+                        }
                     } else {
                         Log.d(TAG, "Sorry i tried my best");
                     }
