@@ -16,11 +16,11 @@ public class BillProcessor {
     private ArrayList<String> announcements = new ArrayList<>();
 
 
-    BillProcessor(List<Bill> billList){
+    public BillProcessor(List<Bill> billList){
         this.billList = billList;
         this.readBillList();
     }
-    BillProcessor(Event event){
+    public BillProcessor(Event event){
         this.billList = event.getBillsList();
         this.readBillList();
     }
