@@ -60,6 +60,11 @@
     <string name="password">password</string>
     <string name="username">username</string>
     <string name="sign_in">Sign up</string>
+    <string name="create_an_account">Create an account</string>
+    <string name="email">Email</string>
+    <string name="or">OR</string>
+    <string name="create_without_pic">Create without pic</string>
+    <string name="add_profile_pic">Add Profile Pic</string>
 
 
 </resources>
