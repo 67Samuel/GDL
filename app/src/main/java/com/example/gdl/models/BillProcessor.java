@@ -25,6 +25,14 @@ public class BillProcessor {
         this.readBillList();
     }
 
+    public List<String> getMemberMasterList() {
+        return memberMasterList;
+    }
+
+    public Map<String, Integer> getMemberIndexMap() {
+        return memberIndexMap;
+    }
+
 
     public double[][] getComputationalGraph(){
         return this.computationalGraph;
