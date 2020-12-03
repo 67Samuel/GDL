@@ -11,7 +11,7 @@ public class Event implements Parcelable {
 
     private String id;
     private String name;
-    private Uri eventPicture = null;
+    private String eventPicture;
     private long timeInitialized;
     private boolean status; //completed=true, ongoing=false
     private double totalSpent;
@@ -46,18 +46,6 @@ public class Event implements Parcelable {
         date = in.readString();
     }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(id);
-        dest.writeString(name);
-        dest.writeParcelable(eventPicture, flags);
-        dest.writeLong(timeInitialized);
-        dest.writeByte((byte) (status ? 1 : 0));
-        dest.writeDouble(totalSpent);
-        dest.writeTypedList(membersList);
-        dest.writeTypedList(billsList);
-        dest.writeString(date);
-    }
 
     public static final Creator<Event> CREATOR = new Creator<Event>() {
         @Override
@@ -79,7 +67,7 @@ public class Event implements Parcelable {
         this.billsList = billsList;
     }
 
-    public void setEventPicture(Uri eventPicture) {
+    public void setEventPicture(String eventPicture) {
         this.eventPicture = eventPicture;
     }
 
@@ -115,21 +103,17 @@ public class Event implements Parcelable {
         return billsList;
     }
 
-    public Uri getEventPicture() {
+    public String getEventPicture() {
         return eventPicture;
     }
 
-    @Override
-    public String toString() {
-        return "Event{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", timeInitialized=" + timeInitialized +
-                ", status=" + status +
-                ", membersList=" + membersList.toString() +
-                ", billsList=" + billsList.toString() +
-                '}';
+    public Uri getUriFromString() {
+        Uri uri = Uri.parse(eventPicture);
+        return uri;
     }
+
+
+
 
     public void calculateTotalSpent() {
         for (Bill bill : billsList) {
@@ -137,10 +121,22 @@ public class Event implements Parcelable {
         }
     }
 
+
     @Override
     public int describeContents() {
         return 0;
     }
 
-
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(name);
+        dest.writeString(eventPicture);
+        dest.writeLong(timeInitialized);
+        dest.writeByte((byte) (status ? 1 : 0));
+        dest.writeDouble(totalSpent);
+        dest.writeTypedList(membersList);
+        dest.writeTypedList(billsList);
+        dest.writeString(date);
+    }
 }

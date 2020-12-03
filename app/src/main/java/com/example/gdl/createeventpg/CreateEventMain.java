@@ -18,7 +18,7 @@ import androidx.fragment.app.DialogFragment;
 
 import com.example.gdl.GDLActivity;
 import com.example.gdl.R;
-import com.example.gdl.eventlistpg.EventListActivity;
+//import com.example.gdl.eventlistpg.EventListActivity;
 import com.example.gdl.models.Event;
 import com.example.gdl.models.Member;
 import com.google.firebase.firestore.DocumentReference;
@@ -28,6 +28,7 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Map;
 
 public class CreateEventMain extends GDLActivity implements View.OnClickListener, DatePickerDialog.OnDateSetListener {
@@ -41,7 +42,7 @@ public class CreateEventMain extends GDLActivity implements View.OnClickListener
     private ArrayList<Member> mSelectedMembersList = new ArrayList<>();
     SharedPreferences mPreferences;
     Uri event_pic_uri;
-    Map<String, Object> eventInfo;
+    Map<String, Object> eventInfo = new HashMap<>();
 
 
     //UI components
@@ -89,7 +90,7 @@ public class CreateEventMain extends GDLActivity implements View.OnClickListener
         mSelectedMembersList = selectedMembersIntent.getParcelableArrayListExtra(CreateEventSelectMembers.SELECTED_MEMBERS_ID_KEY);
         try {
             Log.d(TAG, "onCreate: " + mSelectedMembersList);
-            eventInfo.put("selected members list", mSelectedMembersList);
+            eventInfo.put("membersList", mSelectedMembersList);
         } catch (Exception e) {
             Log.d(TAG, "onCreate: "+e);
             mSelectedMembersList = new ArrayList<Member>();
@@ -133,11 +134,11 @@ public class CreateEventMain extends GDLActivity implements View.OnClickListener
                     DocumentReference eventRef = db.collection("Events").document(); //creates a doc with unique ID
                     String eventId = eventRef.getId();
                     Event event = new Event(eventId, mEventNameEditText.getText().toString(), mSelectedMembersList, mEventDateTextView.getText().toString());
+                    event.setEventPicture(event_pic_uri.toString());
                     eventRef.set(event);
-                    //wait a bit for db to update
                     Log.d(TAG, "onClick: going to event list page");
-                    Intent eventListIntent = new Intent(this, EventListActivity.class);
-                    startActivity(eventListIntent);
+                    //Intent eventListIntent = new Intent(this, EventListActivity.class);
+                    //startActivity(eventListIntent);
                 }
                 break;
             case R.id.event_date_text_view:
@@ -173,6 +174,7 @@ public class CreateEventMain extends GDLActivity implements View.OnClickListener
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {
                 event_pic_uri = result.getUri();
+                Toast.makeText(this, "event picture added!", Toast.LENGTH_SHORT).show();
                 Log.d(TAG, "onActivityResult: photo uri obtained");
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();

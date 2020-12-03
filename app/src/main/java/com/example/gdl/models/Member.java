@@ -15,7 +15,7 @@ public class Member implements Parcelable {
     private String name;
     private String id;
     private String email;
-    private Uri picId;
+    private String picId;
     private double debt;
     private double lent;
     private List<String> eventsList = null;
@@ -35,17 +35,15 @@ public class Member implements Parcelable {
 
     }
 
-
     protected Member(Parcel in) {
         name = in.readString();
         id = in.readString();
         email = in.readString();
-        picId = in.readParcelable(Uri.class.getClassLoader());
+        picId = in.readString();
         debt = in.readDouble();
         lent = in.readDouble();
         eventsList = in.createStringArrayList();
         friendsList = in.createStringArrayList();
-
     }
 
     public static final Creator<Member> CREATOR = new Creator<Member>() {
@@ -68,6 +66,19 @@ public class Member implements Parcelable {
                 '}';
     }
 
+    public Uri getUriFromString() {
+        Uri uri = Uri.parse(picId);
+        return uri;
+    }
+
+    public void setFriendsList(List<String> friendsList) {
+        this.friendsList = friendsList;
+    }
+
+    public List<String> getFriendsList() {
+        return friendsList;
+    }
+
     public String getEmail() {
         return email;
     }
@@ -76,7 +87,7 @@ public class Member implements Parcelable {
         this.email = email;
     }
 
-    public void setPicId(Uri mPicId) {
+    public void setPicId(String mPicId) {
         this.picId = mPicId;
     }
 
@@ -100,7 +111,7 @@ public class Member implements Parcelable {
         return id;
     }
 
-    public Uri getPicId() {
+    public String getPicId() {
         return picId;
     }
 
@@ -116,8 +127,6 @@ public class Member implements Parcelable {
         return eventsList;
     }
 
-
-
     @Override
     public int describeContents() {
         return 0;
@@ -128,7 +137,7 @@ public class Member implements Parcelable {
         dest.writeString(name);
         dest.writeString(id);
         dest.writeString(email);
-        dest.writeParcelable(picId, flags);
+        dest.writeString(picId);
         dest.writeDouble(debt);
         dest.writeDouble(lent);
         dest.writeStringList(eventsList);

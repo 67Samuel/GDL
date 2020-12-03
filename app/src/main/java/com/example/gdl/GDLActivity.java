@@ -16,7 +16,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 
-import com.example.gdl.eventlistpg.EventListActivity;
+//import com.example.gdl.eventlistpg.EventListActivity;
 import com.example.gdl.myfriendspg.FriendListPage;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -39,7 +39,7 @@ import com.google.firebase.storage.StorageReference;
     public FirebaseAuth.AuthStateListener mAuthListener;
     public FirebaseUser user;
 
-    final StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+    public final StorageReference storageRef = FirebaseStorage.getInstance().getReference();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -76,9 +76,9 @@ import com.google.firebase.storage.StorageReference;
                 startActivity(homeIntent);
                 return true;
             case R.id.menu_my_events:
-//                Toast.makeText(this, "Go to My Events", Toast.LENGTH_SHORT).show();
-                Intent myEventsIntent = new Intent(this, EventListActivity.class);
-                startActivity(myEventsIntent);
+                 Toast.makeText(this, "Go to My Events", Toast.LENGTH_SHORT).show();
+                //Intent myEventsIntent = new Intent(this, EventListActivity.class);
+                //startActivity(myEventsIntent);
                 return true;
             case R.id.menu_my_friends:
 //                Toast.makeText(this, "Go to My Friends", Toast.LENGTH_SHORT).show();

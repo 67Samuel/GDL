@@ -1,6 +1,7 @@
 package com.example.gdl.createeventpg;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,8 +13,11 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.gdl.Glide.GlideApp;
 import com.example.gdl.R;
 import com.example.gdl.models.Member;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +32,8 @@ public class MembersAdapter extends RecyclerView.Adapter<MembersAdapter.ViewHold
     private ArrayList<Member> mFriendsListFull; //copy of full list for filtering
     Context context;
     private RecyclerItemSelectedListener recyclerItemSelectedListener;
+    final StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+    StorageReference userImageStorageRef;
 
     public MembersAdapter(Context context, ArrayList<Member> friendsList) {
         this.mFriendsList = friendsList;
@@ -46,10 +52,16 @@ public class MembersAdapter extends RecyclerView.Adapter<MembersAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         //bind specific data to the views in each itemView
-        holder.name.setText(mFriendsList.get(position).getName());
-        holder.profilePhoto.setImageURI(mFriendsList.get(position).getPicId());
+        holder.name.setText((String)mFriendsList.get(position).getName());
+        Log.d(TAG, "onCreate: getting profile pic from storage");
+        StorageReference imageStorageRef = storageRef.child("Profile Images");
+        Log.d(TAG, "onCreate: uid: "+mFriendsList.get(position).getId());
+        userImageStorageRef = imageStorageRef.child(mFriendsList.get(position).getId() + ".jpg");
+        GlideApp.with(holder.profilePhoto.getContext())
+                .load(userImageStorageRef)
+                .into(holder.profilePhoto);
+        //holder.profilePhoto.setImageURI(mFriendsList.get(position).getUriFromString());
     }
-
 
     @Override
     public int getItemCount() {

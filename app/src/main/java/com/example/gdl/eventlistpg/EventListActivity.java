@@ -1,4 +1,4 @@
-package com.example.gdl.eventlistpg;
+/*package com.example.gdl.eventlistpg;
 
 
 import android.content.Intent;
@@ -156,3 +156,5 @@ public class EventListActivity extends GDLActivity {
 
 }
 
+
+ */

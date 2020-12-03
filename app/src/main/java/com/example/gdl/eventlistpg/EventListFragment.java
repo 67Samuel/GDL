@@ -1,4 +1,4 @@
-package com.example.gdl.eventlistpg;
+/*package com.example.gdl.eventlistpg;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -206,7 +206,6 @@ public class EventListFragment extends Fragment {
                                     });
                         }
 
-     */
 
 }
-
+*/

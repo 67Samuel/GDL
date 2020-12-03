@@ -1,4 +1,4 @@
-package com.example.gdl.eventdetailspg;
+/*package com.example.gdl.eventdetailspg;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -69,5 +69,6 @@ public class BillsListFragment extends Fragment {
             Bill bill = new Bill("12asd3", "bill"+i, member, payeeList, 100);
             billsList.add(bill);
         }
-    }*/
+    }
 }
+*/

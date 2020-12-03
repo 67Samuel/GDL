@@ -1,4 +1,4 @@
-package com.example.gdl.eventdetailspg;
+/*package com.example.gdl.eventdetailspg;
 
 import android.os.Bundle;
 
@@ -83,3 +83,5 @@ public class OverviewFragment extends Fragment {
         return nameList;
     }
 }
+
+ */

@@ -1,4 +1,4 @@
-package com.example.gdl.eventdetailspg;
+/*package com.example.gdl.eventdetailspg;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -84,3 +84,5 @@ public class EventActivity extends GDLActivity {
 
     }
 }
+
+ */

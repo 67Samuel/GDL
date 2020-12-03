@@ -1,4 +1,4 @@
-package com.example.gdl.eventlistpg;
+/*package com.example.gdl.eventlistpg;
 
 import android.content.Context;
 import android.content.Intent;
@@ -99,3 +99,6 @@ public class EventAdapter extends ArrayAdapter<Event> {
     }
 
 }
+
+
+ */

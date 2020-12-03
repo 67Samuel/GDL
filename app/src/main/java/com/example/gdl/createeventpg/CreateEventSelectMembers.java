@@ -1,6 +1,7 @@
 package com.example.gdl.createeventpg;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -8,14 +9,22 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.example.gdl.GDLActivity;
+import com.example.gdl.Glide.GlideApp;
 import com.example.gdl.R;
+import com.example.gdl.Utils;
 import com.example.gdl.models.Member;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -28,9 +37,13 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.SetOptions;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 public class CreateEventSelectMembers extends GDLActivity implements RecyclerItemSelectedListener {
@@ -51,6 +64,10 @@ public class CreateEventSelectMembers extends GDLActivity implements RecyclerIte
     public final static String SELECTED_MEMBERS_ID_KEY = "com.example.gdl.CreateEventActivities.selected_members_ids_key";
     public ArrayList<String> mSelectedMembersIds = new ArrayList<>();
     public ArrayList<Member> friendsList = new ArrayList<>();
+    public ArrayList<String> friendsIdList = new ArrayList<>();
+    int counter = 0;
+    String friendsName;
+    StorageReference friendImageStorageRef;
 
 
     @Override
@@ -59,6 +76,8 @@ public class CreateEventSelectMembers extends GDLActivity implements RecyclerIte
         Log.d(TAG, "onCreate: called");
         setContentView(R.layout.create_event_select_members);
         Log.d(TAG, "onCreate: layout set up");
+
+        Utils utils = new Utils();
 
         //set actionbar
         ActionBar actionBar = getSupportActionBar();
@@ -86,33 +105,45 @@ public class CreateEventSelectMembers extends GDLActivity implements RecyclerIte
             }
         }
 
-        //TODO: get all friends of user (Member objs) and store in friendsList, find out if friends is a collection or subcollection
-        DocumentReference userRef = db.collection("Users").document(user.getUid()); //ref to list of friends
-        CollectionReference friendsRef = userRef.collection("friends");
-        friendsRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        //get all user's friends as Member classes
+        DocumentReference userRef = db.collection("Users").document(user.getUid());
+        userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        Log.d(TAG, document.getId() + " => " + document.getData());
-                        Member friend = document.toObject(Member.class);
-                        friendsList.add(friend);
+                    DocumentSnapshot friendsDocument = task.getResult();
+                    if (friendsDocument.exists()) {
+                        friendsIdList = (ArrayList) friendsDocument.getData().get("friendsList");
+                        Log.d(TAG, "onComplete: got friends id list from db");
+                        CollectionReference usersCollection = db.collection("Users");
+                        counter = friendsIdList.size();
+                        for (String id : friendsIdList) {
+                            DocumentReference friendRef = usersCollection.document(id);
+                            friendRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                @Override
+                                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                    counter--;
+                                    friendsList.add(documentSnapshot.toObject(Member.class));
+                                    if (counter == 0) {
+                                        Member friend = friendsList.get(0);
+                                        Log.d(TAG, "onComplete: friends: " + friend.toString());
+                                        Log.d(TAG, "onComplete: friends 1");
+                                        mMemberLayoutManager = new LinearLayoutManager(CreateEventSelectMembers.this);
+                                        mMemberRecyclerView.setLayoutManager(mMemberLayoutManager);
+                                        mMembersAdapter = new MembersAdapter(CreateEventSelectMembers.this, friendsList);
+                                        mMemberRecyclerView.setAdapter(mMembersAdapter);
+                                        Log.d(TAG, "onCreate: recyclerview set up");
+
+                                        mSearchView = findViewById(R.id.select_members_search_bar);
+                                        setListeners();
+                                    }
+                                }
+                            });
+                        }
                     }
-                } else {
-                    Log.d(TAG, "Error getting documents: ", task.getException());
                 }
             }
         });
-
-        mMemberLayoutManager = new LinearLayoutManager(this);
-        mMemberRecyclerView.setLayoutManager(mMemberLayoutManager);
-        mMembersAdapter = new MembersAdapter(this, friendsList);
-        mMemberRecyclerView.setAdapter(mMembersAdapter);
-        Log.d(TAG, "onCreate: recyclerview set up");
-
-        mSearchView = findViewById(R.id.select_members_search_bar);
-        setListeners();
-
     }
 
     private void setListeners() {
@@ -150,27 +181,54 @@ public class CreateEventSelectMembers extends GDLActivity implements RecyclerIte
             Log.d(TAG, "onItemSelected: making chip");
             Chip chip = new Chip(this);
             //TODO: get member name from database using id
-            chip.setText("id: "+id);
-            ChipDrawable drawable = ChipDrawable.createFromAttributes(this, null, 0, R.style.Widget_MaterialComponents_Chip_Entry);
-            chip.setChipDrawable(drawable);
-            chip.setCloseIconVisible(true);
-            chip.setCheckable(false);
-            chip.setClickable(false);
-            chip.setChipIconResource(R.drawable.ashketchum);
-            //TODO: set icon with picture from member after member can get pic from database
-            //chip.setChipIcon(ContextCompat.getDrawable(this, member.getPicId()));
-            chip.setPadding(80, 10, 80, 10);
-            chip.setOnCloseIconClickListener(new View.OnClickListener() {
+            db.collection("Users").document(id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
-                public void onClick(View view) {
-                    mSelectedMembersChipGroup.removeView(chip);
-                    mSelectedMembersIds.remove(id);
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            friendsName = document.getData().get("name").toString();
+                            chip.setText(friendsName);
+                            ChipDrawable drawable = ChipDrawable.createFromAttributes(CreateEventSelectMembers.this, null, 0, R.style.Widget_MaterialComponents_Chip_Entry);
+                            chip.setChipDrawable(drawable);
+                            chip.setCloseIconVisible(true);
+                            chip.setCheckable(false);
+                            chip.setClickable(false);
+                            chip.setPadding(50, 10, 80, 10);
+                            chip.setOnCloseIconClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    mSelectedMembersChipGroup.removeView(chip);
+                                    mSelectedMembersIds.remove(id);
+                                }
+                            });
+                            mSelectedMembersChipGroup.addView(chip);
+                            mSelectedMembersIds.add(id);
+                            mSelectedMembersChipGroup.setVisibility(View.VISIBLE);
+                        }
+                    }
                 }
             });
-            mSelectedMembersChipGroup.addView(chip);
-            mSelectedMembersIds.add(id);
-            mSelectedMembersChipGroup.setVisibility(View.VISIBLE);
         }
+    }
+
+    public Chip setIconUrl(String url, Drawable errDrawable, Chip chip) {
+        Glide.with(this)
+                .load(url)
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        chip.setChipIcon(errDrawable);
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        chip.setChipIcon(resource);
+                        return false;
+                    }
+                }).preload();
+        return chip;
     }
 
     private void saveSharedPreferences() {

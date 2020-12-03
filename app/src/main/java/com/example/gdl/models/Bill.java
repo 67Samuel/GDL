@@ -14,7 +14,7 @@ public class Bill implements Parcelable {
     private String id;
     private String name;
     private long timeInitialized;
-    private Uri receiptPicture = null;
+    private String receiptPicture = null;
     private Member payer;
     private List<String> membersList; //members who are splitting this bill, including payer
     private Map<String, Double> expensesMap; //members and how much they owe, doesn't include payer
@@ -33,14 +33,15 @@ public class Bill implements Parcelable {
         this.membersList = mMembersList;
         this.totalCost = totalCost;
 
-        memberSize = mMembersList.size();
+        memberSize = mMembersList.size()+1;
     }
+
 
     protected Bill(Parcel in) {
         id = in.readString();
         name = in.readString();
         timeInitialized = in.readLong();
-        receiptPicture = in.readParcelable(Uri.class.getClassLoader());
+        receiptPicture = in.readString();
         payer = in.readParcelable(Member.class.getClassLoader());
         membersList = in.createStringArrayList();
         memberSize = in.readInt();
@@ -59,7 +60,12 @@ public class Bill implements Parcelable {
         }
     };
 
-    public void setReceiptPicture(Uri mReceiptPicture) {
+    public Uri getUriFromString() {
+        Uri uri = Uri.parse(receiptPicture);
+        return uri;
+    }
+
+    public void setReceiptPicture(String mReceiptPicture) {
         this.receiptPicture = mReceiptPicture;
     }
 
@@ -75,7 +81,7 @@ public class Bill implements Parcelable {
         return timeInitialized;
     }
 
-    public Uri getReceiptPicture() {
+    public String getReceiptPicture() {
         return receiptPicture;
     }
 
@@ -135,7 +141,7 @@ public class Bill implements Parcelable {
         dest.writeString(id);
         dest.writeString(name);
         dest.writeLong(timeInitialized);
-        dest.writeParcelable(receiptPicture, flags);
+        dest.writeString(receiptPicture);
         dest.writeParcelable(payer, flags);
         dest.writeStringList(membersList);
         dest.writeInt(memberSize);

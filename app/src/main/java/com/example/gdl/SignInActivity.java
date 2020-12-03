@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -41,6 +42,7 @@ public class SignInActivity extends AppCompatActivity {
     Button mSaveButton;
     Button mSetPic;
     CropImageView mPicPreview;
+    TextView mOr;
 
     Map<String, Object> userInfo;
 
@@ -65,6 +67,7 @@ public class SignInActivity extends AppCompatActivity {
         mSaveButton = findViewById(R.id.sign_in_save_button);
         mSetPic = findViewById(R.id.sign_in_set_profile_photo_button);
         mPicPreview = findViewById(R.id.cropImageView);
+        mOr = findViewById(R.id.sign_in_or);
 
         //database stuff
         mAuth = FirebaseAuth.getInstance();
@@ -83,6 +86,7 @@ public class SignInActivity extends AppCompatActivity {
         mSetPic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mOr.setVisibility(View.INVISIBLE);
                 Log.d(TAG, "onComplete: GETTING PROFILE PICTURE");
                 CropImage.activity().setGuidelines(CropImageView.Guidelines.ON).setAspectRatio(1,1).start(SignInActivity.this);
             }
@@ -112,6 +116,7 @@ public class SignInActivity extends AppCompatActivity {
                                 Log.d(TAG, "createUserWithEmail:success");
 
                                 user = mAuth.getCurrentUser();
+                                userInfo.put("id", user.getUid());
 
                                 user.updateProfile(new UserProfileChangeRequest.Builder().setDisplayName(username).build());
                                 if (pic_uri != null) {
@@ -120,19 +125,7 @@ public class SignInActivity extends AppCompatActivity {
                                         mUserProfileImageRef = storageRef.child("Profile Images");
                                         StorageReference filePath = mUserProfileImageRef.child(user.getUid() + ".jpg");
                                         Log.d(TAG, "onComplete: filepath computed");
-                                        filePath.putFile(pic_uri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-                                                                                            @Override
-                                                                                            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                                                                                                if (task.isSuccessful()) {
-                                                                                                    Log.d(TAG, "onComplete: profile pic is stored in storage");
-                                                                                                    downloadUrl = task.getResult().getMetadata().getReference().getDownloadUrl().toString();
-                                                                                                    userInfo.put("profile picture storage link", downloadUrl);
-                                                                                                } else {
-                                                                                                    Log.d(TAG, "onComplete: profile pic was not stored in storage");
-                                                                                                }
-                                                                                            }
-                                                                                        });
-
+                                        filePath.putFile(pic_uri);
                                         Log.d(TAG, "pic uri: trying to set photo in userprofile");
                                         user.updateProfile(new UserProfileChangeRequest.Builder().setPhotoUri(pic_uri).build());
                                     } catch (Exception e) {
@@ -179,7 +172,7 @@ public class SignInActivity extends AppCompatActivity {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {
                 pic_uri = result.getUri();
-                userInfo.put("profile picture uri", pic_uri.toString());
+                userInfo.put("picId", pic_uri.toString());
                 Toast.makeText(this, "photo uri obtained", Toast.LENGTH_SHORT).show();
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();
