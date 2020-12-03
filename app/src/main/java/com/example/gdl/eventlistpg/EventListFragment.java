@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -68,6 +69,7 @@ public class EventListFragment extends Fragment {
         user = mAuth.getCurrentUser();
 
 
+
         docRef = db.collection("Users").document(user.getUid());
         Log.d(TAG, "USER-EMAIL: " + user.getUid());
         //DB Test - Query for the user
@@ -83,6 +85,8 @@ public class EventListFragment extends Fragment {
                             DocumentSnapshot docSnap = docSnapList.get(0);
                             Map<String, Object> s = docSnap.getData();
                             List<String> eventsIds = (List<String>) s.get("eventsList");
+
+
                             db.collection("Events")
                                     .whereIn("id", eventsIds)
                                     .get()
@@ -91,7 +95,9 @@ public class EventListFragment extends Fragment {
                                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                             if (task.isSuccessful()) {
                                                 for (QueryDocumentSnapshot document : task.getResult()) {
-                                                    eventList.add(document.toObject(Event.class));
+                                                    Event e = document.toObject(Event.class);
+//                                                    Log.d(TAG, e.toString());
+                                                    eventList.add(e);
                                                 }
                                                 adapter[0] = new EventAdapter(getContext(), R.layout.event_item, eventList);
                                             }
@@ -103,6 +109,8 @@ public class EventListFragment extends Fragment {
                             Log.d(TAG, docSnap.getId());
                         }catch(IllegalArgumentException e){
                             Log.w(TAG,"No event");
+                            Toast t = Toast.makeText(getActivity(), "No event to display",Toast.LENGTH_SHORT);
+                            t.show();
                         }
                     } else {
                         Log.d(TAG, "Sorry i tried my best");
@@ -118,7 +126,7 @@ public class EventListFragment extends Fragment {
         event_listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Event event= eventList.get(position);
+                Event event = eventList.get(position);
                 Toast.makeText(getContext(), event.getName(), Toast.LENGTH_SHORT).show();
             }
         });
@@ -134,7 +142,7 @@ public class EventListFragment extends Fragment {
             @Override
             public void onAddbillClick(Event e) {
                 Intent intent = new Intent(getActivity(), EventActivity.class);
-                intent.putExtra("EVENT", e);
+                intent.putExtra("SELECTED_EVENT", e);
                 startActivity(intent);
             }
         });
