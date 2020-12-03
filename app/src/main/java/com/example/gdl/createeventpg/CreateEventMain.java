@@ -13,21 +13,27 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.gdl.GDLActivity;
 import com.example.gdl.R;
-//import com.example.gdl.eventlistpg.EventListActivity;
+import com.example.gdl.eventlistpg.EventListActivity;
+import com.example.gdl.models.Bill;
 import com.example.gdl.models.Event;
 import com.example.gdl.models.Member;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -133,12 +139,39 @@ public class CreateEventMain extends GDLActivity implements View.OnClickListener
                 } else {
                     DocumentReference eventRef = db.collection("Events").document(); //creates a doc with unique ID
                     String eventId = eventRef.getId();
-                    Event event = new Event(eventId, mEventNameEditText.getText().toString(), mSelectedMembersList, mEventDateTextView.getText().toString());
-                    event.setEventPicture(event_pic_uri.toString());
-                    eventRef.set(event);
+                    //Event event = new Event(eventId, mEventNameEditText.getText().toString(), mSelectedMembersList, mEventDateTextView.getText().toString());
+                    //event.setEventPicture(event_pic_uri.toString());
+                    eventInfo.put("id", eventId);
+                    eventInfo.put("name", mEventNameEditText.getText().toString());
+                    eventInfo.put("eventPicture", event_pic_uri.toString());
+                    Date date = new Date();
+                    eventInfo.put("timeInitialized", date.getTime());
+                    eventInfo.put("status", false);
+                    eventInfo.put("totalSpent", 0);
+                    ArrayList<Member> pesudoMembersList = new ArrayList<>();
+                    pesudoMembersList.add(new Member("Sally", "f2g4uyd987dgf23g3827v"));
+                    pesudoMembersList.add(new Member("Joe", "b2h5w9r87eb3if73b2d7d2d"));
+                    eventInfo.put("membersList", pesudoMembersList);
+                    ArrayList<Bill> billsList = new ArrayList<>();
+                    eventInfo.put("billsList", billsList);
+                    DateFormat df = new SimpleDateFormat("dd/MM/yy");
+                    Calendar calobj = Calendar.getInstance();
+                    Log.d(TAG, "onClick: date: "+df.format(calobj.getTime()));
+                    eventInfo.put("date", (String)df.format(calobj.getTime()));
+                    //eventRef.set(event);
+                    eventRef.set(eventInfo).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                Log.d(TAG, "onComplete: event pushed to db");
+                            } else {
+                                Log.d(TAG, "onComplete: error pushing event to db");
+                            }
+                        }
+                    });
                     Log.d(TAG, "onClick: going to event list page");
-                    //Intent eventListIntent = new Intent(this, EventListActivity.class);
-                    //startActivity(eventListIntent);
+                    Intent eventListIntent = new Intent(this, EventListActivity.class);
+                    startActivity(eventListIntent);
                 }
                 break;
             case R.id.event_date_text_view:

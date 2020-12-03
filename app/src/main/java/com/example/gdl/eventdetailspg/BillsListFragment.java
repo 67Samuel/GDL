@@ -1,4 +1,4 @@
-/*package com.example.gdl.eventdetailspg;
+package com.example.gdl.eventdetailspg;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -21,9 +21,9 @@ import java.util.List;
 
 public class BillsListFragment extends Fragment {
 
-    private List<Bill> billsList=new ArrayList<>();
+    private List<Bill> billsList = new ArrayList<>();
 
-    BillsListFragment(List<Bill> billsList){
+    BillsListFragment(List<Bill> billsList) {
         super();
         this.billsList = billsList;
     }
@@ -32,14 +32,14 @@ public class BillsListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.bills_listview, container,false);
+        View view = inflater.inflate(R.layout.bills_listview, container, false);
 
         //create adapter
         //testBills(); //initialize
-        BillsAdapter adapter=new BillsAdapter(getContext(), R.layout.bill_item, billsList);
+        BillsAdapter adapter = new BillsAdapter(getContext(), R.layout.bill_item, billsList);
 
         // transfer the data from adapter to listView
-        ListView listView=view.findViewById(R.id.bills_listview);
+        ListView listView = view.findViewById(R.id.bills_listview);
         listView.setAdapter(adapter);
         listView.setItemsCanFocus(false);
 
@@ -47,28 +47,12 @@ public class BillsListFragment extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Bill bill=billsList.get(position);
+                Bill bill = billsList.get(position);
                 Toast.makeText(getContext(), bill.getName(), Toast.LENGTH_SHORT).show();
             }
         });
 
 
-
         return view;
     }
-
-
-    /**public void testBills(){
-        for(int i=0;i<5;i++){
-            Member member = new Member("Peter", "12sdf345");
-            Member member1 = new Member("John", "1233adf45");
-            Member member2 = new Member("James", "123s4545");
-            ArrayList<String> payeeList = new ArrayList<>();
-            payeeList.add(member1.getId());
-            payeeList.add(member2.getId());
-            Bill bill = new Bill("12asd3", "bill"+i, member, payeeList, 100);
-            billsList.add(bill);
-        }
-    }
 }
-*/

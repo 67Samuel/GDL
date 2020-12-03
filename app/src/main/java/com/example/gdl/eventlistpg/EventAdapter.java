@@ -1,4 +1,4 @@
-/*package com.example.gdl.eventlistpg;
+package com.example.gdl.eventlistpg;
 
 import android.content.Context;
 import android.content.Intent;
@@ -69,7 +69,7 @@ public class EventAdapter extends ArrayAdapter<Event> {
             viewHolder = (ViewHolder) view.getTag();
         }
 
-        viewHolder.eventImage.setImageURI(event.getEventPicture());
+        viewHolder.eventImage.setImageURI(event.getUriFromString());
         viewHolder.eventName.setText(event.getName());
         viewHolder.eventTime.setText(event.getDate());
         viewHolder.eventMembers.setText("Members: "+event.getMembersList().size());
@@ -99,6 +99,3 @@ public class EventAdapter extends ArrayAdapter<Event> {
     }
 
 }
-
-
- */
