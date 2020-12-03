@@ -22,15 +22,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         public ImageView mImageView;
         public TextView mTextView1;
-        public TextView mTextView2;
-        public TextView mTextView3;
 
         public ExampleViewHolder(@NonNull View itemView) {
             super(itemView);
             mImageView = itemView.findViewById(R.id.profilePic);
             mTextView1 = itemView.findViewById(R.id.friendName);
-            mTextView2 = itemView.findViewById(R.id.sharedEvents);
-            mTextView3 = itemView.findViewById(R.id.no_of_shared_events);
         }
     }
 
@@ -51,8 +47,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         exampleItem currentItem = mExampleList.get(position);
         holder.mImageView.setImageResource(currentItem.getImageResource());
         holder.mTextView1.setText(currentItem.getText1());
-        holder.mTextView2.setText(currentItem.getText2());
-        holder.mTextView3.setText(currentItem.getText3());
     }
 
     @Override

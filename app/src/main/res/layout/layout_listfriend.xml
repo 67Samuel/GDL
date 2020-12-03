@@ -22,32 +22,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         android:layout_toRightOf="@+id/profilePic"
         android:text="Name of friend"
         android:textColor="#000000"
         android:textSize="24sp" />
 
-    <TextView
-        android:id="@+id/no_of_shared_events"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
-        android:layout_marginTop="40dp"
-        android:layout_toRightOf="@+id/sharedEvents"
-        android:text="3"
-        android:textColor="#000000"
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/sharedEvents"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="40dp"
-        android:layout_toRightOf="@+id/profilePic"
-        android:text="Shared Events:"
-        android:textColor="#000000"
-        android:textSize="18sp" />
 
 </RelativeLayout>

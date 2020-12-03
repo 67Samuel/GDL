@@ -21,15 +21,18 @@ public class FriendListPage extends AppCompatActivity {
         setContentView(R.layout.friend_list);
 
         ArrayList<exampleItem> exampleList = new ArrayList<>();
-        exampleList.add(new exampleItem(R.drawable.ic_launcher_foreground, "Name of Friend", "Shared Events:", "3"));
-        exampleList.add(new exampleItem(R.drawable.ic_launcher_foreground, "Name of Friend", "Shared Events:", "6"));
-        exampleList.add(new exampleItem(R.drawable.ic_launcher_foreground, "Name of Friend", "Shared Events:", "9"));
-        exampleList.add(new exampleItem(R.drawable.ic_launcher_foreground, "Name of Friend", "Shared Events:", "3"));
-        exampleList.add(new exampleItem(R.drawable.ic_launcher_foreground, "Name of Friend", "Shared Events:", "6"));
-        exampleList.add(new exampleItem(R.drawable.ic_launcher_foreground, "Name of Friend", "Shared Events:", "9"));
-        exampleList.add(new exampleItem(R.drawable.ic_launcher_foreground, "Name of Friend", "Shared Events:", "3"));
-        exampleList.add(new exampleItem(R.drawable.ic_launcher_foreground, "Name of Friend", "Shared Events:", "6"));
-        exampleList.add(new exampleItem(R.drawable.ic_launcher_foreground, "Name of Friend", "Shared Events:", "9"));
+        exampleList.add(new exampleItem(R.drawable.ic_launcher_foreground, "Marcus"));
+        exampleList.add(new exampleItem(R.drawable.ic_launcher_foreground, "Zhi Xuan"));
+        exampleList.add(new exampleItem(R.drawable.ic_launcher_foreground, "Mathias"));
+        exampleList.add(new exampleItem(R.drawable.ic_launcher_foreground, "Samuel"));
+        exampleList.add(new exampleItem(R.drawable.ic_launcher_foreground, "Zichen"));
+        exampleList.add(new exampleItem(R.drawable.ic_launcher_foreground, "Jacob"));
+        exampleList.add(new exampleItem(R.drawable.ic_launcher_foreground, "Hannah"));
+        exampleList.add(new exampleItem(R.drawable.ic_launcher_foreground, "Altrive"));
+        exampleList.add(new exampleItem(R.drawable.ic_launcher_foreground, "Cade"));
+        exampleList.add(new exampleItem(R.drawable.ic_launcher_foreground, "Elizabeth"));
+
+
 
         mRecyclerView = findViewById(R.id.recycler_view);
         mRecyclerView.setHasFixedSize(true);
