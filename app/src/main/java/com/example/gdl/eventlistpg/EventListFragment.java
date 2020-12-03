@@ -54,14 +54,14 @@ public class EventListFragment extends Fragment {
 
     final StorageReference storageRef = FirebaseStorage.getInstance().getReference();
 
-    interface FScallback{
+    interface FScallback {
         void callback(List<String> eventsIds);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.event_listview, container,false);
+        View view = inflater.inflate(R.layout.event_listview, container, false);
         final EventAdapter[] adapter = {new EventAdapter(getContext(), R.layout.event_item, eventList)};
         event_listview = view.findViewById(R.id.event_listview);
 
@@ -69,54 +69,47 @@ public class EventListFragment extends Fragment {
         user = mAuth.getCurrentUser();
 
 
-
         docRef = db.collection("Users").document(user.getUid());
         Log.d(TAG, "USER-EMAIL: " + user.getUid());
         //DB Test - Query for the user
         db.collection("Users")
-            .whereEqualTo(FieldPath.documentId(), user.getUid())
-            .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                    if (task.isSuccessful()) {
-                        try {
-                            QuerySnapshot querySnap = task.getResult();
-                            List<DocumentSnapshot> docSnapList = querySnap.getDocuments();
-                            DocumentSnapshot docSnap = docSnapList.get(0);
-                            Map<String, Object> s = docSnap.getData();
-                            List<String> eventsIds = (List<String>) s.get("eventsList");
-
-
-                            db.collection("Events")
-                                    .whereIn("id", eventsIds)
-                                    .get()
-                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                            if (task.isSuccessful()) {
-                                                for (QueryDocumentSnapshot document : task.getResult()) {
-                                                    Event e = document.toObject(Event.class);
-//                                                    Log.d(TAG, e.toString());
-                                                    eventList.add(e);
-                                                }
-                                                adapter[0] = new EventAdapter(getContext(), R.layout.event_item, eventList);
+                .whereEqualTo(FieldPath.documentId(), user.getUid())
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    try {
+                        QuerySnapshot querySnap = task.getResult();
+                        List<DocumentSnapshot> docSnapList = querySnap.getDocuments();
+                        DocumentSnapshot docSnap = docSnapList.get(0);
+                        Map<String, Object> s = docSnap.getData();
+                        List<String> eventsIds = (List<String>) s.get("eventsList");
+                        db.collection("Events")
+                                .whereIn("id", eventsIds)
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                                eventList.add(document.toObject(Event.class));
                                             }
+                                            adapter[0] = new EventAdapter(getContext(), R.layout.event_item, eventList);
                                         }
-                                    });
+                                    }
+                                });
 
-                            Log.d(TAG, "Task successful");
-                            Log.d(TAG, eventsIds.toString());
-                            Log.d(TAG, docSnap.getId());
-                        }catch(IllegalArgumentException e){
-                            Log.w(TAG,"No event");
-                            Toast t = Toast.makeText(getActivity(), "No event to display",Toast.LENGTH_SHORT);
-                            t.show();
-                        }
-                    } else {
-                        Log.d(TAG, "Sorry i tried my best");
+                        Log.d(TAG, "Task successful");
+                        Log.d(TAG, eventsIds.toString());
+                        Log.d(TAG, docSnap.getId());
+                    } catch (IllegalArgumentException e) {
+                        Log.w(TAG, "No event");
                     }
+                } else {
+                    Log.d(TAG, "Sorry i tried my best");
                 }
-            });
+            }
+        });
 
         // transfer the data from adapter to listView
 
@@ -142,7 +135,7 @@ public class EventListFragment extends Fragment {
             @Override
             public void onAddbillClick(Event e) {
                 Intent intent = new Intent(getActivity(), EventActivity.class);
-                intent.putExtra("SELECTED_EVENT", e);
+                intent.putExtra("EVENT", e);
                 startActivity(intent);
             }
         });
@@ -150,18 +143,19 @@ public class EventListFragment extends Fragment {
     }
 
 
-    public void testEvents(){
+    public void testEvents() {
         Member testMember1 = new Member("payeeGuy1", "g2g345");
         Member testMember2 = new Member("payeeGuy1", "nb23g4h5");
         ArrayList<Member> testMemberList = new ArrayList<>();
         testMemberList.add(testMember1);
         testMemberList.add(testMember2);
-        Event a=new Event("12fv3j6g4", "testEvent1", testMemberList, "date1");
+        Event a = new Event("12fv3j6g4", "testEvent1", testMemberList, "date1");
         eventList.add(a);
-        Event b=new Event("12ff2v3g4", "testEvent2", testMemberList, "date2");
+        Event b = new Event("12ff2v3g4", "testEvent2", testMemberList, "date2");
         eventList.add(b);
 
     }
+}
 
 //    @Override
 //    public void onResume(){
@@ -214,7 +208,8 @@ public class EventListFragment extends Fragment {
                                     });
                         }
 
-     */
 
 }
+
+     */
 
