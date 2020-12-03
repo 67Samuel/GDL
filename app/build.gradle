@@ -53,6 +53,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth'
     implementation 'com.firebaseui:firebase-ui-auth:6.4.0'
     implementation 'com.google.firebase:firebase-messaging'
+
     //image cropping
     api 'com.theartofdev.edmodo:android-image-cropper:2.8.+'
     // glide for getting image
@@ -60,4 +61,10 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
     // FirebaseUI for Cloud Storage
     implementation 'com.firebaseui:firebase-ui-storage:7.1.0'
+
+//    implementation 'com.google.firebase:firebase-admin:7.0.1'
+
+
+
+
 }

@@ -2,6 +2,7 @@ package com.example.gdl.eventlistpg;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,14 +16,19 @@ import androidx.annotation.NonNull;
 
 import java.util.List;
 
+import com.example.gdl.Glide.GlideApp;
 import com.example.gdl.R;
 import com.example.gdl.eventdetailspg.EventActivity;
 import com.example.gdl.models.Event;
-
-
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 
 public class EventAdapter extends ArrayAdapter<Event> {
+    public static final String TAG = "EventAdapter";
     private int resourceId;
 
     //save view as cache
@@ -68,6 +74,24 @@ public class EventAdapter extends ArrayAdapter<Event> {
             view = convertView;
             viewHolder = (ViewHolder) view.getTag();
         }
+
+//        final StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+//        FirebaseFirestore db= FirebaseFirestore.getInstance();
+//        FirebaseAuth mAuth= FirebaseAuth.getInstance();
+//        FirebaseAuth.AuthStateListener mAuthListener;
+//        FirebaseUser user = mAuth.getCurrentUser();
+
+//        StorageReference imageStorageRef = storageRef.child("Profile Images");
+//        Log.d(TAG, "onCreate: uid: " + user.getUid());
+//        StorageReference userImageStorageRef = imageStorageRef.child(user.getUid() + ".jpg");
+//        try {
+//            GlideApp.with(EventAdapter.this)
+//                    .load(userImageStorageRef)
+//                    .into(viewHolder.eventImage);
+//            Log.d(TAG, "onCreate: profile pic obtained");
+//        } catch (Exception e) {
+//            Log.d(TAG, "onCreate: cannot set photo");
+//        }
 
         viewHolder.eventImage.setImageURI(event.getUriFromString());
         viewHolder.eventName.setText(event.getName());

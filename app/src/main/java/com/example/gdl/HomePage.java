@@ -22,6 +22,7 @@ import androidx.appcompat.widget.AppCompatButton;
 import com.example.gdl.Glide.GlideApp;
 import com.example.gdl.createeventpg.CreateEventMain;
 //import com.example.gdl.eventlistpg.EventListActivity;
+import com.example.gdl.eventlistpg.EventListActivity;
 import com.example.gdl.models.Bill;
 import com.example.gdl.models.Event;
 import com.example.gdl.models.Member;
@@ -98,7 +99,7 @@ public class HomePage extends GDLActivity {
         mAmtToReceive = findViewById(R.id.amt_to_receive);
         Log.d(TAG, "onCreate: getting profile pic from storage");
         StorageReference imageStorageRef = storageRef.child("Profile Images");
-        Log.d(TAG, "onCreate: uid: "+user.getUid());
+        Log.d(TAG, "onCreate: uid: " + user.getUid());
         userImageStorageRef = imageStorageRef.child(user.getUid() + ".jpg");
         try {
             GlideApp.with(this)
@@ -140,8 +141,8 @@ public class HomePage extends GDLActivity {
             public void onClick(View view) {
                 Toast myEventsPg = Toast.makeText(HomePage.this, "Go to My Events", Toast.LENGTH_SHORT);
                 myEventsPg.show();
-                //Intent intent = new Intent(HomePage.this, EventListActivity.class);
-                //startActivity(intent);
+                Intent intent = new Intent(HomePage.this, EventListActivity.class);
+                startActivity(intent);
             }
         });
 

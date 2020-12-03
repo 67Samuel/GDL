@@ -33,7 +33,7 @@ public class Bill implements Parcelable {
         this.membersList = mMembersList;
         this.totalCost = totalCost;
 
-        memberSize = mMembersList.size()+1;
+        memberSize = mMembersList.size() + 1;
     }
 
 
