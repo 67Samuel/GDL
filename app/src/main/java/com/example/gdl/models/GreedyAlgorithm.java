@@ -5,18 +5,19 @@ import java.util.Arrays;
 public class GreedyAlgorithm extends GraphOptimiser{
     private double[] credit;
 
-    GreedyAlgorithm(double[][] computationalGraph){
+    public GreedyAlgorithm(double[][] computationalGraph){
         this.computationalGraph = computationalGraph;
 
     }
 
-    GreedyAlgorithm(){}
+    public GreedyAlgorithm(){}
 
     @Override
     public void preProcessGraph(){
         calculateCreditPerNode();
         int N = computationalGraph.length;
         this.optimisedComputationalGraph = new double[N][N];
+        checkInputs();
     }
 
     private void minimiseGraphArrows(double[] creditList){
@@ -108,6 +109,18 @@ public class GreedyAlgorithm extends GraphOptimiser{
 
     public double[] getCredit() {
         return credit;
+    }
+
+    private void checkInputs(){
+        int len = computationalGraph[0].length;
+        double[][] output = new double[len][len];
+        for(int i = 0; i < len; i++){
+            for(int j = 0; j < len; j++){
+                if(computationalGraph[i][j] < 0 && computationalGraph[i][j] != -0.0){
+                    throw new IllegalArgumentException("Cannot have negative numbers in the computational graph matrix");
+                }
+            }
+        }
     }
 
 

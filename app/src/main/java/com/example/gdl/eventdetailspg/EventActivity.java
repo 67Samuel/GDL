@@ -2,6 +2,7 @@
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -14,13 +15,16 @@ import java.util.List;
 
 import com.example.gdl.GDLActivity;
 import com.example.gdl.R;
+import com.example.gdl.addbillspg.AddBillActivity;
 import com.example.gdl.models.Event;
+import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 
 public class EventActivity extends GDLActivity {
     TabLayout tabLayout;
     ViewPager2 viewPager;
 
+    FloatingActionButton buttonAddBill;
     //save fragments
     List<Fragment> fragments = new ArrayList<>();
 
@@ -31,6 +35,16 @@ public class EventActivity extends GDLActivity {
 
         Intent intent = getIntent();
         Event event = intent.getParcelableExtra("EVENT");
+
+        buttonAddBill = findViewById(R.id.event_floatingbutton);
+
+        buttonAddBill.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent addBillIntent = new Intent(EventActivity.this, AddBillActivity.class);
+                startActivity(addBillIntent);
+            }
+        });
 
         tabLayout = findViewById(R.id.event_tablayout);
         viewPager = findViewById(R.id.event_viewpager);
