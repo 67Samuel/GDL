@@ -49,7 +49,6 @@ public class JoinEventActivity extends GDLActivity {
         join_event_join_button = findViewById(R.id.join_event_search_button2);
         join_event_edit_text = findViewById(R.id.join_event_eventid_edittext);
         event_name = findViewById(R.id.join_event_name);
-        event_owner = findViewById(R.id.join_event_owner);
         event_picture = findViewById(R.id.join_event_image);
 
         FirebaseUser user = mAuth.getCurrentUser();
@@ -66,7 +65,7 @@ public class JoinEventActivity extends GDLActivity {
                             if (document.exists()) {
                                 current_event_id = join_event_edit_text.getText().toString();
                                 event_name.setText(document.getData().get("name").toString());
-                                event_picture.setImageURI((Uri) document.getData().get("eventPicture"));
+                                //event_picture.setImageURI((Uri) document.getData().get("eventPicture"));
                                 search_Successful = true;
                             } else {
                                 event_name.setText("Event not found");
