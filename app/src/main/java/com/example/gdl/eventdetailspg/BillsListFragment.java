@@ -13,7 +13,6 @@ import androidx.fragment.app.Fragment;
 import com.example.gdl.R;
 import com.example.gdl.eventlistpg.EventAdapter;
 import com.example.gdl.models.Bill;
-import com.example.gdl.models.Item;
 import com.example.gdl.models.Member;
 
 import java.util.ArrayList;

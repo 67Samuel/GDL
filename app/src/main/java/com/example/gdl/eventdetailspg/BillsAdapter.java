@@ -12,7 +12,6 @@ import androidx.annotation.NonNull;
 
 import com.example.gdl.R;
 import com.example.gdl.models.Bill;
-import com.example.gdl.models.Event;
 
 import java.util.List;
 
@@ -69,8 +68,8 @@ public class BillsAdapter extends ArrayAdapter<Bill> {
         viewHolder.billsSpending.setText("Total Spending: "+bill.getSpending());*/
 
         viewHolder.billsName.setText(bill.getName());
-        viewHolder.billsPayer.setText("Paid by: "+bill.getPayer().getName());
-        viewHolder.billsMembers.setText("Members: "+bill.getMemberSize());
+//        viewHolder.billsPayer.setText("Paid by: " + bill.getPayer().getName());
+//        viewHolder.billsMembers.setText("Members: " + bill.getMemberSize());
         viewHolder.billsSpending.setText("Total Spending: "+bill.getTotalCost());
 
         //TODO: find a way to judge the status of bill

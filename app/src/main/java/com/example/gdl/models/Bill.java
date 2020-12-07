@@ -16,7 +16,7 @@ public class Bill implements Parcelable {
     private long timeInitialized;
     private String receiptPicture = null;
     private Member payer;
-    private List<String> membersList; //members who are splitting this bill, including payer
+    private List<String> membersList;
     private Map<String, Double> expensesMap; //members and how much they owe, doesn't include payer
     private int memberSize = 0;
     private double totalCost = 0.0;
@@ -95,6 +95,10 @@ public class Bill implements Parcelable {
         return membersList;
     }
 
+    public void setMembersList(List<String> membersList) {
+        this.membersList = membersList;
+    }
+
     public Map<String, Double> getExpensesMap() {
         return expensesMap;
     }
@@ -106,6 +110,8 @@ public class Bill implements Parcelable {
     public double getTotalCost() {
         return totalCost;
     }
+
+    public void setTotalCost(double totalCost){this.totalCost = totalCost;}
 
     public void calculateSplit() {
         double amtEachPerson = this.totalCost / (this.membersList.size() + 1);
