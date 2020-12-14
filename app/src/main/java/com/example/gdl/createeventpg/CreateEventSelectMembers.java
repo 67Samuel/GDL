@@ -47,6 +47,7 @@ import com.google.firebase.storage.StorageReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -67,8 +68,8 @@ public class CreateEventSelectMembers extends GDLActivity implements RecyclerIte
     //private static final String sharedPrefFile = "com.example.gdl.createeventpg.CreateEventSelectMembers.preffile";
     //public final static String SELECTED_MEMBERS_ID_KEY = "com.example.gdl.CreateEventActivities.selected_members_ids_key";
     public ArrayList<String> mSelectedMembersIds = new ArrayList<>();
-    public ArrayList<Member> friendsList = new ArrayList<>();
-    public ArrayList<String> friendsIdList = new ArrayList<>();
+    public List<Member> friendsList = new ArrayList<>();
+    public List<String> friendsIdList = new ArrayList<>();
     int counter = 0;
     String friendsName;
     StorageReference friendImageStorageRef;
@@ -174,7 +175,7 @@ public class CreateEventSelectMembers extends GDLActivity implements RecyclerIte
                     Toast.makeText(CreateEventSelectMembers.this, "Select at least one member", Toast.LENGTH_SHORT).show();
                     return;
                 } else {
-                    intent.putExtra(CreateEventSelectMembersSharedPref.SELECTED_MEMBERS_ID_SET_KEY, mSelectedMembersIds);
+                    intent.putStringArrayListExtra(CreateEventSelectMembersSharedPref.SELECTED_MEMBERS_ID_SET_KEY,  mSelectedMembersIds);
                 }
                 startActivity(intent);
             }
