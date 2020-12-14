@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class CreateEventMain extends GDLActivity implements View.OnClickListener, DatePickerDialog.OnDateSetListener {
@@ -47,8 +48,8 @@ public class CreateEventMain extends GDLActivity implements View.OnClickListener
     private static final String sharedPrefFile = "com.example.gdl.createActivityMainSP";
     public static final String EVENT_NAME_KEY = "event name key";
     public static final String EVENT_DATE_KEY = "event date key";
-    private ArrayList<Member> mSelectedMembersList = new ArrayList<>();
-    private ArrayList<String> mSelectedMembersIdsList = new ArrayList<>();
+    private List<Member> mSelectedMembersList = new ArrayList<>();
+    private List<String> mSelectedMembersIdsList = new ArrayList<>();
     SharedPreferences mPreferences;
     Uri event_pic_uri;
     Map<String, Object> eventInfo = new HashMap<>();
@@ -157,44 +158,7 @@ public class CreateEventMain extends GDLActivity implements View.OnClickListener
                     String eventId = eventRef.getId();
                     Event event = new Event(eventId, mEventNameEditText.getText().toString(), mSelectedMembersList, mEventDateTextView.getText().toString());
                     eventRef.set(event);
-                    //if (event_pic_uri != null) {
-                        //event.setEventPicture(event_pic_uri.toString());
-                    //}
-                    /*eventInfo.put("id", eventId);
-                    eventInfo.put("name", mEventNameEditText.getText().toString());
-                    try {
-                        eventInfo.put("eventPicture", event_pic_uri.toString());
-                    } catch (Exception e) {
-                        Log.d(TAG, "maybe no pic?: "+e);
-                    }
 
-                    Date date = new Date();
-                    eventInfo.put("status", false);
-                    eventInfo.put("totalSpent", 0);
-                    //ArrayList<Member> pesudoMembersList = new ArrayList<>();
-                    //pesudoMembersList.add(new Member("Sally", "f2g4uyd987dgf23g3827v"));
-                    //pesudoMembersList.add(new Member("Joe", "b2h5w9r87eb3if73b2d7d2d"));
-                    ArrayList<Bill> billsList = new ArrayList<>();
-                    billsList.add(new Bill());
-                    eventInfo.put("billsList", billsList);
-                    DateFormat df = new SimpleDateFormat("dd/MM/yy");
-                    Calendar calobj = Calendar.getInstance();
-                    Log.d(TAG, "onClick: date: "+df.format(calobj.getTime()));
-                    eventInfo.put("date", (String)df.format(calobj.getTime()));
-
-                     */
-                    /*eventRef.set(eventInfo).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()) {
-                                Log.d(TAG, "onComplete: event pushed to db");
-                            } else {
-                                Log.d(TAG, "onComplete: error pushing event to db");
-                            }
-                        }
-                    });
-
-                     */
                     Toast.makeText(this, "Selected members are reset and event is created", Toast.LENGTH_SHORT).show();
                     CreateEventSelectMembersSharedPref.remove(CreateEventSelectMembersSharedPref.SELECTED_MEMBERS_ID_SET_KEY);
                     Log.d(TAG, "onClick: going to event list page");

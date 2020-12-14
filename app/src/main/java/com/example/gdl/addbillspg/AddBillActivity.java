@@ -17,16 +17,16 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class AddBillActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     MemberListAdapter mAdapter;
 
-    // TODO 3.0 Remove the memberArr dummy data
-    ArrayList<String> mMemberList = new ArrayList<>();
+    List<String> mMemberList = new ArrayList<>();
     String[] memberArr = {"Member 1", "Member 2", "Member 3", "Member 4", "Member 5", "Member 6", "Member 7", "Member 8", "Member 9", "Member 10"};
-    ArrayList<Member> eventMember = new ArrayList<>();
+    List<Member> eventMember = new ArrayList<>();
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     @Override

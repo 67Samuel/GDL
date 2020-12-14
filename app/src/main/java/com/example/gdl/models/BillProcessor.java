@@ -13,7 +13,7 @@ public class BillProcessor {
     private Map<String, Integer> memberIndexMap;
     private double[][] optimisedComputationalGraph;
     private double[][] computationalGraph;
-    private ArrayList<String> announcements = new ArrayList<>();
+    private List<String> announcements = new ArrayList<>();
 
 
     public BillProcessor(List<Bill> billList){
@@ -38,7 +38,7 @@ public class BillProcessor {
         return this.computationalGraph;
     }
 
-    public ArrayList<String> getAnnouncements(){
+    public List<String> getAnnouncements(){
         return this.announcements;
     }
 

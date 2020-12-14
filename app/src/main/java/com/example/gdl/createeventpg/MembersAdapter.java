@@ -28,14 +28,14 @@ public class MembersAdapter extends RecyclerView.Adapter<MembersAdapter.ViewHold
 
     private static final String TAG = "MembersAdapter";
 
-    private ArrayList<Member> mFriendsList;
-    private ArrayList<Member> mFriendsListFull; //copy of full list for filtering
+    private List<Member> mFriendsList;
+    private List<Member> mFriendsListFull; //copy of full list for filtering
     Context context;
     private RecyclerItemSelectedListener recyclerItemSelectedListener;
     final StorageReference storageRef = FirebaseStorage.getInstance().getReference();
     StorageReference userImageStorageRef;
 
-    public MembersAdapter(Context context, ArrayList<Member> friendsList) {
+    public MembersAdapter(Context context, List<Member> friendsList) {
         this.mFriendsList = friendsList;
         this.mFriendsListFull = new ArrayList<>(friendsList);
         this.context = context;

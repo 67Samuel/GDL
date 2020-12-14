@@ -22,6 +22,7 @@ import com.google.firebase.storage.StorageException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class JoinEventActivity extends GDLActivity {
@@ -36,7 +37,7 @@ public class JoinEventActivity extends GDLActivity {
     ImageView event_picture;
     Boolean search_Successful = false;
     String current_event_id;
-    ArrayList event_list;
+    List event_list;
 
 ;
 

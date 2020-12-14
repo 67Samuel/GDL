@@ -20,11 +20,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MemberListAdapter extends RecyclerView.Adapter<MemberListAdapter.MemberViewHolder> {
-    ArrayList<Member> mMemberList;
+    List<Member> mMemberList;
     LayoutInflater mInflater;
     MemberViewHolder memberViewHolder;
 
-    public MemberListAdapter(Context context, ArrayList<Member> memberList) {
+    public MemberListAdapter(Context context, List<Member> memberList) {
         mInflater = LayoutInflater.from(context);
         this.mMemberList = memberList;
     }
@@ -72,12 +72,12 @@ public class MemberListAdapter extends RecyclerView.Adapter<MemberListAdapter.Me
                 public void onClick(View v) {
 
                     if(checkBoxPayer.isChecked()) {
-                        // TODO 1.1 Add the String name the Payer to the ArrayList of a Bill Object
+
                         payerID.add(data.getId());
 
                         Log.i(TAG, "Add Payer: " + textViewMember.getText().toString());
                     } else {
-                        // TODO 1.2 Remove the string name the Payer from the ArrayList above
+
                         payerID.remove(data.getId());
                         Log.i(TAG, "Remove Payer: " + textViewMember.getText().toString());
                     }
@@ -88,13 +88,13 @@ public class MemberListAdapter extends RecyclerView.Adapter<MemberListAdapter.Me
                 @Override
                 public void onClick(View v) {
                     if(checkBoxPayee.isChecked()) {
-                        // TODO 2.1 Add the String name of the Payee to the ArrayList of a Bill Object
+
                         payeeID.add(data.getId());
 
                         Log.i(TAG, "Add Payee: " + textViewMember.getText().toString());
                     } else {
 
-                        // TODO 2.2 Remove the string name the Payee from the ArrayList above
+
                         payeeID.remove(data.getId());
 
                         Log.i(TAG, "Remove Payee: " + textViewMember.getText().toString());

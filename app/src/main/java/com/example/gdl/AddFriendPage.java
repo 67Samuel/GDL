@@ -24,6 +24,7 @@ import com.google.firebase.firestore.SetOptions;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class AddFriendPage extends GDLActivity {
@@ -39,8 +40,8 @@ public class AddFriendPage extends GDLActivity {
     Boolean search_Successful = false;
     String current_Friend_ID;
     String current_Friend_Name;
-    ArrayList friend_list;
-    ArrayList friends_friend_list;
+    List friend_list;
+    List friends_friend_list;
     Uri current_Friend_Pic_Uri;
 
 
