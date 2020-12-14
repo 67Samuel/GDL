@@ -4,11 +4,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.SearchView;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
+import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,6 +24,7 @@ import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.example.gdl.AddFriendPage;
 import com.example.gdl.GDLActivity;
 import com.example.gdl.Glide.GlideApp;
 import com.example.gdl.R;
@@ -59,9 +63,9 @@ public class CreateEventSelectMembers extends GDLActivity implements RecyclerIte
     private ChipGroup mSelectedMembersChipGroup;
 
     //vars
-    SharedPreferences mPreferences;
-    private static final String sharedPrefFile = "com.example.gdl.createeventpg.CreateEventSelectMembers.preffile";
-    public final static String SELECTED_MEMBERS_ID_KEY = "com.example.gdl.CreateEventActivities.selected_members_ids_key";
+    //SharedPreferences mPreferences;
+    //private static final String sharedPrefFile = "com.example.gdl.createeventpg.CreateEventSelectMembers.preffile";
+    //public final static String SELECTED_MEMBERS_ID_KEY = "com.example.gdl.CreateEventActivities.selected_members_ids_key";
     public ArrayList<String> mSelectedMembersIds = new ArrayList<>();
     public ArrayList<Member> friendsList = new ArrayList<>();
     public ArrayList<String> friendsIdList = new ArrayList<>();
@@ -79,6 +83,8 @@ public class CreateEventSelectMembers extends GDLActivity implements RecyclerIte
 
         Utils utils = new Utils();
 
+        CreateEventSelectMembersSharedPref.createSharedPref(getApplicationContext());
+
         //set actionbar
         ActionBar actionBar = getSupportActionBar();
         Log.d(TAG, "onCreate: action bar created");
@@ -94,8 +100,9 @@ public class CreateEventSelectMembers extends GDLActivity implements RecyclerIte
         Log.d(TAG, "onCreate: views found");
 
         //get shared pref
-        mPreferences = getSharedPreferences(sharedPrefFile, MODE_PRIVATE);
-        Set<String> membersIdsSet = this.mPreferences.getStringSet(SELECTED_MEMBERS_ID_KEY, null);
+        //mPreferences = getSharedPreferences(sharedPrefFile, MODE_PRIVATE);
+        //Set<String> membersIdsSet = this.mPreferences.getStringSet(SELECTED_MEMBERS_ID_KEY, null);
+        Set<String> membersIdsSet = CreateEventSelectMembersSharedPref.readStringSet(CreateEventSelectMembersSharedPref.SELECTED_MEMBERS_ID_SET_KEY, null);
         if (membersIdsSet != null && !membersIdsSet.isEmpty()) {
             Log.d(TAG, "onCreate: getting shared pref");
             mSelectedMembersIds.clear();
@@ -127,7 +134,6 @@ public class CreateEventSelectMembers extends GDLActivity implements RecyclerIte
                                     if (counter == 0) {
                                         Member friend = friendsList.get(0);
                                         Log.d(TAG, "onComplete: friends: " + friend.toString());
-                                        Log.d(TAG, "onComplete: friends 1");
                                         mMemberLayoutManager = new LinearLayoutManager(CreateEventSelectMembers.this);
                                         mMemberRecyclerView.setLayoutManager(mMemberLayoutManager);
                                         mMembersAdapter = new MembersAdapter(CreateEventSelectMembers.this, friendsList);
@@ -162,12 +168,13 @@ public class CreateEventSelectMembers extends GDLActivity implements RecyclerIte
         mSelectMembersDoneButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d(TAG, "onClick: going to create event main");
                 Intent intent = new Intent(CreateEventSelectMembers.this, CreateEventMain.class);
                 if (mSelectedMembersIds.isEmpty()) {
                     Toast.makeText(CreateEventSelectMembers.this, "Select at least one member", Toast.LENGTH_SHORT).show();
                     return;
                 } else {
-                    intent.putExtra(SELECTED_MEMBERS_ID_KEY, mSelectedMembersIds);
+                    intent.putExtra(CreateEventSelectMembersSharedPref.SELECTED_MEMBERS_ID_SET_KEY, mSelectedMembersIds);
                 }
                 startActivity(intent);
             }
@@ -180,7 +187,6 @@ public class CreateEventSelectMembers extends GDLActivity implements RecyclerIte
         if (!mSelectedMembersIds.contains(id)) {
             Log.d(TAG, "onItemSelected: making chip");
             Chip chip = new Chip(this);
-            //TODO: get member name from database using id
             db.collection("Users").document(id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -194,6 +200,7 @@ public class CreateEventSelectMembers extends GDLActivity implements RecyclerIte
                             chip.setCloseIconVisible(true);
                             chip.setCheckable(false);
                             chip.setClickable(false);
+                            chip.setChipBackgroundColorResource(R.color.translucentGreen);
                             chip.setPadding(50, 10, 80, 10);
                             chip.setOnCloseIconClickListener(new View.OnClickListener() {
                                 @Override
@@ -212,26 +219,7 @@ public class CreateEventSelectMembers extends GDLActivity implements RecyclerIte
         }
     }
 
-    public Chip setIconUrl(String url, Drawable errDrawable, Chip chip) {
-        Glide.with(this)
-                .load(url)
-                .listener(new RequestListener<Drawable>() {
-                    @Override
-                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                        chip.setChipIcon(errDrawable);
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                        chip.setChipIcon(resource);
-                        return false;
-                    }
-                }).preload();
-        return chip;
-    }
-
-    private void saveSharedPreferences() {
+    /*private void saveSharedPreferences() {
         //saving mSelectedMembersIds as a String set to saved pref
         if (mPreferences != null) {
             SharedPreferences.Editor preferencesEditor = mPreferences.edit();
@@ -246,6 +234,20 @@ public class CreateEventSelectMembers extends GDLActivity implements RecyclerIte
                 preferencesEditor.remove(SELECTED_MEMBERS_ID_KEY);
             }
             preferencesEditor.apply();
+        }
+    }
+     */
+
+    private void saveSharedPreferences() {
+        int count = mSelectedMembersIds.size();
+        if (count > 0) {
+            Set<String> selectedMembersIdsSet = new HashSet<String>();
+            for (String i : mSelectedMembersIds) {
+                selectedMembersIdsSet.add(String.valueOf(i));
+            }
+            CreateEventSelectMembersSharedPref.write(CreateEventSelectMembersSharedPref.SELECTED_MEMBERS_ID_SET_KEY, selectedMembersIdsSet);
+        } else {
+            CreateEventSelectMembersSharedPref.remove(CreateEventSelectMembersSharedPref.SELECTED_MEMBERS_ID_SET_KEY);
         }
     }
 

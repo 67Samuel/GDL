@@ -24,8 +24,10 @@ import com.example.gdl.models.Bill;
 import com.example.gdl.models.Event;
 import com.example.gdl.models.Member;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
@@ -46,6 +48,7 @@ public class CreateEventMain extends GDLActivity implements View.OnClickListener
     public static final String EVENT_NAME_KEY = "event name key";
     public static final String EVENT_DATE_KEY = "event date key";
     private ArrayList<Member> mSelectedMembersList = new ArrayList<>();
+    private ArrayList<String> mSelectedMembersIdsList = new ArrayList<>();
     SharedPreferences mPreferences;
     Uri event_pic_uri;
     Map<String, Object> eventInfo = new HashMap<>();
@@ -93,25 +96,38 @@ public class CreateEventMain extends GDLActivity implements View.OnClickListener
 
         //get intent from CreateEventSelectedMembers and update selected members list to be sent to db
         Intent selectedMembersIntent = getIntent();
-        mSelectedMembersList = selectedMembersIntent.getParcelableArrayListExtra(CreateEventSelectMembers.SELECTED_MEMBERS_ID_KEY);
-        try {
-            Log.d(TAG, "onCreate: " + mSelectedMembersList);
-            eventInfo.put("membersList", mSelectedMembersList);
-        } catch (Exception e) {
-            Log.d(TAG, "onCreate: "+e);
-            mSelectedMembersList = new ArrayList<Member>();
-        }
+        mSelectedMembersIdsList = selectedMembersIntent.getStringArrayListExtra(CreateEventSelectMembersSharedPref.SELECTED_MEMBERS_ID_SET_KEY);
         //set number for mNumberMembersSelected, try catch block for case where mSelectedMembersList == 0
         try {
-            String formattedNumberSelected = getString(R.string.numberSelected, mSelectedMembersList.size());
+            String formattedNumberSelected = getString(R.string.numberSelected, mSelectedMembersIdsList.size());
             mNumberMembersSelected.setText(formattedNumberSelected);
-            Log.d(TAG, "onCreate: mSelectedMembersList=" + mSelectedMembersList);
+            Log.d(TAG, "onCreate: mSelectedMembersIdsList=" + mSelectedMembersIdsList);
         } catch (Exception e) {
             String formattedNumberSelected = getString(R.string.numberSelected, 0);
             mNumberMembersSelected.setText(formattedNumberSelected);
+            Log.d(TAG, "first time in pg?: "+e);
+        }
+        try {
+            for (String id : mSelectedMembersIdsList) {
+                DocumentReference objectRef = db.collection("Users").document(id);
+                objectRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        mSelectedMembersList.add(documentSnapshot.toObject(Member.class));
+                        try {
+                            Log.d(TAG, "adding this to eventInfo: " + mSelectedMembersList);
+                            //eventInfo.put("membersList", mSelectedMembersList); //update the key membersList after each success
+                        } catch (Exception e) {
+                            Log.d(TAG, "onCreate: "+e);
+                            mSelectedMembersList = new ArrayList<Member>();
+                        }
+                    }
+                });
+            }
+        } catch (Exception e) {
+            Log.d(TAG, "onCreate: first time gg to pg");
             Log.d(TAG, "onCreate: "+e);
         }
-
     }
 
     private void setListeners() {
@@ -139,27 +155,35 @@ public class CreateEventMain extends GDLActivity implements View.OnClickListener
                 } else {
                     DocumentReference eventRef = db.collection("Events").document(); //creates a doc with unique ID
                     String eventId = eventRef.getId();
-                    //Event event = new Event(eventId, mEventNameEditText.getText().toString(), mSelectedMembersList, mEventDateTextView.getText().toString());
-                    //event.setEventPicture(event_pic_uri.toString());
-                    eventInfo.put("id", eventId);
+                    Event event = new Event(eventId, mEventNameEditText.getText().toString(), mSelectedMembersList, mEventDateTextView.getText().toString());
+                    eventRef.set(event);
+                    //if (event_pic_uri != null) {
+                        //event.setEventPicture(event_pic_uri.toString());
+                    //}
+                    /*eventInfo.put("id", eventId);
                     eventInfo.put("name", mEventNameEditText.getText().toString());
-                    eventInfo.put("eventPicture", event_pic_uri.toString());
+                    try {
+                        eventInfo.put("eventPicture", event_pic_uri.toString());
+                    } catch (Exception e) {
+                        Log.d(TAG, "maybe no pic?: "+e);
+                    }
+
                     Date date = new Date();
-                    eventInfo.put("timeInitialized", date.getTime());
                     eventInfo.put("status", false);
                     eventInfo.put("totalSpent", 0);
-                    ArrayList<Member> pesudoMembersList = new ArrayList<>();
-                    pesudoMembersList.add(new Member("Sally", "f2g4uyd987dgf23g3827v"));
-                    pesudoMembersList.add(new Member("Joe", "b2h5w9r87eb3if73b2d7d2d"));
-                    eventInfo.put("membersList", pesudoMembersList);
+                    //ArrayList<Member> pesudoMembersList = new ArrayList<>();
+                    //pesudoMembersList.add(new Member("Sally", "f2g4uyd987dgf23g3827v"));
+                    //pesudoMembersList.add(new Member("Joe", "b2h5w9r87eb3if73b2d7d2d"));
                     ArrayList<Bill> billsList = new ArrayList<>();
+                    billsList.add(new Bill());
                     eventInfo.put("billsList", billsList);
                     DateFormat df = new SimpleDateFormat("dd/MM/yy");
                     Calendar calobj = Calendar.getInstance();
                     Log.d(TAG, "onClick: date: "+df.format(calobj.getTime()));
                     eventInfo.put("date", (String)df.format(calobj.getTime()));
-                    //eventRef.set(event);
-                    eventRef.set(eventInfo).addOnCompleteListener(new OnCompleteListener<Void>() {
+
+                     */
+                    /*eventRef.set(eventInfo).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
@@ -169,9 +193,13 @@ public class CreateEventMain extends GDLActivity implements View.OnClickListener
                             }
                         }
                     });
+
+                     */
+                    Toast.makeText(this, "Selected members are reset and event is created", Toast.LENGTH_SHORT).show();
+                    CreateEventSelectMembersSharedPref.remove(CreateEventSelectMembersSharedPref.SELECTED_MEMBERS_ID_SET_KEY);
                     Log.d(TAG, "onClick: going to event list page");
                     Intent eventListIntent = new Intent(this, EventListActivity.class);
-                    startActivity(eventListIntent);
+                    //startActivity(eventListIntent);
                 }
                 break;
             case R.id.event_date_text_view:
