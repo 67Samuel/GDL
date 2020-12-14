@@ -29,12 +29,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<com.example.gdl.my
 
     private static final String TAG = "RecyclerViewAdapter";
 
-    private ArrayList<Member> mFriendsList;
+    private List<Member> mFriendsList;
     Context context;
     final StorageReference storageRef = FirebaseStorage.getInstance().getReference();
     StorageReference userImageStorageRef;
 
-    public RecyclerViewAdapter(Context context, ArrayList<Member> friendsList) {
+    public RecyclerViewAdapter(Context context, List<Member> friendsList) {
         this.mFriendsList = friendsList;
         this.context = context;
     }

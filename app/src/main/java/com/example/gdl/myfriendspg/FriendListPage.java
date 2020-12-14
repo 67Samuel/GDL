@@ -31,8 +31,8 @@ public class FriendListPage extends GDLActivity {
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayourManager;
 
-    ArrayList<Member> friendsList = new ArrayList<>();
-    ArrayList<String> friendsIdList = new ArrayList<>();
+    List<Member> friendsList = new ArrayList<>();
+    List<String> friendsIdList = new ArrayList<>();
     int counter = 0;
     int current_count;
 
