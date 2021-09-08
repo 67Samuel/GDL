@@ -1,3 +1,8 @@
+# GoDutchLeh
+An efficient bill splitting and debt reminder app
+
+
+====================================================
 # Instructions on Integrating FireStore
 
 ## Add Dependency
